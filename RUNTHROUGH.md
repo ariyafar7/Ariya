@@ -6,6 +6,7 @@ A mock information product for **World IBS Day (19 April)**. It's a short pop-up
 - **Length:** 9 stops (6 multiple choice, 3 short answer), a halfway breathing break and a results screen. About 4 minutes, with no timer.
 - **Playable draft:** `index.html` (also published as an Artifact)
 - **Format inspiration:** the dive-style daily game *Krillion*. Its ocean dive becomes a descent through the gut, and its krill becomes a microbe.
+- **Look (v2):** 8-bit pixel art. The scene is drawn at about 130 px wide and scaled up with hard pixels. Headings use a pixel font (Press Start 2P) and body text uses a readable pixel font (Pixelify Sans). Buttons and panels have stepped pixel corners.
 
 ---
 
@@ -41,6 +42,25 @@ Every question screen follows the same pattern:
 5. **Keep descending ↓** animates the drop to the next stop. The depth readout counts up in metres, and the tunnel walls change texture: smooth tube, stomach folds, finger-like villi, then colon pouches.
 
 Each correct answer adds a microbe friend that follows Bifi. A bigger, more varied community stands for a healthy microbiota. A wrong answer makes Bifi look stressed for a moment, but the player always moves on.
+
+## 2b. What the player sees on the way down
+
+| Zone | Pixel scene |
+|------|-------------|
+| Mouth | Rows of white pixel teeth on both walls, a few oral bacteria and food crumbs |
+| Oesophagus | Narrow tube with muscle rings |
+| Stomach | Folded walls (rugae) and a bubbling pool of yellow stomach acid that Bifi swims through. Bifi says it's about pH 2. |
+| Duodenum | Orange-tinted walls with yellow bile dripping in |
+| Jejunum, ileum | Finger-like villi on the walls and more and more resident microbes |
+| Colon, sigmoid | Pouched walls (haustra) and a crowded, mixed community: rods, cocci clusters, chains, spiky and ciliated microbes |
+
+**Sprites:** Bifi is a 12×16 green bacterium with darker spots, a dark outline and three wiggling flagella. Their face changes with each answer: a smile, a big grin with sparkles when right, or a zigzag mouth and a sweat drop when wrong. Each correct answer adds a different microbe to the colony that follows Bifi. The sprites are original art in the style of the team's reference image, not copies of it.
+
+**HUD:** DEPTH (metres), ZONE and STOP x/9 across the top, COLONY count bottom-left, and a depth gauge on the right split into upper GI, small intestine and colon.
+
+**Dialog box:** each stop opens with Bifi's portrait and a line of text typed out RPG-style (tap to skip).
+
+**Sound:** optional 8-bit chiptune effects (start, dive, right, wrong, breathing tones, stage clear). Off by default because the game pops up on a search page.
 
 ## 3. Question bank
 
@@ -130,6 +150,7 @@ Any genuine answer earns a point. The game matches keywords to give tailored fee
 - [ ] "About 90% of the body's serotonin is made in the gut" is widely cited but isn't in our two core readings. Add a supporting source.
 - [ ] "Some bacteria can sense stress hormones directly" (colon, Learn more) comes from microbial endocrinology research. Add a source or cut it.
 - [ ] GI tract lengths are approximate adult averages.
+- [ ] "Stomach acid is about pH 2" and "some people clench or grind their teeth under stress" are general knowledge. Add a source for each.
 - [ ] Check the "when to see a doctor" red flags against a current local guideline.
 - [ ] Keep the "this was in rats" caveat on the crowding-study question.
 

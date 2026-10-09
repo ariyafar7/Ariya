@@ -1,43 +1,51 @@
 <title>Bifi's Gut Dive</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=JetBrains+Mono:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;600;700&display=swap">
 <style>
-/* Layout: a plain mock search page is the backdrop; the game lives in a phone-sized pop-up card.
-   Top of the card = a gut tunnel drawn on canvas that scrolls as Bifi descends, with a depth gauge in real metres.
-   Bottom of the card = the question sheet. One deliberate look (inside the gut), so no theme switching. */
+/* Layout: a plain mock search page is the backdrop; the game is an 8-bit pop-up cartridge.
+   Top = low-resolution canvas (drawn at ~130px wide, scaled up with hard pixels) with a game HUD.
+   Bottom = an RPG-style dialog box holding the question. One deliberate look, so no theme switching. */
 :root{
   color-scheme: light;
   /* backdrop: mock search page */
   --page:#e8ebee; --page-card:#ffffff; --page-ink:#262a2e; --page-muted:#68707a; --page-line:#d3d8dd;
-  /* gut world */
-  --lumen:#1a0e16; --panel:#22121c; --panel-2:#2e1826; --line:#4a2a3a;
-  --tissue:#7d2f48; --villi:#e07a90;
-  --bifi:#86e05e; --bifi-deep:#3d962a; --bile:#f2c94c; --wrong:#ff9d7e;
-  --ink:#fbeef1; --ink-soft:#dcc0c9; --ink-faint:#a98896;
-  --f-display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
-  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
-  --f-mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+  /* 8-bit palette */
+  --k:#0d0710;        /* outline black */
+  --night:#1a0b17;    /* lumen / card */
+  --plum:#2b1226;     /* panel */
+  --plum-2:#3d1a35;   /* raised panel */
+  --edge:#6b2d55;     /* pixel borders */
+  --g1:#1f4d22; --g2:#3f8f2f; --g3:#7ccf4a; --g4:#b9f27c;   /* Bifi greens */
+  --acid:#f2d14a; --orange:#ff9d5c; --red:#ff6b6b; --sky:#8fd3ff;
+  --ink:#fff4e8; --ink-soft:#e2c7d6; --ink-faint:#a985a0;
+  --f-pixel:"Press Start 2P","Courier New",monospace;
+  --f-body:"Pixelify Sans","Trebuchet MS",system-ui,sans-serif;
 }
 [hidden]{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 html,body{height:100%}
-body{background:var(--page);color:var(--page-ink);font-family:var(--f-body);font-size:15px;line-height:1.5;display:flex;flex-direction:column;min-height:100%}
+body{background:var(--page);color:var(--page-ink);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.5;display:flex;flex-direction:column;min-height:100%}
 button{font:inherit;cursor:pointer}
-:focus-visible{outline:3px solid var(--bile);outline-offset:2px}
+
+/* stepped-corner pixel frame */
+.px{--n:6px;--h:3px;clip-path:polygon(0 var(--n),var(--h) var(--n),var(--h) var(--h),var(--n) var(--h),var(--n) 0,calc(100% - var(--n)) 0,calc(100% - var(--n)) var(--h),calc(100% - var(--h)) var(--h),calc(100% - var(--h)) var(--n),100% var(--n),100% calc(100% - var(--n)),calc(100% - var(--h)) calc(100% - var(--n)),calc(100% - var(--h)) calc(100% - var(--h)),calc(100% - var(--n)) calc(100% - var(--h)),calc(100% - var(--n)) 100%,var(--n) 100%,var(--n) calc(100% - var(--h)),var(--h) calc(100% - var(--h)),var(--h) calc(100% - var(--n)),0 calc(100% - var(--n)))}
+.px-lg{--n:12px;--h:6px}
 
 /* ---------- draft bar ---------- */
 .draft-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:10px 16px;background:var(--page-ink);color:var(--page);font-size:13px}
 .draft-bar p{margin:0;flex:1;min-width:0}
-.tag{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;background:var(--bile);color:var(--lumen);padding:2px 8px;border-radius:3px;font-weight:700}
+.tag{font-family:var(--f-pixel);font-size:9px;letter-spacing:.06em;text-transform:uppercase;background:var(--acid);color:var(--k);padding:5px 8px}
 .draft-bar button{background:transparent;color:var(--page);border:1px solid #6d747b;border-radius:6px;padding:6px 12px;font-size:13px}
 .draft-bar button:hover{border-color:var(--page)}
+.draft-bar button:focus-visible{outline:3px solid var(--acid);outline-offset:2px}
 
 /* ---------- stage + mock search page ---------- */
 .stage{flex:1;position:relative;padding-inline:16px;padding-block:20px;display:flex;justify-content:center}
 .mock{width:100%;max-width:1040px;display:flex;flex-direction:column;gap:18px;padding-right:440px;box-sizing:border-box}
 .mock-search{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.mock-word{font-family:var(--f-display);font-weight:800;font-size:22px;color:var(--page-muted);letter-spacing:-.01em}
-.mock-q{flex:1;min-width:0;background:var(--page-card);border:1px solid var(--page-line);border-radius:999px;padding:10px 18px;font-size:15px;color:var(--page-ink);box-shadow:0 1px 3px rgba(30,35,40,.08)}
+.mock-word{font-weight:800;font-size:22px;color:var(--page-muted)}
+.mock-q{flex:1;min-width:0;background:var(--page-card);border:1px solid var(--page-line);border-radius:999px;padding:10px 18px;font-size:15px;box-shadow:0 1px 3px rgba(30,35,40,.08)}
 .mock-note{font-size:12px;color:var(--page-muted);margin:-8px 0 0 4px}
 .mock-res{display:flex;flex-direction:column;gap:6px;padding:4px}
 .mock-res .u{width:34%;height:9px;background:#c9cfd5;border-radius:4px}
@@ -45,139 +53,157 @@ button{font:inherit;cursor:pointer}
 .mock-res .l{width:92%;height:8px;background:#d6dbe0;border-radius:4px}
 .mock-res .l.s{width:70%}
 
-/* ---------- pop-up card ---------- */
-.popup{position:absolute;top:20px;right:max(16px,calc(50% - 520px));width:400px;height:min(740px,calc(100% - 40px));min-height:600px;
-  background:var(--lumen);color:var(--ink);border-radius:20px;overflow:hidden;display:flex;flex-direction:column;
-  box-shadow:0 24px 60px rgba(26,14,22,.35),0 2px 6px rgba(26,14,22,.2)}
-.pop-head{display:flex;align-items:center;gap:12px;padding:14px 16px 12px;background:var(--panel);border-bottom:1px solid var(--line)}
+/* ---------- pop-up cartridge ---------- */
+.popup{position:absolute;top:20px;right:max(16px,calc(50% - 520px));width:400px;height:min(760px,calc(100% - 40px));min-height:620px;
+  display:flex;filter:drop-shadow(0 18px 28px rgba(26,11,23,.35))}
+.frame{flex:1;min-width:0;display:flex;background:var(--edge);padding:4px}
+.popup-in{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--night);color:var(--ink);font-family:var(--f-body);overflow:hidden}
+.pop-head{display:flex;align-items:center;gap:8px;padding:10px 12px 9px;background:var(--plum);border-bottom:4px solid var(--k)}
 .pop-head > div:first-child{flex:1;min-width:0}
-.eyebrow{margin:0;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--bile)}
-.pop-head h1{margin:0;font-family:var(--f-display);font-weight:800;font-size:22px;line-height:1.1;letter-spacing:-.01em}
-.pop-head h1 span{color:var(--bifi)}
-.depth-read{font-family:var(--f-mono);font-variant-numeric:tabular-nums;text-align:right;line-height:1.1}
-.depth-read b{font-size:22px;font-weight:700;color:var(--ink)}
-.depth-read small{display:block;font-size:10px;color:var(--ink-faint);letter-spacing:.08em;text-transform:uppercase}
-.close{width:32px;height:32px;border-radius:50%;border:1px solid var(--line);background:transparent;color:var(--ink-soft);font-size:18px;line-height:1;display:grid;place-items:center}
-.close:hover{color:var(--ink);border-color:var(--ink-faint)}
+.eyebrow{margin:0 0 5px;font-family:var(--f-pixel);font-size:7.5px;letter-spacing:.06em;color:var(--acid);text-transform:uppercase}
+.pop-head h1{margin:0;font-family:var(--f-pixel);font-weight:400;font-size:13px;line-height:1.2;color:var(--ink)}
+.pop-head h1 span{color:var(--g3)}
+.hbtn{background:var(--plum-2);color:var(--ink-soft);border:0;padding:7px 8px;font-family:var(--f-pixel);font-size:8px;line-height:1;box-shadow:inset -2px -2px 0 rgba(0,0,0,.4),inset 2px 2px 0 rgba(255,255,255,.12)}
+.hbtn:hover{color:var(--ink)}
+.hbtn[aria-pressed="true"]{color:var(--g4)}
+.hbtn:focus-visible,.btn:focus-visible,.opt:focus-visible,.ghost:focus-visible{outline:3px solid var(--acid);outline-offset:-5px}
 
-.scene{position:relative;flex:0 0 40%;min-height:210px;background:var(--lumen)}
-.scene canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
-.zone-tag{position:absolute;left:12px;top:10px;font-family:var(--f-mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
-  background:rgba(26,14,22,.72);border:1px solid var(--line);color:var(--ink);padding:4px 9px;border-radius:999px;transition:opacity .4s}
-.colony{position:absolute;left:12px;bottom:10px;font-family:var(--f-mono);font-size:11px;color:var(--ink-soft);background:rgba(26,14,22,.72);padding:3px 9px;border-radius:999px;border:1px solid var(--line)}
-.colony b{color:var(--bifi)}
-.gauge{position:absolute;right:10px;top:12px;bottom:12px;width:22px;display:flex;flex-direction:column;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:rgba(26,14,22,.6)}
-.gauge .seg{position:relative;display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;font-family:var(--f-mono);font-size:8.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);overflow:hidden;white-space:nowrap}
-.gauge .seg.up{flex:0.5;background:#8a3a52}
-.gauge .seg.si{flex:6.5;background:#5a2742}
-.gauge .seg.li{flex:1.9;background:#3c2440}
-.gauge .marker{position:absolute;left:-3px;right:-3px;height:3px;background:var(--bifi);box-shadow:0 0 8px var(--bifi);transition:top .2s linear}
+.scene{position:relative;flex:0 0 47%;min-height:230px;background:var(--night);overflow:hidden;border-bottom:4px solid var(--k)}
+.scene canvas{position:absolute;left:0;top:0;display:block;image-rendering:pixelated;image-rendering:crisp-edges}
+.hud{position:absolute;left:8px;right:40px;top:8px;display:flex;justify-content:space-between;align-items:flex-start;gap:6px;pointer-events:none}
+.hud .box{background:rgba(13,7,16,.82);padding:5px 7px;font-family:var(--f-pixel);font-size:7px;line-height:1.5;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.04em}
+.hud .box b{display:block;font-weight:400;color:var(--ink);font-size:11px;font-variant-numeric:tabular-nums;letter-spacing:0}
+.hud .box.zone b{color:var(--acid);font-size:9px}
+.colony{position:absolute;left:8px;bottom:8px;background:rgba(13,7,16,.82);padding:5px 7px;font-family:var(--f-pixel);font-size:7px;color:var(--ink-faint);text-transform:uppercase}
+.colony b{font-weight:400;color:var(--g3);font-size:9px}
+.gauge{position:absolute;right:8px;top:8px;bottom:8px;width:16px;display:flex;flex-direction:column;background:var(--k);padding:2px;box-sizing:border-box;gap:2px}
+.gauge .seg{display:flex;align-items:center;justify-content:center;writing-mode:vertical-rl;font-family:var(--f-pixel);font-size:5.5px;color:var(--ink);overflow:hidden;white-space:nowrap;text-transform:uppercase}
+.gauge .seg.up{flex:0.5;background:#a8395a}
+.gauge .seg.si{flex:6.5;background:#722747}
+.gauge .seg.li{flex:1.9;background:#521f42}
+.gauge .marker{position:absolute;left:-3px;right:-3px;height:4px;background:var(--g3);box-shadow:0 0 0 2px var(--k)}
 
-/* ---------- question sheet ---------- */
-.sheet{flex:1;min-height:0;overflow-y:auto;background:var(--panel);border-top:1px solid var(--line);padding:16px 18px 20px;display:flex;flex-direction:column;gap:12px}
-.sheet h2{margin:0;font-family:var(--f-display);font-weight:800;font-size:23px;line-height:1.15;text-wrap:balance;letter-spacing:-.01em}
+/* ---------- dialog sheet ---------- */
+.sheet{flex:1;min-height:0;overflow-y:auto;background:var(--plum);padding:12px 14px 18px;display:flex;flex-direction:column;gap:11px;font-size:16px;line-height:1.4}
+.sheet h2{margin:0;font-family:var(--f-pixel);font-weight:400;font-size:14px;line-height:1.55;color:var(--ink);text-wrap:balance}
 .sheet p{margin:0}
-.meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.chip{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid var(--line);color:var(--ink-soft)}
-.chip.k{border-color:var(--bifi-deep);color:var(--bifi)}
-.say{display:flex;gap:10px;align-items:flex-start;color:var(--ink-soft);font-size:13.5px;font-style:italic}
-.say .dot{flex:0 0 22px;height:22px;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--bifi),var(--bifi-deep));margin-top:1px}
-.q{font-size:17px;font-weight:700;line-height:1.4;color:var(--ink)}
-.opts{display:flex;flex-direction:column;gap:8px}
-.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;background:var(--panel-2);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:14.5px;line-height:1.4;transition:border-color .15s,background .15s}
-.opt:hover:not(:disabled){border-color:var(--ink-faint)}
-.opt .L{flex:0 0 22px;height:22px;border-radius:6px;display:grid;place-items:center;font-family:var(--f-mono);font-size:11px;font-weight:700;background:var(--lumen);color:var(--ink-soft)}
+.meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.chip{font-family:var(--f-pixel);font-size:7px;letter-spacing:.04em;text-transform:uppercase;padding:5px 7px;background:var(--night);color:var(--ink-soft)}
+.chip.k{color:var(--g3)}
+.say{display:flex;gap:10px;align-items:flex-start;background:var(--night);padding:8px 10px;--n:6px;--h:3px}
+.say canvas{flex:0 0 auto;width:42px;height:48px;image-rendering:pixelated}
+.say .who{display:block;font-family:var(--f-pixel);font-size:7px;color:var(--g3);margin-bottom:4px;letter-spacing:.04em}
+.say .txt{font-size:15px;color:var(--ink-soft);min-height:2.8em}
+.q{font-size:18px;font-weight:700;line-height:1.35;color:var(--ink)}
+.opts{display:flex;flex-direction:column;gap:7px}
+.opt{display:flex;gap:10px;align-items:flex-start;text-align:left;background:var(--plum-2);color:var(--ink);border:0;padding:9px 11px;font-family:var(--f-body);font-size:15.5px;line-height:1.35;
+  box-shadow:inset -3px -3px 0 rgba(0,0,0,.35),inset 3px 3px 0 rgba(255,255,255,.08)}
+.opt:hover:not(:disabled){background:#4c2142}
+.opt:active:not(:disabled){box-shadow:inset 3px 3px 0 rgba(0,0,0,.35)}
+.opt .L{flex:0 0 auto;font-family:var(--f-pixel);font-size:9px;line-height:1;padding:5px 5px 4px;background:var(--k);color:var(--acid);margin-top:1px}
 .opt:disabled{cursor:default}
-.opt.right{border-color:var(--bifi);background:#24361f}
-.opt.right .L{background:var(--bifi);color:var(--lumen)}
-.opt.wrongpick{border-color:var(--wrong);background:#3a1f1f}
-.opt.wrongpick .L{background:var(--wrong);color:var(--lumen)}
-.opt.dim{opacity:.55}
+.opt.right{background:#21481f}
+.opt.right .L{background:var(--g3);color:var(--k)}
+.opt.wrongpick{background:#5a2020}
+.opt.wrongpick .L{background:var(--red);color:var(--k)}
+.opt.dim{opacity:.5}
 .sa{display:flex;gap:8px;flex-wrap:wrap}
-.sa input{flex:1;min-width:0;background:var(--lumen);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:inherit;font-size:15px}
+.sa label{flex-basis:100%;font-family:var(--f-pixel);font-size:7px;color:var(--ink-faint);text-transform:uppercase}
+.sa input{flex:1;min-width:0;background:var(--k);color:var(--g4);border:0;padding:11px 12px;font-family:var(--f-body);font-size:17px;caret-color:var(--g3);box-shadow:inset 0 0 0 2px var(--edge)}
 .sa input::placeholder{color:var(--ink-faint)}
-.sa input:focus{border-color:var(--bifi);outline:none}
-.btn{background:var(--bifi);color:var(--lumen);border:0;border-radius:10px;padding:10px 16px;font-weight:700;font-size:15px}
-.btn:hover{filter:brightness(1.08)}
-.btn.big{width:100%;padding:13px 16px;font-size:16px}
-.ghost{background:transparent;color:var(--ink-soft);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:13.5px}
-.ghost:hover{color:var(--ink);border-color:var(--ink-faint)}
+.sa input:focus{outline:none;box-shadow:inset 0 0 0 3px var(--g3)}
+.btn{background:var(--g3);color:var(--k);border:0;padding:11px 14px;font-family:var(--f-pixel);font-size:10px;line-height:1.3;text-transform:uppercase;
+  box-shadow:inset -4px -4px 0 var(--g2),inset 4px 4px 0 var(--g4)}
+.btn:hover{background:#8cdb58}
+.btn:active{box-shadow:inset 4px 4px 0 var(--g2)}
+.btn.big{width:100%;padding:14px 16px;font-size:11px}
+.ghost{background:var(--night);color:var(--ink-soft);border:0;padding:8px 10px;font-family:var(--f-pixel);font-size:7.5px;text-transform:uppercase;line-height:1.4;box-shadow:inset 0 0 0 2px var(--edge)}
+.ghost:hover{color:var(--ink)}
 .row{display:flex;gap:8px;flex-wrap:wrap}
-.hint{font-size:13.5px;color:var(--bile)}
-.fb{border-radius:12px;padding:12px 14px;background:var(--panel-2);border:1px solid var(--line);display:flex;flex-direction:column;gap:8px}
-.fb .v{font-family:var(--f-display);font-weight:800;font-size:17px}
-.fb.ok .v{color:var(--bifi)}
-.fb.no .v{color:var(--wrong)}
-.fb.mid .v{color:var(--bile)}
-.fb p{font-size:14.5px;color:var(--ink)}
-.fb .model{font-size:13.5px;color:var(--ink-soft)}
-details.more{border-top:1px dashed var(--line);padding-top:8px}
-details.more summary{cursor:pointer;color:var(--bile);font-weight:700;font-size:14px;list-style:none;display:flex;align-items:center;gap:6px}
+.hint{font-size:15px;color:var(--acid)}
+.fb{padding:11px 12px;background:var(--night);display:flex;flex-direction:column;gap:8px}
+.fb .v{font-family:var(--f-pixel);font-size:10px;line-height:1.5;text-transform:uppercase}
+.fb.ok .v{color:var(--g3)}
+.fb.no .v{color:var(--red)}
+.fb.mid .v{color:var(--acid)}
+.fb p{font-size:15.5px;color:var(--ink)}
+.fb .model{font-size:14.5px;color:var(--ink-soft)}
+details.more{border-top:2px dashed var(--edge);padding-top:8px}
+details.more summary{cursor:pointer;color:var(--acid);font-family:var(--f-pixel);font-size:8px;line-height:1.6;text-transform:uppercase;list-style:none;display:flex;align-items:center;gap:8px}
 details.more summary::-webkit-details-marker{display:none}
-details.more summary::before{content:"+";font-family:var(--f-mono);display:inline-grid;place-items:center;width:18px;height:18px;border:1px solid var(--bile);border-radius:4px;font-size:12px}
-details.more[open] summary::before{content:"–"}
-.more-body{display:flex;flex-direction:column;gap:8px;padding-top:8px;font-size:14px;color:var(--ink-soft)}
+details.more summary::before{content:"+";display:inline-grid;place-items:center;width:16px;height:16px;background:var(--acid);color:var(--k);font-size:9px}
+details.more[open] summary::before{content:"-"}
+details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:2px}
+.more-body{display:flex;flex-direction:column;gap:8px;padding-top:8px;font-size:15px;color:var(--ink-soft)}
 .more-body ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:4px}
 .more-body b{color:var(--ink)}
-.chain{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-family:var(--f-mono);font-size:11.5px}
-.chain span{background:var(--lumen);border:1px solid var(--line);border-radius:6px;padding:3px 7px;color:var(--ink)}
+.chain{display:flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:13px}
+.chain span{background:var(--plum-2);padding:3px 7px;color:var(--ink)}
 .chain i{font-style:normal;color:var(--ink-faint)}
-.src{font-size:12px;color:var(--ink-faint)}
+.src{font-size:13px;color:var(--ink-faint)}
 .src em{color:var(--ink-soft)}
-.fine{font-size:12px;color:var(--ink-faint)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.stat{background:var(--panel-2);border:1px solid var(--line);border-radius:12px;padding:10px;display:flex;flex-direction:column;gap:2px}
-.stat b{font-family:var(--f-mono);font-size:20px;font-variant-numeric:tabular-nums;color:var(--ink)}
-.stat span{font-size:11.5px;color:var(--ink-faint);line-height:1.3}
-.take{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:14.5px}
-.warn{border:1px solid #6b4b1e;background:#2d2114;border-radius:12px;padding:10px 12px;font-size:13.5px;color:var(--ink-soft)}
-.warn b{color:var(--bile)}
+.fine{font-size:13px;color:var(--ink-faint)}
+.title-card{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.title-card .big{font-family:var(--f-pixel);font-size:19px;line-height:1.45;color:var(--ink);margin:0;text-shadow:3px 3px 0 var(--k)}
+.title-card .big span{color:var(--g3)}
+.blink{animation:blink 1s steps(2) infinite}
+@keyframes blink{50%{opacity:0}}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.stat{background:var(--night);padding:9px;display:flex;flex-direction:column;gap:4px}
+.stat b{font-family:var(--f-pixel);font-weight:400;font-size:13px;color:var(--ink)}
+.stat span{font-size:12.5px;color:var(--ink-faint);line-height:1.25}
+.take{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:15.5px}
+.warn{background:#3a2a12;padding:10px 12px;font-size:15px;color:var(--ink-soft)}
+.warn b{color:var(--acid)}
 
 /* breathe */
-.breathe{display:flex;flex-direction:column;align-items:center;gap:14px;text-align:center;padding-top:4px}
-.orb{width:120px;height:120px;border-radius:50%;background:radial-gradient(circle at 40% 38%,var(--bifi),var(--bifi-deep) 70%);box-shadow:0 0 30px rgba(134,224,94,.35);transform:scale(.6);transition:transform 4s ease-in-out}
-.orb.in{transform:scale(1)}
-.bcount{font-family:var(--f-display);font-weight:800;font-size:22px}
+.breathe{display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center}
+.breathe canvas{width:84px;height:96px;image-rendering:pixelated;transform:scale(.7);transition:transform 4s steps(8)}
+.breathe canvas.in{transform:scale(1.25)}
+.bcount{font-family:var(--f-pixel);font-size:11px;line-height:1.6;color:var(--g4)}
 
 /* minimised pill */
-.pill{position:absolute;right:max(16px,calc(50% - 520px));bottom:24px;background:var(--lumen);color:var(--ink);border:0;border-radius:999px;padding:10px 16px 10px 10px;display:flex;align-items:center;gap:10px;box-shadow:0 10px 30px rgba(26,14,22,.35);font-weight:700}
-.pill .dot{width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 35% 35%,var(--bifi),var(--bifi-deep))}
+.pill{position:absolute;right:max(16px,calc(50% - 520px));bottom:24px;background:var(--night);color:var(--ink);border:0;padding:10px 14px;display:flex;align-items:center;gap:10px;font-family:var(--f-pixel);font-size:9px;box-shadow:inset -3px -3px 0 rgba(0,0,0,.4),0 0 0 4px var(--edge)}
+.pill canvas{width:21px;height:24px;image-rendering:pixelated}
+.pill:focus-visible{outline:3px solid var(--acid);outline-offset:3px}
 
-/* ---------- run-through notes drawer ---------- */
+/* ---------- run-through notes drawer (plain document styling) ---------- */
 .notes{position:fixed;inset:0;z-index:20;display:flex;justify-content:flex-start;background:rgba(20,24,28,.45)}
 .notes-inner{width:min(460px,100%);height:100%;overflow-y:auto;background:var(--page-card);color:var(--page-ink);padding-inline:22px;padding-block:20px calc(28px + env(safe-area-inset-bottom,0px));box-sizing:border-box;display:flex;flex-direction:column;gap:16px;box-shadow:8px 0 30px rgba(20,24,28,.2)}
-.notes h2{margin:0;font-family:var(--f-display);font-weight:800;font-size:24px;letter-spacing:-.01em}
-.notes h3{margin:0;font-family:var(--f-mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--page-muted)}
+.notes h2{margin:0;font-family:var(--f-pixel);font-weight:400;font-size:15px;line-height:1.4}
+.notes h3{margin:0;font-family:var(--f-pixel);font-weight:400;font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:var(--page-muted)}
 .notes p,.notes li{font-size:14px;color:var(--page-ink)}
 .notes p{margin:0}
 .notes ul,.notes ol{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:5px}
 .notes section{display:flex;flex-direction:column;gap:8px}
 .flow{list-style:none;padding:0 !important;gap:4px !important}
-.flow li{display:flex;align-items:center;gap:10px;border:1px solid var(--page-line);border-radius:10px;padding:7px 10px}
-.flow .n{font-family:var(--f-mono);font-size:11px;color:var(--page-muted);width:42px;flex:0 0 42px;font-variant-numeric:tabular-nums}
+.flow li{display:flex;align-items:center;gap:10px;border:1px solid var(--page-line);border-radius:8px;padding:7px 10px}
+.flow .n{font-family:ui-monospace,Menlo,monospace;font-size:11px;color:var(--page-muted);width:46px;flex:0 0 46px;font-variant-numeric:tabular-nums}
 .flow .d{flex:1;min-width:0;font-size:13.5px;line-height:1.35}
 .flow .d small{display:block;color:var(--page-muted);font-size:12px}
 .flow button{background:transparent;border:1px solid var(--page-line);color:var(--page-ink);border-radius:6px;padding:4px 9px;font-size:12px}
 .flow button:hover{border-color:var(--page-ink)}
 .notes-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
 .notes-top button{background:transparent;border:1px solid var(--page-line);border-radius:6px;padding:6px 10px;color:var(--page-ink)}
-.flag{border-left:3px solid var(--bile);padding-left:10px}
+.notes button:focus-visible{outline:3px solid var(--edge);outline-offset:2px}
+.flag{border-left:3px solid var(--acid);padding-left:10px}
 
 @media (max-width: 900px){
   .mock{padding-right:0}
   .mock-res{display:none}
   .stage{flex-direction:column;align-items:center;gap:14px}
-  .popup{position:relative;top:auto;right:auto;width:100%;max-width:420px;height:min(740px,calc(100dvh - 140px));min-height:560px}
+  .popup{position:relative;top:auto;right:auto;width:100%;max-width:420px;height:min(760px,calc(100dvh - 130px));min-height:580px}
   .pill{position:static}
 }
 @media (prefers-reduced-motion: reduce){
-  .orb,.gauge .marker,.zone-tag{transition:none}
+  .blink{animation:none}
+  .breathe canvas{transition:none}
 }
 </style>
 
 <div class="draft-bar">
-  <span class="tag">Draft</span>
-  <p>Mock information product: a search pop-up game for World IBS Day (19 April). Audience: people moving into university or work.</p>
+  <span class="tag">Draft v2</span>
+  <p>Mock information product: an 8-bit search pop-up game for World IBS Day (19 April). Audience: people moving into university or work.</p>
   <button type="button" id="notesBtn">Run-through notes</button>
 </div>
 
@@ -195,29 +221,37 @@ details.more[open] summary::before{content:"–"}
   </div>
 
   <section class="popup" id="popup" role="dialog" aria-labelledby="gameTitle">
-    <header class="pop-head">
-      <div>
-        <p class="eyebrow">World IBS Day · 19 April</p>
-        <h1 id="gameTitle"><span>Bifi's</span> Gut Dive</h1>
+   <div class="frame px px-lg">
+    <div class="popup-in px px-lg">
+      <header class="pop-head">
+        <div>
+          <p class="eyebrow">World IBS Day · 19 April</p>
+          <h1 id="gameTitle"><span>Bifi's</span> Gut Dive</h1>
+        </div>
+        <button type="button" class="hbtn" id="sfxBtn" aria-pressed="false" title="Sound effects">SFX OFF</button>
+        <button type="button" class="hbtn" id="closeBtn" aria-label="Minimise the pop-up">X</button>
+      </header>
+      <div class="scene" id="sceneWrap">
+        <canvas id="scene" aria-hidden="true"></canvas>
+        <div class="hud" aria-hidden="true">
+          <div class="box">Depth<b id="depthVal">0.00m</b></div>
+          <div class="box zone">Zone<b id="zoneTag">Mouth</b></div>
+          <div class="box">Stop<b id="stopVal">0/9</b></div>
+        </div>
+        <div class="colony" aria-live="polite">Colony <b id="colonyN">1</b></div>
+        <div class="gauge" title="Your position along about 8.9 m of gut">
+          <div class="seg up"></div>
+          <div class="seg si">Small int.</div>
+          <div class="seg li">Colon</div>
+          <div class="marker" id="marker" style="top:0"></div>
+        </div>
       </div>
-      <div class="depth-read" aria-live="off"><b id="depthVal">0.00</b><small>metres in</small></div>
-      <button type="button" class="close" id="closeBtn" aria-label="Minimise the pop-up">×</button>
-    </header>
-    <div class="scene" id="sceneWrap">
-      <canvas id="scene" aria-hidden="true"></canvas>
-      <div class="zone-tag" id="zoneTag">Mouth</div>
-      <div class="colony" id="colony">Gut community <b id="colonyN">1</b></div>
-      <div class="gauge" title="Your position along about 8.9 m of gut">
-        <div class="seg up" title="Mouth, oesophagus, stomach"></div>
-        <div class="seg si" title="Small intestine">Small intestine</div>
-        <div class="seg li" title="Large intestine (colon)">Colon</div>
-        <div class="marker" id="marker" style="top:0"></div>
-      </div>
+      <div class="sheet" id="sheet" aria-live="polite"></div>
     </div>
-    <div class="sheet" id="sheet" aria-live="polite"></div>
+   </div>
   </section>
 
-  <button type="button" class="pill" id="pill" hidden><span class="dot"></span>Resume Gut Dive</button>
+  <button type="button" class="pill" id="pill" hidden><canvas id="pillIcon" width="14" height="16" aria-hidden="true"></canvas>Resume Gut Dive</button>
 </div>
 
 <div class="notes" id="notes" hidden>
@@ -238,15 +272,29 @@ details.more[open] summary::before{content:"–"}
     </section>
 
     <section>
+      <h3>What the player sees on the way down</h3>
+      <ul>
+        <li><b>Mouth:</b> rows of pixel teeth on both walls, plus a few oral bacteria.</li>
+        <li><b>Oesophagus:</b> a narrow tube with muscle rings.</li>
+        <li><b>Stomach:</b> folded walls and a bubbling pool of yellow stomach acid (about pH 2) that Bifi swims through.</li>
+        <li><b>Duodenum:</b> orange-tinted walls with yellow bile dripping in.</li>
+        <li><b>Jejunum and ileum:</b> finger-like villi on the walls, with more and more resident microbes.</li>
+        <li><b>Colon:</b> pouched walls and a crowded, mixed community: rods, cocci clusters, chains, spiky and ciliated microbes.</li>
+      </ul>
+    </section>
+
+    <section>
       <h3>Design decisions</h3>
       <ul>
+        <li><b>8-bit look.</b> Retro pixel art feels like a game, not a health warning, and stays light enough for a pop-up.</li>
         <li><b>No timer.</b> The reference game uses a countdown. Our audience is already under exam and job-hunt pressure, so the dive is self-paced.</li>
         <li><b>Wrong answers still move you down.</b> Every answer explains itself, so nobody gets stuck or feels tested.</li>
-        <li><b>The colony grows.</b> Each correct answer adds a microbe friend. A bigger, more varied community stands for a healthier microbiota.</li>
+        <li><b>The colony grows.</b> Each correct answer adds a different microbe friend. A bigger, more varied community stands for a healthier microbiota.</li>
         <li><b>Learn more is optional.</b> The question stays at plain-language level. Mechanism detail and sources sit behind "Learn more".</li>
         <li><b>A breathing break at halfway</b> models one stress-calming tool instead of only describing it.</li>
-        <li><b>Real units.</b> The depth gauge uses metres along an adult gut (about 8.9 m in this draft), so players feel how long the small intestine is.</li>
-        <li><b>Mix of formats.</b> 6 multiple-choice and 3 short-answer questions. Short answers accept spelling slips and close answers.</li>
+        <li><b>Real units.</b> The depth readout uses metres along an adult gut (about 8.9 m in this draft).</li>
+        <li><b>Sound is off by default,</b> since the game pops up on a search page.</li>
+        <li><b>Original sprites.</b> The microbe art is drawn for this project in the style of the team's reference image, not copied from it.</li>
       </ul>
     </section>
 
@@ -255,7 +303,7 @@ details.more[open] summary::before{content:"–"}
       <ul>
         <li class="flag">"About 90% of the body's serotonin is made in the gut" is widely cited but is not in our two core readings. Add a supporting source.</li>
         <li class="flag">"Some bacteria can sense stress hormones directly" (colon stop, Learn more) comes from microbial endocrinology research, not our two readings. Add a source or cut it.</li>
-        <li class="flag">GI tract lengths are approximate adult averages and vary by person and by measurement method.</li>
+        <li class="flag">Stomach acid "about pH 2", teeth grinding linked to stress, and GI tract lengths are general knowledge. Add a source for each.</li>
         <li class="flag">"When to see a doctor" red flags follow standard IBS guidance. Check them against a current local guideline before publishing.</li>
         <li class="flag">The crowding study was in rats. The game says so, and it should stay that way in later edits.</li>
       </ul>
@@ -274,15 +322,13 @@ details.more[open] summary::before{content:"–"}
 <script>
 (() => {
 const TOTAL_M = 8.9;
-
 /* ---------------------------------------------------------------
    Content. Each stop is one section of gut plus one question.
-   tex: wall texture for the canvas. width: tunnel width (share of canvas).
 ---------------------------------------------------------------- */
 const STOPS = [
 {
-  zone:"Mouth", depth:0.0, tex:"smooth", width:0.62, tissue:[138,58,82], lumen:[42,18,32], bugs:0.15,
-  say:"Every journey starts here. Stress can make your mouth go dry. That's your nervous system switching to alert mode.",
+  zone:"Mouth", depth:0.0,
+  say:"Teeth start breaking food down here. Stress can make your mouth go dry, and some people clench or grind their teeth.",
   type:"mcq",
   q:"Let's start simple. What is IBS (irritable bowel syndrome)?",
   options:[
@@ -303,7 +349,7 @@ const STOPS = [
   src:"Qin et al., 2014, World J Gastroenterol"
 },
 {
-  zone:"Oesophagus", depth:0.25, tex:"smooth", width:0.36, tissue:[125,48,69], lumen:[38,16,30], bugs:0.1,
+  zone:"Oesophagus", depth:0.25,
   say:"This muscle tube pushes food down in waves. Nerves run those waves, and nerves are where stress gets in.",
   type:"mcq",
   q:"Your brain and your gut are connected. Which way do the messages travel?",
@@ -320,8 +366,8 @@ const STOPS = [
   src:"Qin et al., 2014, World J Gastroenterol"
 },
 {
-  zone:"Stomach", depth:0.45, tex:"rugae", width:0.8, tissue:[110,42,69], lumen:[36,15,30], bugs:0.05,
-  say:"Butterflies, knots, nausea. The stomach is often the first place people feel stress.",
+  zone:"Stomach", depth:0.45,
+  say:"Splash! Stomach acid here is about pH 2, strong enough to kill lots of microbes. Stress can leave your stomach feeling knotted too.",
   type:"sa",
   q:"It's exam week. Glands on top of your kidneys release the main stress hormone. What's it called?",
   placeholder:"One word",
@@ -341,7 +387,7 @@ const STOPS = [
   src:"Qin et al., 2014, World J Gastroenterol"
 },
 {
-  zone:"Duodenum", depth:0.75, tex:"villi", width:0.48, tissue:[118,62,48], lumen:[40,22,22], bugs:0.15,
+  zone:"Duodenum", depth:0.75,
   say:"First stretch of the small intestine. Bile from your liver and gallbladder joins in here. That's the yellow tint.",
   type:"mcq",
   q:"Scientists kept rats in crowded cages for 15 days, a bit like a packed share-house in exam season. Afterwards their colons had about 4× more of something. What?",
@@ -359,7 +405,7 @@ const STOPS = [
   src:"Vicario et al., 2012, Psychoneuroendocrinology"
 },
 {
-  zone:"Jejunum", depth:2.0, tex:"villi", width:0.46, tissue:[98,40,62], lumen:[34,15,28], bugs:0.2,
+  zone:"Jejunum", depth:2.0,
   say:"Most of your food is absorbed here, through a lining only one cell thick.",
   type:"mcq",
   q:"Your gut lining is a wall one cell thick that keeps microbes and food bits inside the gut. What does ongoing stress do to it?",
@@ -377,7 +423,7 @@ const STOPS = [
   src:"Qin et al., 2014; Vicario et al., 2012"
 },
 {
-  zone:"Ileum", depth:4.5, tex:"villi", width:0.44, tissue:[86,36,60], lumen:[30,14,27], bugs:0.35,
+  zone:"Ileum", depth:4.5,
   say:"The longest stretch so far, packed with cells that make chemical messengers.",
   type:"sa",
   q:"Serotonin is often called a \"happy chemical\". Where in the body is most of it made?",
@@ -399,7 +445,7 @@ const STOPS = [
   src:"Qin et al., 2014, World J Gastroenterol"
 },
 {
-  zone:"Colon", depth:7.2, tex:"haustra", width:0.66, tissue:[66,32,58], lumen:[26,13,26], bugs:1,
+  zone:"Colon", depth:7.2,
   say:"Welcome to the big city. Trillions of microbes live here. This is my home!",
   type:"mcq",
   q:"What can long-term stress do to the microbiota, the community of microbes living in your gut?",
@@ -422,7 +468,7 @@ const STOPS = [
   src:"Qin et al., 2014, World J Gastroenterol"
 },
 {
-  zone:"Sigmoid colon", depth:8.4, tex:"haustra", width:0.56, tissue:[54,30,56], lumen:[22,12,24], bugs:0.8,
+  zone:"Sigmoid colon", depth:8.4,
   say:"Nearly there. This S-shaped bend is where gut sensitivity is often measured.",
   type:"mcq",
   q:"True or false: if stress makes IBS worse, then IBS is \"all in your head\".",
@@ -439,7 +485,7 @@ const STOPS = [
   src:"Qin et al., 2014; Vicario et al., 2012"
 },
 {
-  zone:"Exit", depth:8.9, tex:"haustra", width:0.4, tissue:[44,26,48], lumen:[20,11,22], bugs:0.5,
+  zone:"Exit", depth:8.9,
   say:"End of the line. Let's finish with something useful.",
   type:"sa", any:true,
   q:"Name one thing that can help calm the stress–gut loop.",
@@ -461,6 +507,23 @@ const STOPS = [
 }
 ];
 
+
+/* ---------------------------------------------------------------
+   Pixel look for each stop.
+   pal = [lumen, wall dark, wall mid, wall edge highlight]
+---------------------------------------------------------------- */
+const ZV = [
+  {tex:"teeth",   width:.72, bugs:.10, food:.55, pal:["#2a0f1e","#6b1f3a","#a8395a","#e86f8c"]},
+  {tex:"rings",   width:.34, bugs:.03, food:.35, pal:["#240d1b","#5e1b35","#92314f","#d3607d"]},
+  {tex:"rugae",   width:.84, bugs:0,   food:.25, pal:["#210c1c","#551a36","#86304f","#c95a78"]},
+  {tex:"villi",   width:.50, bugs:.18, food:.2,  pal:["#24120f","#5b2a1c","#8e4a2c","#d08a4a"]},
+  {tex:"villi",   width:.48, bugs:.32, food:.12, pal:["#1f0c1a","#4f1834","#7f2a4c","#c4527a"]},
+  {tex:"villi",   width:.46, bugs:.5,  food:.08, pal:["#1c0b19","#461632","#722747","#b34a72"]},
+  {tex:"haustra", width:.70, bugs:1,   food:.04, pal:["#170a18","#3a1430","#5f2348","#95406e"]},
+  {tex:"haustra", width:.60, bugs:.9,  food:.04, pal:["#140918","#32122d","#521f42","#823a66"]},
+  {tex:"haustra", width:.42, bugs:.6,  food:0,   pal:["#10070f","#2a0f26","#461b3b","#70345c"]}
+];
+
 const COPING = [
   {keys:["exercise","walk","run","gym","sport","yoga","swim","move","movement","cycling","bike","dance","pilates"],msg:"Moving your body is one of the best-supported ways to lower stress and help gut movement."},
   {keys:["cbt","therapy","therapist","psycholog","counsel","cognitive","talk therapy"],msg:"CBT has good evidence for IBS. It helps break the loop between worry and gut symptoms."},
@@ -472,26 +535,46 @@ const COPING = [
   {keys:["music","hobby","nature","outside","journal","read","game","art","break"],msg:"Anything that genuinely lowers your stress can help calm the loop."}
 ];
 
-const FRIEND_COLORS = ["#b9ef7a","#5fd3b0","#f2c94c","#9fd0ff","#c9a8ff","#ffb38a","#7fe0d0","#e8f07a","#ffa3c4"];
-
 /* ---------------------------------------------------------------
    State
 ---------------------------------------------------------------- */
 const S = {
-  phase:"intro",   // intro | descend | question | breathe | end
-  idx:0,           // current stop
-  pos:0,           // camera position in stop units (float)
-  depth:0,         // metres shown
-  score:0,
-  friends:[],
-  answered:false,
-  mood:"happy", moodUntil:0,
-  breathTimer:null
+  phase:"intro", idx:0, pos:0, depth:0, score:0, friends:[], answered:false,
+  mood:"happy", moodUntil:0, breathTimer:null, typeT:null
 };
 const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
 const $ = s => document.querySelector(s);
 const sheet = $("#sheet");
+
+/* ---------------------------------------------------------------
+   8-bit sound (off by default; starts only from a click)
+---------------------------------------------------------------- */
+let AC=null, sfx=false;
+function beep(seq){
+  if(!sfx) return;
+  try{
+    AC = AC || new (window.AudioContext||window.webkitAudioContext)();
+    let t=AC.currentTime+0.01;
+    seq.forEach(([f,d])=>{
+      const o=AC.createOscillator(), g=AC.createGain();
+      o.type="square"; o.frequency.value=f;
+      g.gain.setValueAtTime(0.045,t); g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+      o.connect(g).connect(AC.destination); o.start(t); o.stop(t+d+0.02);
+      t+=d*0.92;
+    });
+  }catch(e){}
+}
+const SFX={
+  start:[[392,.07],[523,.07],[659,.07],[784,.14]],
+  right:[[659,.07],[784,.07],[1047,.16]],
+  wrong:[[220,.12],[165,.22]],
+  dive:[[523,.05],[440,.05],[349,.05],[262,.09]],
+  end:[[523,.1],[659,.1],[784,.1],[1047,.1],[784,.08],[1047,.24]]
+};
+$("#sfxBtn").addEventListener("click",e=>{
+  sfx=!sfx; e.currentTarget.setAttribute("aria-pressed",sfx); e.currentTarget.textContent=sfx?"SFX ON":"SFX OFF";
+  if(sfx) beep([[784,.06],[1047,.1]]);
+});
 
 /* ---------------------------------------------------------------
    Short-answer marking
@@ -520,18 +603,175 @@ function hits(input,keys){
 }
 
 /* ---------------------------------------------------------------
+   Pixel art: palettes, sprites, primitives
+---------------------------------------------------------------- */
+const K="#0d0710";
+const COLS={
+  green:{m:"#7ccf4a",d:"#3f8f2f",l:"#b9f27c"},
+  teal:{m:"#4fc3a1",d:"#23806a",l:"#a2ecd6"},
+  purple:{m:"#a77bd8",d:"#6a46a0",l:"#d6c0f2"},
+  orange:{m:"#ff9d5c",d:"#c4622a",l:"#ffd2a8"},
+  yellow:{m:"#f2c94c",d:"#b38a1c",l:"#fff0a8"},
+  sky:{m:"#8fd3ff",d:"#3f8fc4",l:"#d4efff"}
+};
+const COL_KEYS=Object.keys(COLS);
+
+const BIFI=[
+  "...kkkkkk...",
+  "..klllgggk..",
+  ".kllgggggdk.",
+  "klggggggggdk",
+  "klggggggggdk",
+  "klggggggggdk",
+  "kcggggggggck",
+  "kgggggggggdk",
+  "kgdggggggggk",
+  "kgddgggggdgk",
+  "kggggggggddk",
+  "kggggdgggggk",
+  ".kgggggggdk.",
+  ".kdggggggdk.",
+  "..kddddddk..",
+  "...kkkkkk..."
+];
+const BIFI_PAL={k:K,l:"#b9f27c",g:"#7ccf4a",d:"#3f8f2f",c:"#ff8fa3"};
+const TOOTH=["kkkkkkk.","kwwwwwwk","kwwwwwsk","kwwwwwsk","kwwwwssk","kswwssk.","kkkkkk.."];
+const TOOTH_PAL={k:K,w:"#f4f0e6",s:"#c9bfb2"};
+const ROD=[".kkkkk.","kllmmmk","kmmmmdk",".kkkkk."];
+const ROD_V=ROD[0].split("").map((_,i)=>ROD.map(r=>r[i]).join(""));
+const COCCUS=[".kk.","klmk","kmdk",".kk."];
+
+function px(c,x,y,col){ c.fillStyle=col; c.fillRect(x,y,1,1); }
+function spr(c,rows,x,y,pal,flip){
+  x=Math.round(x); y=Math.round(y);
+  for(let j=0;j<rows.length;j++){
+    const r=rows[j];
+    for(let i=0;i<r.length;i++){
+      const col=pal[r[i]]; if(!col) continue;
+      c.fillStyle=col; c.fillRect(flip?x+r.length-1-i:x+i,y+j,1,1);
+    }
+  }
+}
+const palOf=col=>({k:K,m:col.m,d:col.d,l:col.l});
+function disc(c,cx,cy,r,col){
+  cx=Math.round(cx); cy=Math.round(cy);
+  for(let dy=-r-1;dy<=r+1;dy++) for(let dx=-r-1;dx<=r+1;dx++){
+    const d=dx*dx+dy*dy;
+    if(d<=r*r+r*.6) px(c,cx+dx,cy+dy, (dx<0&&dy<0&&d<=r*r*.35)?col.l:(dx+dy>r*.5?col.d:col.m));
+    else if(d<=(r+1)*(r+1)+r*.6) px(c,cx+dx,cy+dy,K);
+  }
+}
+
+/* Bifi: 12x16 body + face that changes with mood */
+function drawBifi(c,x,y,mood,t,flagella){
+  x=Math.round(x); y=Math.round(y);
+  if(flagella){
+    for(const [i,bx] of [[0,3],[1,6],[2,9]].map(a=>a)){
+      for(let k=1;k<=6;k++){
+        const wx=bx+Math.round(Math.sin(t*8-k*.9+i*1.7)*1.2);
+        px(c,x+wx,y-k,k%2?"#7ccf4a":"#3f8f2f");
+      }
+    }
+  }
+  spr(c,BIFI,x,y,BIFI_PAL);
+  const blink=Math.sin(t*1.3)>0.97;
+  if(blink){
+    [[2,5],[3,5],[7,5],[8,5]].forEach(([i,j])=>px(c,x+i,y+j,K));
+  } else {
+    [[2,4],[3,4],[2,5],[7,4],[8,4],[7,5]].forEach(([i,j])=>px(c,x+i,y+j,"#ffffff"));
+    [[3,5],[8,5]].forEach(([i,j])=>px(c,x+i,y+j,K));
+  }
+  let m;
+  if(mood==="wow") m=[[4,7,K],[5,7,K],[6,7,K],[7,7,K],[4,8,K],[5,8,"#ff6b6b"],[6,8,"#ff6b6b"],[7,8,K],[5,9,K],[6,9,K]];
+  else if(mood==="stressed") m=[[4,8,K],[5,7,K],[6,8,K],[7,7,K]];
+  else m=[[4,7,K],[7,7,K],[5,8,K],[6,8,K]];
+  m.forEach(([i,j,col])=>px(c,x+i,y+j,col));
+  if(mood==="stressed"){ px(c,x+12,y+1,"#8fd3ff"); px(c,x+12,y+2,"#8fd3ff"); px(c,x+13,y+2,"#d4efff"); px(c,x+12,y+3,"#3f8fc4"); }
+  if(mood==="wow"){
+    const s=Math.floor(t*6)%2;
+    [[-3,1],[14,0],[-2,12],[14,11]].forEach(([i,j],n)=>{ if((n+s)%2) { px(c,x+i,y+j,"#f2d14a"); px(c,x+i-1,y+j,"#fff0a8"); px(c,x+i+1,y+j,"#fff0a8"); px(c,x+i,y+j-1,"#fff0a8"); px(c,x+i,y+j+1,"#fff0a8"); } });
+  }
+}
+
+/* Other gut microbes */
+function drawMicrobe(c,type,x,y,col,t,ph){
+  const p=palOf(col);
+  switch(type){
+    case "rod":  spr(c,ROD,x-3,y-2,p); break;
+    case "rodv": spr(c,ROD_V,x-2,y-3,p); break;
+    case "coccus": spr(c,COCCUS,x-2,y-2,p); break;
+    case "cluster":
+      [[-3,-2],[1,-3],[-1,1],[3,1]].forEach(([i,j])=>spr(c,COCCUS,x+i-2,y+j-2,p)); break;
+    case "chain": {
+      const cs=[COLS.yellow,COLS.green,COLS.orange];
+      for(let k=0;k<5;k++){
+        const a=Math.PI*(.15+k*.18)+Math.sin(t*1.5+ph)*.08;
+        spr(c,COCCUS,x+Math.round(Math.cos(a)*6)-2,y-Math.round(Math.sin(a)*5)-2,palOf(cs[k%3]));
+      }
+      break;
+    }
+    case "spiky":
+      for(const [dx,dy] of [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]]){
+        const L=dx&&dy?4:5;
+        px(c,Math.round(x)+dx*(L-1),Math.round(y)+dy*(L-1),col.d);
+        px(c,Math.round(x)+dx*L,Math.round(y)+dy*L,col.l);
+      }
+      disc(c,x,y,3,col); px(c,Math.round(x)-1,Math.round(y)+1,col.d); px(c,Math.round(x)+1,Math.round(y)-1,col.d);
+      break;
+    case "ciliate": {
+      const rx=3, ry=5; x=Math.round(x); y=Math.round(y);
+      for(let dy=-ry-2;dy<=ry+2;dy++) for(let dx=-rx-2;dx<=rx+2;dx++){
+        const e=(dx*dx)/(rx*rx)+(dy*dy)/(ry*ry), e2=(dx*dx)/((rx+1)*(rx+1))+(dy*dy)/((ry+1)*(ry+1)), e3=(dx*dx)/((rx+2)*(rx+2))+(dy*dy)/((ry+2)*(ry+2));
+        if(e<=1) px(c,x+dx,y+dy,(dx<0&&dy<-1)?col.l:col.m);
+        else if(e2<=1) px(c,x+dx,y+dy,K);
+        else if(e3<=1 && (dx+dy+Math.floor(t*4))%2===0) px(c,x+dx,y+dy,col.l);
+      }
+      px(c,x,y,col.d); px(c,x+1,y,col.d); px(c,x,y+1,col.d); px(c,x+1,y+1,K);
+      break;
+    }
+  }
+}
+
+/* ---------------------------------------------------------------
    Rendering the sheet
 ---------------------------------------------------------------- */
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 
+function portrait(canvas,mood){
+  canvas.width=15; canvas.height=17;
+  const c=canvas.getContext("2d"); c.clearRect(0,0,15,17);
+  drawBifi(c,1,1,mood||"happy",0.2,false);
+}
+function sayBox(text){
+  return `<div class="say px"><canvas width="15" height="17" aria-hidden="true"></canvas>
+    <div><span class="who">BIFI</span><span class="sr">${esc(text)}</span><span class="txt" aria-hidden="true"></span></div></div>`;
+}
+function typeInto(el,text){
+  clearInterval(S.typeT);
+  if(reduce){ el.textContent=text; return; }
+  let i=0; el.textContent="";
+  S.typeT=setInterval(()=>{ i+=2; el.textContent=text.slice(0,i); if(i>=text.length) clearInterval(S.typeT); },24);
+}
+function mountSay(text,mood){
+  const box=sheet.querySelector(".say"); if(!box) return;
+  portrait(box.querySelector("canvas"),mood);
+  const txt=box.querySelector(".txt");
+  typeInto(txt,text);
+  box.addEventListener("click",()=>{ clearInterval(S.typeT); txt.textContent=text; });
+}
+
 function renderIntro(){
+  S.phase="intro";
   sheet.innerHTML = `
-    <h2>Ride 8.9 metres of gut with Bifi</h2>
-    <p>Bifi is a friendly gut microbe. Dive from mouth to colon and find out what stress does inside your gut, and how that links to IBS.</p>
-    <div class="meta"><span class="chip">9 stops</span><span class="chip">About 4 minutes</span><span class="chip k">No timer</span></div>
-    <button type="button" class="btn big" id="startBtn">Begin descent ↓</button>
+    <div class="title-card">
+      <p class="big"><span>Bifi's</span><br>Gut Dive</p>
+      <p>Ride 8.9 metres of gut with Bifi, a friendly gut microbe. Find out what stress does inside your gut, and how that links to IBS.</p>
+      <div class="meta"><span class="chip px">9 stops</span><span class="chip px">~4 min</span><span class="chip k px">No timer</span></div>
+    </div>
+    <button type="button" class="btn big px" id="startBtn">&#9654; Begin dive</button>
     <p class="fine">General health information, not medical advice. If gut symptoms are affecting your life, talk to a doctor.</p>`;
-  $("#startBtn").addEventListener("click",()=>descendTo(0));
+  updateHud();
+  $("#startBtn").addEventListener("click",()=>{ beep(SFX.start); descendTo(0); });
 }
 
 function renderQuestion(){
@@ -541,23 +781,24 @@ function renderQuestion(){
   let body="";
   if(st.type==="mcq"){
     body=`<div class="opts" role="group" aria-label="Answer options">${st.options.map((o,i)=>
-      `<button type="button" class="opt" data-i="${i}"><span class="L">${"ABCD"[i]}</span><span>${esc(o)}</span></button>`).join("")}</div>`;
+      `<button type="button" class="opt px" data-i="${i}"><span class="L">${"ABCD"[i]}</span><span>${esc(o)}</span></button>`).join("")}</div>`;
   } else {
     body=`<form class="sa" id="saForm" autocomplete="off">
-        <label for="saIn" class="fine" style="flex-basis:100%">Type your answer</label>
+        <label for="saIn">Type your answer</label>
         <input id="saIn" name="saIn" type="text" placeholder="${esc(st.placeholder||"")}" maxlength="120">
-        <button type="submit" class="btn">Check</button>
+        <button type="submit" class="btn px">Check</button>
       </form>
-      <div class="row"><button type="button" class="ghost" id="hintBtn">Hint</button><button type="button" class="ghost" id="skipBtn">Not sure? Show me</button></div>
+      <div class="row"><button type="button" class="ghost px" id="hintBtn">Hint</button><button type="button" class="ghost px" id="skipBtn">Not sure? Show me</button></div>
       <p class="hint" id="hintTxt" hidden>${esc(st.hint)}</p>`;
   }
   sheet.innerHTML=`
-    <div class="meta"><span class="chip">Stop ${n} of ${STOPS.length}</span><span class="chip">${st.zone}</span><span class="chip k">${st.type==="mcq"?"Multiple choice":"Short answer"}</span></div>
-    <p class="say"><span class="dot" aria-hidden="true"></span><span>${esc(st.say)}</span></p>
+    <div class="meta"><span class="chip px">Stop ${n}/${STOPS.length}</span><span class="chip px">${st.zone}</span><span class="chip k px">${st.type==="mcq"?"Multiple choice":"Short answer"}</span></div>
+    ${sayBox(st.say)}
     <p class="q" id="qText">${esc(st.q)}</p>
     ${body}
     <div id="fbSlot"></div>`;
   sheet.scrollTop=0;
+  mountSay(st.say);
   if(st.type==="mcq"){
     sheet.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>answerMcq(+b.dataset.i)));
   } else {
@@ -570,17 +811,17 @@ function renderQuestion(){
 function feedback(kind,verdict,text,extraHtml=""){
   const st=STOPS[S.idx];
   const last=S.idx===STOPS.length-1;
-  const nextLabel = last ? "See your results" : (S.idx===3 ? "Take a breath, then keep going ↓" : "Keep descending ↓");
+  const nextLabel = last ? "See results" : (S.idx===3 ? "Breathe, then dive &#9660;" : "Keep diving &#9660;");
   $("#fbSlot").innerHTML=`
-    <div class="fb ${kind}">
+    <div class="fb ${kind} px">
       <span class="v">${verdict}</span>
       <p>${esc(text)}</p>
       ${extraHtml}
-      <details class="more"><summary>Learn more about this</summary>
+      <details class="more"><summary>Learn more</summary>
         <div class="more-body">${st.more}<p class="src">Source: <em>${esc(st.src)}</em></p></div>
       </details>
     </div>
-    <button type="button" class="btn big" id="nextBtn">${nextLabel}</button>`;
+    <button type="button" class="btn big px" id="nextBtn">${nextLabel}</button>`;
   $("#nextBtn").addEventListener("click",next);
   requestAnimationFrame(()=>$("#fbSlot").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"}));
 }
@@ -588,10 +829,11 @@ function feedback(kind,verdict,text,extraHtml=""){
 function reward(correct){
   if(correct){
     S.score++;
-    S.friends.push(makeFriend());
+    S.friends.push(makeFriend(S.friends.length));
     $("#colonyN").textContent=1+S.friends.length;
-    setMood("wow",1800);
-  } else setMood("stressed",2200);
+    setMood("wow",1800); beep(SFX.right);
+  } else { setMood("stressed",2200); beep(SFX.wrong); }
+  const pc=sheet.querySelector(".say canvas"); if(pc) portrait(pc,correct?"wow":"stressed");
 }
 
 function answerMcq(i){
@@ -604,7 +846,7 @@ function answerMcq(i){
     else b.classList.add("dim");
   });
   reward(ok);
-  feedback(ok?"ok":"no", ok?"Spot on, +1 microbe friend":"Not quite", ok?st.right:st.wrong);
+  feedback(ok?"ok":"no", ok?"Correct! +1 microbe":"Not quite", ok?st.right:st.wrong);
 }
 
 function answerSa(raw,gaveUp){
@@ -621,12 +863,12 @@ function answerSa(raw,gaveUp){
     if(gaveUp){ reward(false); feedback("mid","Here are some ideas",st.wrong,`<p class="model">${esc(st.model)}</p>`); return; }
     const tip=COPING.find(c=>hits(val,c.keys));
     reward(true);
-    feedback("ok","Nice one, +1 microbe friend", tip?tip.msg:"Anything that genuinely lowers your stress can help. Here's what research supports most.", you+`<p class="model">${esc(st.model)}</p>`);
+    feedback("ok","Nice one! +1 microbe", tip?tip.msg:"Anything that genuinely lowers your stress can help. Here's what research supports most.", you+`<p class="model">${esc(st.model)}</p>`);
     return;
   }
   if(!gaveUp && hits(val,st.accept)){
     reward(true);
-    feedback("ok","Spot on, +1 microbe friend",st.right,you+`<p class="model">Answer: ${esc(st.model)}</p>`);
+    feedback("ok","Correct! +1 microbe",st.right,you+`<p class="model">Answer: ${esc(st.model)}</p>`);
     return;
   }
   const near=!gaveUp && (st.close||[]).find(c=>hits(val,c.keys));
@@ -640,8 +882,9 @@ function answerSa(raw,gaveUp){
 }
 
 function next(){
-  if(S.idx===STOPS.length-1){ S.phase="end"; renderEnd(); return; }
+  if(S.idx===STOPS.length-1){ renderEnd(); return; }
   if(S.idx===3){ renderBreathe(); return; }
+  beep(SFX.dive);
   descendTo(S.idx+1);
 }
 
@@ -649,22 +892,24 @@ function renderBreathe(){
   S.phase="breathe";
   sheet.innerHTML=`
     <div class="breathe">
-      <span class="chip k">Halfway break</span>
+      <span class="chip k px">Halfway break</span>
       <h2>Breathe with Bifi</h2>
-      <div class="orb" id="orb" aria-hidden="true"></div>
-      <p class="bcount" id="bTxt" aria-live="polite">Get ready…</p>
-      <p style="color:var(--ink-soft);font-size:14px">Slow breathing nudges your nervous system toward "rest and digest", the opposite of fight-or-flight. It's one small way to turn down the stress signal reaching your gut.</p>
-      <button type="button" class="ghost" id="bSkip">Skip and keep descending ↓</button>
+      <canvas id="bCv" width="15" height="17" aria-hidden="true"></canvas>
+      <p class="bcount" id="bTxt" aria-live="polite">Get ready...</p>
+      <p style="color:var(--ink-soft);font-size:15px">Slow breathing nudges your nervous system toward "rest and digest", the opposite of fight-or-flight. It's one small way to turn down the stress signal reaching your gut.</p>
+      <button type="button" class="ghost px" id="bSkip">Skip and keep diving &#9660;</button>
     </div>`;
+  const cv=$("#bCv"); portrait(cv,"happy");
   $("#bSkip").addEventListener("click",endBreathe);
-  const orb=$("#orb"), txt=$("#bTxt");
+  const txt=$("#bTxt");
   let step=0; const cycles=3;
   const tick=()=>{
     if(S.phase!=="breathe") return;
     if(step>=cycles*2){ txt.textContent="Nice. Let's keep going."; S.breathTimer=setTimeout(endBreathe,1200); return; }
     const inhale=step%2===0;
-    orb.classList.toggle("in",inhale);
-    txt.textContent=(inhale?"Breathe in":"Breathe out")+` · ${Math.floor(step/2)+1} of ${cycles}`;
+    cv.classList.toggle("in",inhale);
+    txt.textContent=(inhale?"Breathe in":"Breathe out")+` ${Math.floor(step/2)+1}/${cycles}`;
+    beep(inhale?[[392,.12]]:[[294,.12]]);
     step++;
     S.breathTimer=setTimeout(tick,4000);
   };
@@ -673,33 +918,35 @@ function renderBreathe(){
 function endBreathe(){
   clearTimeout(S.breathTimer);
   if(S.phase!=="breathe") return;
+  beep(SFX.dive);
   descendTo(S.idx+1);
 }
 
 function renderEnd(){
+  S.phase="end"; updateHud();
   const total=STOPS.length;
-  const msg = S.score>=8 ? "Gut genius. Your microbe community is thriving."
-            : S.score>=5 ? "Solid dive. Your gut community is growing."
-            : "Every expert starts somewhere, and you now know more than most.";
+  const msg = S.score>=8 ? "Gut genius! Your colony is thriving."
+            : S.score>=5 ? "Solid dive! Your colony is growing."
+            : "Dive complete! You now know more than most.";
   sheet.innerHTML=`
-    <span class="chip k" style="align-self:flex-start">Dive complete · 8.9 m</span>
+    <span class="chip k px" style="align-self:flex-start">Stage clear · 8.9 m</span>
     <h2>${msg}</h2>
     <div class="stats">
-      <div class="stat"><b>${S.score}/${total}</b><span>questions right</span></div>
-      <div class="stat"><b>${1+S.friends.length}</b><span>microbes in your community</span></div>
-      <div class="stat"><b>8.9 m</b><span>of gut explored</span></div>
+      <div class="stat px"><b>${S.score}/${total}</b><span>questions right</span></div>
+      <div class="stat px"><b>${1+S.friends.length}</b><span>microbes in your colony</span></div>
+      <div class="stat px"><b>8.9m</b><span>of gut explored</span></div>
     </div>
-    <p class="q" style="font-size:16px">Four things to remember</p>
+    <p class="q" style="font-size:17px">Four things to remember</p>
     <ol class="take">
       <li>Your brain and gut talk <b>both ways</b>. Stress can change your gut, and gut trouble can raise stress.</li>
       <li>Long-term stress keeps the <b>cortisol</b> system switched on, makes the gut lining <b>leakier</b> and turns up gut <b>nerve sensitivity</b>.</li>
       <li>Stress shifts the balance of your <b>gut microbes</b>, and they signal back to the brain.</li>
       <li>IBS is <b>real, common and manageable</b>. Calming stress is part of treating it.</li>
     </ol>
-    <div class="warn"><b>See a doctor if you notice:</b> blood in your poo, weight loss you can't explain, symptoms that wake you at night, fever, or a family history of bowel cancer, coeliac disease or IBD. These need checking and aren't typical of IBS.</div>
+    <div class="warn px"><b>See a doctor if you notice:</b> blood in your poo, weight loss you can't explain, symptoms that wake you at night, fever, or a family history of bowel cancer, coeliac disease or IBD. These need checking and aren't typical of IBS.</div>
     <div class="row">
-      <button type="button" class="btn" id="againBtn">Dive again</button>
-      <button type="button" class="ghost" id="shareBtn">Copy a message for a friend</button>
+      <button type="button" class="btn px" id="againBtn">Dive again</button>
+      <button type="button" class="ghost px" id="shareBtn">Copy a message for a friend</button>
     </div>
     <p class="fine" id="shareMsg" aria-live="polite"></p>
     <details class="more"><summary>Sources</summary>
@@ -710,34 +957,34 @@ function renderEnd(){
     </details>
     <p class="fine">General health information, not medical advice.</p>`;
   sheet.scrollTop=0;
-  setMood("wow",2500);
+  setMood("wow",2500); beep(SFX.end);
   $("#againBtn").addEventListener("click",restart);
   $("#shareBtn").addEventListener("click",()=>{
     const text=`It's World IBS Day (19 April). I just did Bifi's Gut Dive and learned how stress changes your gut. ${S.score}/${total}. Can you beat me?`;
     const out=$("#shareMsg");
     const fallback=()=>{ out.textContent=text; const r=document.createRange(); r.selectNodeContents(out); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); };
-    try{
-      navigator.clipboard.writeText(text).then(()=>{out.textContent="Copied. Paste it in a group chat.";},fallback);
-    }catch(e){ fallback(); }
+    try{ navigator.clipboard.writeText(text).then(()=>{out.textContent="Copied. Paste it in a group chat.";},fallback); }
+    catch(e){ fallback(); }
   });
 }
 
 function restart(){
   S.score=0; S.friends=[]; $("#colonyN").textContent="1";
-  S.phase="intro"; S.idx=0; S.pos=0; S.depth=0;
-  updateHud();
+  S.idx=0; S.pos=0; S.depth=0;
   renderIntro();
 }
 
 /* ---------------------------------------------------------------
-   Descent animation between stops
+   Descent between stops
 ---------------------------------------------------------------- */
 let anim=null;
 function descendTo(i){
   S.phase="descend";
+  clearInterval(S.typeT);
   const from=S.pos, to=i, d0=S.depth, d1=STOPS[i].depth;
-  sheet.innerHTML=`<p class="say"><span class="dot" aria-hidden="true"></span><span>Descending to the ${STOPS[i].zone.toLowerCase()}…</span></p>`;
-  const dur = reduce ? 0 : 1300 + Math.min(1200, Math.abs(d1-d0)*260);
+  sheet.innerHTML=`${sayBox("Diving to the "+STOPS[i].zone.toLowerCase()+"...")}`;
+  mountSay("Diving to the "+STOPS[i].zone.toLowerCase()+"...");
+  const dur = reduce ? 0 : 1400 + Math.min(1200, Math.abs(d1-d0)*260);
   const t0=performance.now();
   if(anim) cancelAnimationFrame(anim);
   const step=now=>{
@@ -752,244 +999,184 @@ function descendTo(i){
   };
   anim=requestAnimationFrame(step);
 }
-
+function stopAll(){ if(anim) cancelAnimationFrame(anim); anim=null; clearTimeout(S.breathTimer); clearInterval(S.typeT); }
 function jumpTo(i){
-  if(anim) cancelAnimationFrame(anim); anim=null;
-  clearTimeout(S.breathTimer);
+  stopAll();
   S.idx=i; S.pos=i; S.depth=STOPS[i].depth; S.phase="question";
   updateHud(); renderQuestion();
 }
 
 function updateHud(){
-  $("#depthVal").textContent=S.depth.toFixed(2);
-  $("#marker").style.top=`calc(${(S.depth/TOTAL_M*100).toFixed(2)}% - 1.5px)`;
+  $("#depthVal").textContent=S.depth.toFixed(2)+"m";
+  $("#marker").style.top=`calc(${(S.depth/TOTAL_M*100).toFixed(2)}% - 2px)`;
   const zi=Math.min(STOPS.length-1,Math.round(S.pos));
-  const tag=$("#zoneTag");
-  if(tag.dataset.z!==String(zi)){ tag.dataset.z=zi; tag.textContent=STOPS[zi].zone; }
+  $("#zoneTag").textContent=STOPS[zi].zone==="Sigmoid colon"?"Sigmoid":STOPS[zi].zone;
+  $("#stopVal").textContent=(S.phase==="intro"?0:S.phase==="end"?STOPS.length:zi+1)+"/"+STOPS.length;
 }
-
 function setMood(m,ms){ S.mood=m; S.moodUntil=performance.now()+ms; }
 
 /* ---------------------------------------------------------------
-   Canvas scene: tunnel walls, particles, Bifi and friends
+   Scene: drawn at low resolution, scaled up with hard pixels
 ---------------------------------------------------------------- */
 const cv=$("#scene"), ctx=cv.getContext("2d");
-let W=0,H=0,DPR=1;
-const SPACING=520; // world px per stop
+let PX=3, w=0, h=0;
+const SP=170;                 // world pixels between stops
 function resize(){
-  const r=cv.getBoundingClientRect();
-  DPR=Math.min(2,window.devicePixelRatio||1);
-  W=r.width; H=r.height;
-  cv.width=Math.round(W*DPR); cv.height=Math.round(H*DPR);
-  ctx.setTransform(DPR,0,0,DPR,0,0);
+  const r=$("#sceneWrap").getBoundingClientRect();
+  if(!r.width) return;
+  PX=Math.max(2,Math.round(r.width/132));
+  w=Math.ceil(r.width/PX); h=Math.ceil(r.height/PX);
+  cv.width=w; cv.height=h;
+  cv.style.width=(w*PX)+"px"; cv.style.height=(h*PX)+"px";
+  ctx.imageSmoothingEnabled=false;
 }
 new ResizeObserver(resize).observe($("#sceneWrap"));
 
+const BAYER=[0,8,2,10,12,4,14,6,3,11,1,9,15,7,13,5].map(v=>(v+.5)/16);
+const bay=(x,y)=>BAYER[(y&3)*4+(x&3)];
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const lerp=(a,b,t)=>a+(b-a)*t;
-const mix=(c1,c2,t)=>c1.map((v,i)=>Math.round(lerp(v,c2[i],t)));
-const rgb=(c,a=1)=>`rgba(${c[0]},${c[1]},${c[2]},${a})`;
+const zoneIdx=wy=>clamp(Math.round(wy/SP),0,STOPS.length-1);
 
-function zoneAt(p){
-  const c=Math.max(0,Math.min(STOPS.length-1,p));
-  const i=Math.floor(c), j=Math.min(STOPS.length-1,i+1), t=c-i;
-  return {a:STOPS[i], b:STOPS[j], t};
-}
-function edgeOffset(st,wy){
-  switch(st.tex){
-    case "rugae":   return 10*Math.sin(wy*0.045)+5*Math.sin(wy*0.11);
-    case "villi":   return 6*Math.abs(Math.sin(wy*0.22))+4*Math.sin(wy*0.03);
-    case "haustra": return -16*Math.abs(Math.sin(wy*0.02))+3*Math.sin(wy*0.09);
-    default:        return 5*Math.sin(wy*0.025);
-  }
-}
 function wallX(wy){
-  const {a,b,t}=zoneAt(wy/SPACING);
-  const half=W*lerp(a.width,b.width,t)/2;
-  const off=lerp(edgeOffset(a,wy),edgeOffset(b,wy),t);
-  const sway=10*Math.sin(wy*0.006);
-  return {l:W/2-half+off+sway, r:W/2+half-off+sway};
+  const p=clamp(wy/SP,0,STOPS.length-1), i=Math.floor(p), j=Math.min(STOPS.length-1,i+1), f=p-i;
+  const sm=f*f*(3-2*f);
+  const half=(w-8)*lerp(ZV[i].width,ZV[j].width,sm)/2;
+  const z=ZV[zoneIdx(wy)];
+  let off=0;
+  switch(z.tex){
+    case "rugae":   off=Math.round(2*Math.sin(wy*.15)); break;
+    case "rings":   off=((Math.floor(wy)%8)+8)%8<2?-1:0; break;
+    case "haustra": off=-Math.round(7*Math.pow(1-Math.abs(Math.sin(wy*.05)),5)); break;
+    case "villi":   off=Math.round(Math.sin(wy*.08)); break;
+    default:        off=0;
+  }
+  const cx=(w-8)/2+Math.round(3*Math.sin(wy*.02));
+  return {l:Math.round(cx-half-off), r:Math.round(cx+half+off)};
 }
 
-// particles live in screen space and drift up while descending (parallax)
-const parts=Array.from({length:46},()=>({x:Math.random(),y:Math.random(),r:1+Math.random()*2.6,k:Math.random(),rot:Math.random()*6.28,sp:.3+Math.random()*.7}));
-let lastCam=0;
-
-function makeFriend(){
-  const c=FRIEND_COLORS[S.friends.length%FRIEND_COLORS.length];
-  return {c, r:7+Math.random()*4, x:0, y:0, ph:Math.random()*6.28, rod:Math.random()<.45, born:performance.now()};
+/* seeded world: food bits and resident microbes stay put as you scroll */
+let seed=11;
+const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+const WORLD=[];
+const UPPER=["coccus","chain","rod"], LOWER=["rod","rod","rodv","coccus","cluster","chain","ciliate","spiky","rod","cluster"];
+for(let wy=-40; wy<(STOPS.length-1)*SP+60; wy+=4){
+  const z=ZV[zoneIdx(wy)];
+  if(rnd()<z.bugs*.85){
+    const types=wy<2.5*SP?UPPER:LOWER;
+    WORLD.push({k:"bug",wy,u:.12+rnd()*.76,type:types[Math.floor(rnd()*types.length)],col:COLS[COL_KEYS[Math.floor(rnd()*COL_KEYS.length)]],ph:rnd()*6.28});
+  }
+  if(rnd()<z.food*.45) WORLD.push({k:"food",wy,u:.1+rnd()*.8,s:rnd()<.3?2:1,c:rnd()<.5?"#d9b38c":"#a0784f",ph:rnd()*6.28});
 }
 
-function drawBlob(x,y,r,fill,t,ph,wob=1.6){
-  ctx.beginPath();
-  const N=18;
-  for(let i=0;i<=N;i++){
-    const a=i/N*Math.PI*2;
-    const rr=r+Math.sin(a*3+t*2.4+ph)*wob;
-    const px=x+Math.cos(a)*rr, py=y+Math.sin(a)*rr;
-    i?ctx.lineTo(px,py):ctx.moveTo(px,py);
-  }
-  ctx.closePath(); ctx.fillStyle=fill; ctx.fill();
+const FRIEND_TYPES=["coccus","rod","chain","ciliate","cluster","spiky","rodv","coccus","cluster"];
+const FRIEND_COLS=["teal","yellow","orange","purple","sky","green","orange","purple","yellow"];
+function makeFriend(n){
+  return {type:FRIEND_TYPES[n%FRIEND_TYPES.length],col:COLS[FRIEND_COLS[n%FRIEND_COLS.length]],x:null,y:null,ph:n*1.7};
 }
 
-function drawBifi(x,y,t,speed){
-  const r=24;
-  const mood = performance.now()<S.moodUntil ? S.mood : "happy";
-  // pili / little hairs
-  ctx.strokeStyle="rgba(134,224,94,.7)"; ctx.lineWidth=1.6; ctx.lineCap="round";
-  for(let i=0;i<14;i++){
-    const a=i/14*Math.PI*2+t*.3;
-    const len=7+Math.sin(t*4+i)*2;
-    ctx.beginPath();
-    ctx.moveTo(x+Math.cos(a)*(r-2),y+Math.sin(a)*(r-2));
-    ctx.quadraticCurveTo(x+Math.cos(a+.2)*(r+len*.6),y+Math.sin(a+.2)*(r+len*.6),x+Math.cos(a)*(r+len),y+Math.sin(a)*(r+len));
-    ctx.stroke();
-  }
-  // tail flagellum, streams up when descending
-  ctx.strokeStyle="rgba(134,224,94,.55)"; ctx.lineWidth=2.4;
-  ctx.beginPath(); ctx.moveTo(x,y-r+2);
-  for(let k=1;k<=10;k++){ ctx.lineTo(x+Math.sin(t*6-k*.7)*(3+k*.6), y-r-k*(3.2+speed*2.5)); }
-  ctx.stroke();
-  // glow + body
-  const g=ctx.createRadialGradient(x-7,y-8,3,x,y,r+4);
-  g.addColorStop(0,"#c8f7a6"); g.addColorStop(.55,"#86e05e"); g.addColorStop(1,"#3d962a");
-  ctx.shadowColor="rgba(134,224,94,.55)"; ctx.shadowBlur=18;
-  drawBlob(x,y,r,g,t,0,mood==="stressed"?2.8:1.6);
-  ctx.shadowBlur=0;
-  // face
-  const ey=y-4, blink=(Math.sin(t*0.9)>0.985)?.15:1;
-  ctx.fillStyle="#fff";
-  ctx.beginPath(); ctx.ellipse(x-8,ey,5,6*blink,0,0,7); ctx.ellipse(x+8,ey,5,6*blink,0,0,7); ctx.fill();
-  ctx.fillStyle="#1a0e16";
-  const look=Math.sin(t*.7)*1.2;
-  ctx.beginPath(); ctx.arc(x-8+look,ey+1,2.4*blink,0,7); ctx.arc(x+8+look,ey+1,2.4*blink,0,7); ctx.fill();
-  ctx.strokeStyle="#1a0e16"; ctx.lineWidth=2;
-  ctx.beginPath();
-  if(mood==="stressed"){
-    ctx.moveTo(x-7,y+9); for(let i=0;i<=6;i++) ctx.lineTo(x-7+i*2.3,y+9+(i%2?-2:2));
-  } else if(mood==="wow"){
-    ctx.arc(x,y+7,5.5,0,Math.PI); ctx.closePath(); ctx.fillStyle="#1a0e16"; ctx.fill();
-  } else {
-    ctx.arc(x,y+5,6,0.15*Math.PI,0.85*Math.PI);
-  }
-  ctx.stroke();
-  // cheeks
-  ctx.fillStyle="rgba(255,140,160,.45)";
-  ctx.beginPath(); ctx.arc(x-15,y+5,3,0,7); ctx.arc(x+15,y+5,3,0,7); ctx.fill();
-  if(mood==="stressed"){ // sweat drop
-    ctx.fillStyle="#9fd0ff"; ctx.beginPath(); ctx.moveTo(x+20,y-18); ctx.quadraticCurveTo(x+25,y-9,x+20,y-7); ctx.quadraticCurveTo(x+15,y-9,x+20,y-18); ctx.fill();
-  }
-  if(mood==="wow"){ // sparkles
-    ctx.fillStyle="#f2c94c";
-    for(let i=0;i<5;i++){ const a=t*2+i*1.256, d=r+16+Math.sin(t*5+i)*4; star(x+Math.cos(a)*d,y+Math.sin(a)*d,3); }
-  }
-}
-function star(x,y,s){ ctx.beginPath(); ctx.moveTo(x,y-s*1.6); ctx.lineTo(x+s*.45,y-s*.45); ctx.lineTo(x+s*1.6,y); ctx.lineTo(x+s*.45,y+s*.45); ctx.lineTo(x,y+s*1.6); ctx.lineTo(x-s*.45,y+s*.45); ctx.lineTo(x-s*1.6,y); ctx.lineTo(x-s*.45,y-s*.45); ctx.closePath(); ctx.fill(); }
+const ACID_TOP=2*SP-26, ACID_BOT=2*SP+58;
 
 function frame(now){
   const t=now/1000;
-  if(W&&H){
-    const cam=S.pos*SPACING;
-    const speed=Math.min(4,Math.abs(cam-lastCam)/6);
-    const dy=cam-lastCam; lastCam=cam;
-    const {a,b,t:zt}=zoneAt(S.pos);
-    const lumen=mix(a.lumen,b.lumen,zt), tissue=mix(a.tissue,b.tissue,zt);
-    const bugs=lerp(a.bugs,b.bugs,zt);
+  if(w&&h){
+    const cam=S.pos*SP, top=Math.round(cam-h*.5);
+    const rows=new Array(h);
 
-    // lumen
-    const lg=ctx.createLinearGradient(0,0,0,H);
-    lg.addColorStop(0,rgb(lumen)); lg.addColorStop(1,rgb(mix(lumen,[0,0,0],.35)));
-    ctx.fillStyle=lg; ctx.fillRect(0,0,W,H);
-
-    // walls: screen y maps to world y = cam - H*0.45 + y
-    const top=cam-H*0.45, STEP=4;
-    const L=[],R=[];
-    for(let y=-STEP;y<=H+STEP;y+=STEP){ const w=wallX(top+y); L.push([w.l,y]); R.push([w.r,y]); }
-    const dark=rgb(mix(tissue,[0,0,0],.45));
-    for(const [side,pts] of [["l",L],["r",R]]){
-      const wg=ctx.createLinearGradient(side==="l"?0:W,0,side==="l"?W*.45:W*.55,0);
-      wg.addColorStop(0,dark); wg.addColorStop(1,rgb(tissue));
-      ctx.beginPath();
-      ctx.moveTo(side==="l"?0:W,-STEP);
-      pts.forEach(p=>ctx.lineTo(p[0],p[1]));
-      ctx.lineTo(side==="l"?0:W,H+STEP); ctx.closePath();
-      ctx.fillStyle=wg; ctx.fill();
-      // mucus highlight along the edge
-      ctx.beginPath(); pts.forEach((p,i)=>i?ctx.lineTo(p[0],p[1]):ctx.moveTo(p[0],p[1]));
-      ctx.strokeStyle=rgb(mix(tissue,[255,200,210],.35),.75); ctx.lineWidth=2; ctx.stroke();
+    // walls + lumen, row by row
+    for(let y=0;y<h;y++){
+      const wy=top+y, pal=ZV[zoneIdx(wy)].pal, {l,r}=wallX(wy);
+      rows[y]={l,r};
+      ctx.fillStyle=pal[0]; ctx.fillRect(l,y,r-l,1);
+      ctx.fillStyle=pal[1]; ctx.fillRect(0,y,l,1); ctx.fillRect(r,y,w-r,1);
+      ctx.fillStyle=pal[2];
+      for(let x=l-9;x<l-3;x++) if((x-(l-10))/7>bay(x,y)) ctx.fillRect(x,y,1,1);
+      for(let x=r+3;x<r+9;x++) if((r+10-x)/7>bay(x,y)) ctx.fillRect(x,y,1,1);
+      ctx.fillRect(l-3,y,2,1); ctx.fillRect(r+1,y,2,1);
+      ctx.fillStyle=pal[3]; ctx.fillRect(l-1,y,1,1); ctx.fillRect(r,y,1,1);
     }
-    // texture details on the walls
-    ctx.lineCap="round";
-    const firstY=Math.ceil(top/14)*14;
-    for(let wy=firstY; wy<top+H+14; wy+=14){
-      const y=wy-top, z=zoneAt(wy/SPACING), st=z.t<.5?z.a:z.b, w=wallX(wy);
-      if(st.tex==="villi"){
-        ctx.strokeStyle=rgb(mix(tissue,[255,170,190],.3),.9); ctx.lineWidth=4;
-        const len=7+3*Math.sin(wy*.7+t*1.5);
-        ctx.beginPath(); ctx.moveTo(w.l-1,y); ctx.lineTo(w.l+len,y+Math.sin(t*2+wy)*1.5); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(w.r+1,y+7); ctx.lineTo(w.r-len,y+7+Math.sin(t*2+wy)*1.5); ctx.stroke();
-      } else if(st.tex==="rugae"){
-        ctx.strokeStyle=rgb(mix(tissue,[0,0,0],.3),.8); ctx.lineWidth=2;
-        ctx.beginPath(); ctx.moveTo(w.l-26,y-6); ctx.quadraticCurveTo(w.l-12,y,w.l-3,y+4); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(w.r+26,y+1); ctx.quadraticCurveTo(w.r+12,y+7,w.r+3,y+11); ctx.stroke();
-      } else if(st.tex==="haustra" && Math.abs(Math.sin(wy*0.02))<0.16){
-        ctx.strokeStyle=rgb(mix(tissue,[0,0,0],.35),.9); ctx.lineWidth=3;
-        ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(w.l+2,y); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(W,y); ctx.lineTo(w.r-2,y); ctx.stroke();
+
+    // wall details per texture
+    for(let y=0;y<h;y++){
+      const wy=top+y, zi=zoneIdx(wy), z=ZV[zi], {l,r}=rows[y];
+      if(z.tex==="teeth" && ((wy%7)+7)%7===0 && wy>-SP*.45 && wy<SP*.4){
+        spr(ctx,TOOTH,l-3,y-3,TOOTH_PAL,false);
+        spr(ctx,TOOTH,r-5,y,TOOTH_PAL,true);
+      } else if(z.tex==="rings" && ((wy%8)+8)%8===0){
+        ctx.fillStyle=z.pal[2]; ctx.fillRect(0,y,l-1,1); ctx.fillRect(r+1,y,w-r-1,1);
+      } else if(z.tex==="rugae" && ((wy%6)+6)%6===0){
+        for(let k=0;k<4;k++){ px(ctx,l-10+k*2,y+k,z.pal[1]); px(ctx,l-9+k*2,y+k,z.pal[1]); px(ctx,r+9-k*2,y+k,z.pal[1]); px(ctx,r+8-k*2,y+k,z.pal[1]); }
+      } else if(z.tex==="villi" && ((wy%3)+3)%3===0){
+        const n=Math.floor(wy/3), L=3+((n*7)%3)+Math.round(Math.sin(t*2+n));
+        const side=n%2===0;
+        for(let k=0;k<L;k++){
+          const col=k===L-1?z.pal[3]:z.pal[2];
+          if(side){ px(ctx,l+k,y,col); px(ctx,l+k,y+1,col); }
+          else { px(ctx,r-1-k,y,col); px(ctx,r-1-k,y+1,col); }
+        }
+      } else if(z.tex==="haustra" && Math.abs(Math.sin(wy*.05))<.07){
+        ctx.fillStyle=z.pal[2]; ctx.fillRect(l,y,4,1); ctx.fillRect(r-4,y,4,1);
       }
     }
 
-    // particles: food bits + resident microbes
-    for(const p of parts){
-      p.y -= dy/H*p.sp*1.2 + 0.0004*p.sp;
-      p.x += Math.sin(t*.6+p.k*10)*0.0004;
-      if(p.y<-0.05){p.y+=1.1;p.x=Math.random();}
-      if(p.y>1.05){p.y-=1.1;p.x=Math.random();}
-      const px=p.x*W, py=p.y*H;
-      const w=wallX(top+py);
-      if(px<w.l+4||px>w.r-4) continue;
-      if(p.k<bugs*0.75){
-        // resident microbe: small rod
-        ctx.save(); ctx.translate(px,py); ctx.rotate(p.rot+t*.3*p.sp);
-        ctx.fillStyle=p.k<.25?"rgba(95,211,176,.75)":p.k<.5?"rgba(201,168,255,.65)":"rgba(242,201,76,.6)";
-        ctx.beginPath(); ctx.roundRect ? ctx.roundRect(-p.r*2.2,-p.r,p.r*4.4,p.r*2,p.r) : ctx.rect(-p.r*2.2,-p.r,p.r*4.4,p.r*2); ctx.fill();
-        ctx.restore();
-      } else {
-        ctx.fillStyle=`rgba(240,215,190,${.18+p.k*.25})`;
-        ctx.beginPath(); ctx.arc(px,py,p.r,0,7); ctx.fill();
+    // stomach acid pool
+    if(top+h>ACID_TOP && top<ACID_BOT){
+      for(let y=Math.max(0,ACID_TOP-top); y<Math.min(h,ACID_BOT-top); y++){
+        const wy=top+y, {l,r}=rows[y];
+        const a = wy>ACID_BOT-26 ? .4*(ACID_BOT-wy)/26 : .4;
+        for(let x=l;x<r;x++) if(a>bay(x,y)) px(ctx,x,y,(x*3+y)%7?"#7d6a14":"#a88f1c");
+      }
+      const sy=ACID_TOP-top;
+      if(sy>=-2 && sy<h){
+        const {l,r}=rows[clamp(sy,0,h-1)];
+        for(let x=l;x<r;x++){ const yy=sy+Math.round(Math.sin(x*.5+t*3)); px(ctx,x,yy,"#f2d14a"); px(ctx,x,yy+1,"#e0b830"); }
       }
     }
 
-    // friends trail above Bifi
-    const bx=W/2+10*Math.sin(cam*0.006)*0.6 + (reduce?0:Math.sin(t*1.1)*4);
-    const by=H*0.5+(reduce?0:Math.sin(t*1.7)*4);
+    // bile drops in the duodenum
+    for(let i=0;i<6;i++){
+      const wy=3*SP-40+((t*16+i*23)%70);
+      const y=Math.round(wy-top); if(y<0||y>=h||zoneIdx(wy)!==3) continue;
+      const {l,r}=rows[y]; const x=i%2?l+2+(i%3):r-3-(i%3);
+      px(ctx,x,y,"#f2c94c"); px(ctx,x,y+1,"#f2c94c"); px(ctx,x,y-1,"#fff0a8");
+    }
+
+    // world bits
+    for(const o of WORLD){
+      const y=o.wy-top; if(y<-12||y>h+12) continue;
+      const {l,r}=rows[clamp(Math.round(y),0,h-1)];
+      const x=l+o.u*(r-l);
+      if(o.k==="food"){ ctx.fillStyle=o.c; ctx.fillRect(Math.round(x+Math.sin(t+o.ph)),Math.round(y),o.s,o.s); }
+      else drawMicrobe(ctx,o.type,x+Math.round(Math.sin(t*1.2+o.ph)),y+Math.round(Math.cos(t+o.ph)),o.col,t,o.ph);
+    }
+
+    // Bifi and the friends that follow
+    const by=Math.round(h*.5)-8+(reduce?0:Math.round(Math.sin(t*2.2)));
+    const mid=rows[clamp(Math.round(h*.5),0,h-1)];
+    const bx=Math.round((mid.l+mid.r)/2)-6;
     S.friends.forEach((f,i)=>{
       const ring=Math.floor(i/5), slot=i%5;
-      const ang=-Math.PI/2+(slot-2)*0.55+Math.sin(t*.8+f.ph)*.08;
-      const dist=50+ring*26+speed*6;
-      const tx=bx+Math.cos(ang)*dist*1.15, ty=by+Math.sin(ang)*dist*0.8-6;
-      if(!f.x){f.x=bx;f.y=by;}
-      f.x+= (tx-f.x)*0.08; f.y+=(ty-f.y)*0.08;
-      const grow=Math.min(1,(now-f.born)/500);
-      ctx.save();
-      ctx.shadowColor=f.c; ctx.shadowBlur=8;
-      if(f.rod){
-        ctx.translate(f.x,f.y); ctx.rotate(Math.sin(t+f.ph)*.5);
-        ctx.fillStyle=f.c; ctx.beginPath();
-        const rr=f.r*grow;
-        ctx.roundRect ? ctx.roundRect(-rr*1.3,-rr*.7,rr*2.6,rr*1.4,rr*.7) : ctx.rect(-rr*1.3,-rr*.7,rr*2.6,rr*1.4);
-        ctx.fill();
-        ctx.restore(); ctx.save(); ctx.translate(f.x,f.y);
-      } else {
-        drawBlob(f.x,f.y,f.r*grow,f.c,t,f.ph,1);
-        ctx.restore(); ctx.save(); ctx.translate(f.x,f.y);
-      }
-      ctx.shadowBlur=0;
-      ctx.fillStyle="#1a0e16";
-      ctx.beginPath(); ctx.arc(-2.4,-1,1.3,0,7); ctx.arc(2.4,-1,1.3,0,7); ctx.fill();
-      ctx.restore();
+      const ang=-Math.PI/2+(slot-2)*.62;
+      const dist=17+ring*10;
+      const tx=bx+6+Math.cos(ang)*dist*1.3, ty=by+8+Math.sin(ang)*dist*.9;
+      if(f.x===null){ f.x=bx+6; f.y=by+8; }
+      f.x+=(tx-f.x)*.08; f.y+=(ty-f.y)*.08;
+      drawMicrobe(ctx,f.type,f.x+Math.sin(t*1.5+f.ph),f.y,f.col,t,f.ph);
     });
+    const mood = performance.now()<S.moodUntil ? S.mood : "happy";
+    drawBifi(ctx,bx,by,mood,t,true);
 
-    drawBifi(bx,by,t,speed);
+    // acid bubbles in front
+    if(top+h>ACID_TOP && top<ACID_BOT){
+      for(let i=0;i<16;i++){
+        const span=ACID_BOT-ACID_TOP-6;
+        const wy=ACID_BOT-4-((t*(8+i%3*4)+i*19)%span);
+        const y=Math.round(wy-top); if(y<0||y>=h) continue;
+        const {l,r}=rows[y]; const x=l+2+((i*29)%Math.max(1,r-l-4));
+        if(i%3===0){ ctx.fillStyle="#fff2a0"; ctx.fillRect(x,y,2,2); px(ctx,x,y,"#ffffff"); }
+        else px(ctx,x,y,"#fff2a0");
+      }
+    }
   }
   requestAnimationFrame(frame);
 }
@@ -997,6 +1184,7 @@ function frame(now){
 /* ---------------------------------------------------------------
    Pop-up chrome + run-through drawer
 ---------------------------------------------------------------- */
+portrait($("#pillIcon"),"happy");
 $("#closeBtn").addEventListener("click",()=>{ $("#popup").hidden=true; $("#pill").hidden=false; $("#pill").focus(); });
 $("#pill").addEventListener("click",()=>{ $("#pill").hidden=true; $("#popup").hidden=false; resize(); $("#closeBtn").focus(); });
 
@@ -1007,11 +1195,11 @@ notes.addEventListener("click",e=>{ if(e.target===notes) notes.hidden=true; });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape" && !notes.hidden) notes.hidden=true; });
 
 const flowItems=[
-  {n:"Start",d:"Pop-up opens beside search results",s:"Intro card: who Bifi is, 9 stops, no timer",go:()=>{restart();}},
+  {n:"Start",d:"Pop-up opens beside search results",s:"Title screen: Begin dive, 9 stops, no timer",go:()=>{ stopAll(); restart(); }},
   ...STOPS.map((st,i)=>({n:`${st.depth.toFixed(2)} m`,d:`${i+1}. ${st.zone}: ${st.type==="mcq"?"multiple choice":"short answer"}`,s:st.q,go:()=>jumpTo(i)})),
-  {n:"End",d:"Results, takeaways, when to see a doctor",s:"Score, colony size, share message, sources",go:()=>{ if(anim) cancelAnimationFrame(anim); anim=null; S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M; S.phase="end"; updateHud(); renderEnd(); }}
+  {n:"End",d:"Results, takeaways, when to see a doctor",s:"Score, colony size, share message, sources",go:()=>{ stopAll(); S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M; renderEnd(); }}
 ];
-flowItems.splice(5,0,{n:"Break",d:"Breathe with Bifi (after stop 4)",s:"3 slow breaths, skippable",go:()=>{ if(anim) cancelAnimationFrame(anim); anim=null; S.idx=3; S.pos=3; S.depth=STOPS[3].depth; updateHud(); renderBreathe(); }});
+flowItems.splice(5,0,{n:"Break",d:"Breathe with Bifi (after stop 4)",s:"3 slow breaths, skippable",go:()=>{ stopAll(); S.idx=3; S.pos=3; S.depth=STOPS[3].depth; updateHud(); renderBreathe(); }});
 const fl=$("#flowList");
 flowItems.forEach((it,k)=>{
   const li=document.createElement("li");
@@ -1028,9 +1216,9 @@ function start(data){
   resize();
   if(data && typeof data.idx==="number" && data.phase && data.phase!=="intro"){
     S.score=data.score||0;
-    for(let i=0;i<(data.friends||0);i++) S.friends.push(makeFriend());
+    for(let i=0;i<(data.friends||0);i++) S.friends.push(makeFriend(i));
     $("#colonyN").textContent=1+S.friends.length;
-    if(data.phase==="end"){ S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M; S.phase="end"; updateHud(); renderEnd(); }
+    if(data.phase==="end"){ S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M; renderEnd(); }
     else jumpTo(Math.min(STOPS.length-1,data.idx));
   } else renderIntro();
   requestAnimationFrame(frame);
