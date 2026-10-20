@@ -1,9 +1,9 @@
-<title>Bifi's Gut Dive</title>
+<title>Michael the Microbe</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;600;700&display=swap">
 <style>
-/* Layout: a plain mock search page is the backdrop; the game is an 8-bit pop-up cartridge.
+/* Layout: a plain mock search homepage (with a concept Doodle tile) is the backdrop; the game is an 8-bit pop-up cartridge.
    Top = low-resolution canvas (drawn at ~130px wide, scaled up with hard pixels) with a game HUD.
    Bottom = an RPG-style dialog box holding the question. One deliberate look, so no theme switching. */
 :root{
@@ -16,7 +16,7 @@
   --plum:#2b1226;     /* panel */
   --plum-2:#3d1a35;   /* raised panel */
   --edge:#6b2d55;     /* pixel borders */
-  --g1:#1f4d22; --g2:#3f8f2f; --g3:#7ccf4a; --g4:#b9f27c;   /* Bifi greens */
+  --g1:#1f4d22; --g2:#3f8f2f; --g3:#7ccf4a; --g4:#b9f27c;   /* Michael greens */
   --acid:#f2d14a; --orange:#ff9d5c; --red:#ff6b6b; --sky:#8fd3ff;
   --ink:#fff4e8; --ink-soft:#e2c7d6; --ink-faint:#a985a0;
   --f-pixel:"Press Start 2P","Courier New",monospace;
@@ -57,7 +57,7 @@ button{font:inherit;cursor:pointer}
 .popup{position:absolute;top:20px;right:max(16px,calc(50% - 520px));width:400px;height:min(760px,calc(100% - 40px));min-height:620px;
   display:flex;filter:drop-shadow(0 18px 28px rgba(26,11,23,.35))}
 .frame{flex:1;min-width:0;display:flex;background:var(--edge);padding:4px}
-.popup-in{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--night);color:var(--ink);font-family:var(--f-body);overflow:hidden}
+.popup-in{font-variant-ligatures:none;flex:1;min-width:0;display:flex;flex-direction:column;background:var(--night);color:var(--ink);font-family:var(--f-body);overflow:hidden}
 .pop-head{display:flex;align-items:center;gap:8px;padding:10px 12px 9px;background:var(--plum);border-bottom:4px solid var(--k)}
 .pop-head > div:first-child{flex:1;min-width:0}
 .eyebrow{margin:0 0 5px;font-family:var(--f-pixel);font-size:7.5px;letter-spacing:.06em;color:var(--acid);text-transform:uppercase}
@@ -188,6 +188,9 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
 .notes button:focus-visible{outline:3px solid var(--edge);outline-offset:2px}
 .flag{border-left:3px solid var(--acid);padding-left:10px}
 
+@media (max-width: 600px){
+  .draft-bar p{flex-basis:100%;order:3}
+}
 @media (max-width: 900px){
   .mock{padding-right:0}
   .mock-res{display:none}
@@ -199,25 +202,112 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
   .blink{animation:none}
   .breathe canvas{transition:none}
 }
+
+/* ---------- v3: doodle tile, interactions, research panel ---------- */
+.doodle{display:flex;align-items:center;gap:14px;background:var(--night);color:var(--ink);border:0;padding:12px 18px 12px 12px;cursor:pointer;text-align:left;align-self:flex-start;max-width:100%;box-sizing:border-box;
+  box-shadow:inset -4px -4px 0 rgba(0,0,0,.4),inset 4px 4px 0 rgba(255,255,255,.08)}
+.doodle canvas{flex:0 0 auto;width:45px;height:51px;image-rendering:pixelated}
+.doodle{font-variant-ligatures:none}
+.doodle .dt{font-family:var(--f-pixel);font-size:11px;line-height:1.6}
+.doodle .dt span{color:var(--g3)}
+.doodle small{display:block;font-family:var(--f-body);font-size:13px;color:var(--ink-faint);line-height:1.3;margin-top:2px}
+.doodle:hover{background:#24101f}
+.doodle:focus-visible{outline:3px solid var(--edge);outline-offset:3px}
+
+.scenario{font-size:15.5px;font-style:italic;color:var(--ink-soft);border-left:4px solid var(--edge);padding-left:10px}
+.tip{background:#21321b;padding:9px 11px;font-size:15px;color:var(--ink)}
+.tip b{font-family:var(--f-pixel);font-size:7.5px;color:var(--g3);display:block;margin-bottom:4px;letter-spacing:.04em}
+
+/* research links + strength badges (never colour alone: dots + words) */
+.links{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.links li{display:flex;gap:8px;align-items:flex-start;font-size:14px;line-height:1.35}
+.links a{color:var(--sky)}
+.links .pending{color:var(--ink-faint)}
+.badge{flex:0 0 auto;font-family:var(--f-pixel);font-size:6.5px;line-height:1.3;padding:4px 5px;background:var(--plum-2);white-space:nowrap;margin-top:1px}
+.badge.b3{color:var(--g3)} .badge.b2{color:var(--sky)} .badge.b1{color:var(--orange)}
+.legend{font-size:12.5px;color:var(--ink-faint)}
+.note{font-size:13px;color:var(--acid)}
+
+/* true / false quick-fire */
+.stmt{background:var(--night);padding:11px 12px;font-size:16.5px;color:var(--ink)}
+.stmt small{display:block;font-family:var(--f-pixel);font-size:7px;color:var(--ink-faint);margin-bottom:6px}
+.duo{display:flex;gap:8px}
+.duo .btn{flex:1}
+.log{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:14.5px}
+.log li{background:var(--night);padding:7px 10px}
+.log .r{font-family:var(--f-pixel);font-size:7.5px;display:block;margin-bottom:3px}
+.log .r.ok{color:var(--g3)} .log .r.no{color:var(--red)}
+
+/* put in order */
+.slots{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:5px}
+.slot{min-height:38px;box-sizing:border-box;background:var(--night);display:flex;align-items:center;gap:10px;padding:7px 10px;font-size:15px;color:var(--ink-faint)}
+.slot b{font-family:var(--f-pixel);font-size:9px;color:var(--acid);flex:0 0 auto}
+.slot.filled{color:var(--ink);background:#21481f}
+.opt.shake{animation:shake .32s steps(4)}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.mist{font-size:13.5px;color:var(--ink-faint)}
+
+/* tap the scene */
+.tapzone{position:absolute;inset:0;z-index:1}
+.tapzone .nerve{position:absolute;left:6%;width:52%;top:calc(72% - 3px);height:6px;background:repeating-linear-gradient(90deg,var(--acid) 0 9px,#b38a1c 9px 13px);box-shadow:0 0 0 2px var(--k)}
+.tapzone .nerve span{position:absolute;left:0;top:-17px;font-family:var(--f-pixel);font-size:7px;color:var(--acid);background:rgba(13,7,16,.8);padding:2px 4px}
+.cellbtn{position:absolute;width:48px;height:48px;padding:0;border:0;background:transparent;cursor:pointer;transform:translate(-50%,-50%)}
+.cellbtn canvas{width:100%;height:100%;image-rendering:pixelated;display:block}
+.cellbtn:hover canvas{filter:brightness(1.25)}
+.cellbtn:focus-visible{outline:3px solid var(--acid);outline-offset:2px}
+.cellbtn.reveal{outline:3px dashed var(--g3);outline-offset:3px}
+.cellbtn.miss{opacity:.45}
+.textbtn{background:none;border:0;color:var(--sky);text-decoration:underline;padding:0;font-family:var(--f-body);font-size:14px;align-self:flex-start;cursor:pointer}
+
+/* choose Sam's path */
+.meters{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.meter{background:var(--night);padding:8px 9px}
+.meter .lab{display:flex;justify-content:space-between;font-family:var(--f-pixel);font-size:7px;color:var(--ink-faint);gap:6px}
+.bar{height:12px;background:var(--k);margin-top:6px;display:flex;gap:2px;padding:2px}
+.bar i{flex:1;background:var(--plum-2)}
+.meter.stress .bar i.on{background:var(--orange)}
+.meter.gut .bar i.on{background:var(--g3)}
+.moment{font-family:var(--f-pixel);font-size:8px;color:var(--acid);line-height:1.6}
+
+/* swipe to sort */
+.sortwrap{display:flex;flex-direction:column;gap:10px}
+.card{background:var(--night);padding:26px 16px;text-align:center;font-size:19px;font-weight:700;color:var(--ink);touch-action:pan-y;user-select:none;cursor:grab;transition:transform .18s;box-shadow:inset 0 0 0 3px var(--edge)}
+.card.dragging{transition:none;cursor:grabbing}
+.card small{display:block;font-family:var(--f-pixel);font-size:7px;color:var(--ink-faint);margin-bottom:10px;font-weight:400}
+.hint2{font-size:13px;color:var(--ink-faint);text-align:center}
+.kit{display:flex;flex-wrap:wrap;gap:6px}
+.kitbtn{background:var(--plum-2);color:var(--ink);border:0;padding:9px 11px;font-family:var(--f-body);font-size:15px;text-align:left;box-shadow:inset -3px -3px 0 rgba(0,0,0,.35)}
+.kitbtn[aria-pressed="true"]{background:#21481f;box-shadow:inset 0 0 0 3px var(--g3)}
+.kitbtn:focus-visible{outline:3px solid var(--acid);outline-offset:-5px}
+.pledge{background:#21321b;padding:10px 12px;font-size:16px}
+.pledge b{font-family:var(--f-pixel);font-size:7.5px;color:var(--g3);display:block;margin-bottom:5px}
+
+.btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
+.btn.alt:hover{background:#ffab72}
+.btn:disabled{opacity:.45;cursor:default}
+.duo .btn{font-size:9px}
 </style>
 
 <div class="draft-bar">
-  <span class="tag">Draft v2</span>
-  <p>Mock information product: an 8-bit search pop-up game for World IBS Day (19 April). Audience: people moving into university or work.</p>
+  <span class="tag">Prototype v3</span>
+  <p>Michael the Microbe: a concept 8-bit Doodle game for World IBS Day (19 April). Not affiliated with any search engine. Main audience: people moving into university or work.</p>
   <button type="button" id="notesBtn">Run-through notes</button>
 </div>
 
 <div class="stage">
-  <div class="mock" aria-hidden="true">
-    <div class="mock-search">
+  <div class="mock">
+    <button type="button" class="doodle" id="doodle" aria-label="Open the Michael the Microbe game">
+      <canvas id="doodleIcon" width="15" height="17" aria-hidden="true"></canvas>
+      <span><span class="dt"><span>Michael</span> the Microbe</span><small>World IBS Day · tap to play the concept Doodle</small></span>
+    </button>
+    <div class="mock-search" aria-hidden="true">
       <span class="mock-word">Search</span>
       <div class="mock-q">why does stress mess with my stomach</div>
     </div>
-    <p class="mock-note">Placeholder results page. On 19 April, searches about IBS, gut pain or stress open the pop-up.</p>
-    <div class="mock-res"><div class="u"></div><div class="t"></div><div class="l"></div><div class="l s"></div></div>
-    <div class="mock-res"><div class="u"></div><div class="t"></div><div class="l"></div><div class="l"></div><div class="l s"></div></div>
-    <div class="mock-res"><div class="u"></div><div class="t"></div><div class="l"></div><div class="l s"></div></div>
-    <div class="mock-res"><div class="u"></div><div class="t"></div><div class="l"></div><div class="l"></div></div>
+    <p class="mock-note" aria-hidden="true">Placeholder homepage and results. On 19 April the Doodle opens the game, and searches about IBS, gut pain or stress show it beside the results.</p>
+    <div class="mock-res" aria-hidden="true"><div class="u"></div><div class="t"></div><div class="l"></div><div class="l s"></div></div>
+    <div class="mock-res" aria-hidden="true"><div class="u"></div><div class="t"></div><div class="l"></div><div class="l"></div><div class="l s"></div></div>
+    <div class="mock-res" aria-hidden="true"><div class="u"></div><div class="t"></div><div class="l"></div><div class="l s"></div></div>
   </div>
 
   <section class="popup" id="popup" role="dialog" aria-labelledby="gameTitle">
@@ -226,17 +316,17 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
       <header class="pop-head">
         <div>
           <p class="eyebrow">World IBS Day · 19 April</p>
-          <h1 id="gameTitle"><span>Bifi's</span> Gut Dive</h1>
+          <h1 id="gameTitle"><span>Michael</span> the Microbe</h1>
         </div>
         <button type="button" class="hbtn" id="sfxBtn" aria-pressed="false" title="Sound effects">SFX OFF</button>
-        <button type="button" class="hbtn" id="closeBtn" aria-label="Minimise the pop-up">X</button>
+        <button type="button" class="hbtn" id="closeBtn" aria-label="Minimise the game">X</button>
       </header>
       <div class="scene" id="sceneWrap">
         <canvas id="scene" aria-hidden="true"></canvas>
         <div class="hud" aria-hidden="true">
           <div class="box">Depth<b id="depthVal">0.00m</b></div>
           <div class="box zone">Zone<b id="zoneTag">Mouth</b></div>
-          <div class="box">Stop<b id="stopVal">0/9</b></div>
+          <div class="box">Stop<b id="stopVal">0/8</b></div>
         </div>
         <div class="colony" aria-live="polite">Colony <b id="colonyN">1</b></div>
         <div class="gauge" title="Your position along about 8.9 m of gut">
@@ -251,7 +341,7 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
    </div>
   </section>
 
-  <button type="button" class="pill" id="pill" hidden><canvas id="pillIcon" width="14" height="16" aria-hidden="true"></canvas>Resume Gut Dive</button>
+  <button type="button" class="pill" id="pill" hidden><canvas id="pillIcon" width="15" height="17" aria-hidden="true"></canvas>Resume Michael</button>
 </div>
 
 <div class="notes" id="notes" hidden>
@@ -263,7 +353,12 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
 
     <section>
       <h3>How people find it</h3>
-      <p>On World IBS Day (19 April), a search for terms like "IBS", "stomach pain stress" or "gut health" opens this card beside the results. On a phone it slides up as a bottom sheet. One tap starts the game, and one tap closes it to a small "Resume" pill.</p>
+      <p>This is a <b>concept</b> Doodle, not an official one. On World IBS Day (19 April), a pixel Michael tile on the search homepage opens the game. Searches about IBS, gut pain or stress also show it beside the results. On a phone it opens full-screen. One tap closes it to a small "Resume" pill.</p>
+    </section>
+
+    <section>
+      <h3>Story</h3>
+      <p>Michael, a friendly gut microbe, follows <b>Sam</b>, a first-year student who's also starting a part-time job, through one stressful exam fortnight. Each part of the gut shows a moment in Sam's fortnight and one thing stress is doing inside them.</p>
     </section>
 
     <section>
@@ -272,49 +367,47 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
     </section>
 
     <section>
-      <h3>What the player sees on the way down</h3>
+      <h3>Interaction types</h3>
       <ul>
-        <li><b>Mouth:</b> rows of pixel teeth on both walls, plus a few oral bacteria.</li>
-        <li><b>Oesophagus:</b> a narrow tube with muscle rings.</li>
-        <li><b>Stomach:</b> folded walls and a bubbling pool of yellow stomach acid (about pH 2) that Bifi swims through.</li>
-        <li><b>Duodenum:</b> orange-tinted walls with yellow bile dripping in.</li>
-        <li><b>Jejunum and ileum:</b> finger-like villi on the walls, with more and more resident microbes.</li>
-        <li><b>Colon:</b> pouched walls and a crowded, mixed community: rods, cocci clusters, chains, spiky and ciliated microbes.</li>
+        <li><b>Scenario multiple choice</b>: mouth, small intestine, ileum, colon</li>
+        <li><b>True/false quick-fire</b>: oesophagus</li>
+        <li><b>Put in order</b>: the stress chain in the stomach</li>
+        <li><b>Tap the scene</b>: find the alarm cell next to the nerve (with a true/false fallback)</li>
+        <li><b>Choose Sam's path</b>: 3 decisions that move a stress meter and a gut meter</li>
+        <li><b>Swipe to sort</b>: build Sam's gut kit, then pick one thing to try this week</li>
       </ul>
+      <p>Everything works by tapping, so there's no typing on a phone. Swiping also works with the buttons or the arrow keys.</p>
     </section>
 
     <section>
       <h3>Design decisions</h3>
       <ul>
-        <li><b>8-bit look.</b> Retro pixel art feels like a game, not a health warning, and stays light enough for a pop-up.</li>
-        <li><b>No timer.</b> The reference game uses a countdown. Our audience is already under exam and job-hunt pressure, so the dive is self-paced.</li>
-        <li><b>Wrong answers still move you down.</b> Every answer explains itself, so nobody gets stuck or feels tested.</li>
-        <li><b>The colony grows.</b> Each correct answer adds a different microbe friend. A bigger, more varied community stands for a healthier microbiota.</li>
-        <li><b>Learn more is optional.</b> The question stays at plain-language level. Mechanism detail and sources sit behind "Learn more".</li>
-        <li><b>A breathing break at halfway</b> models one stress-calming tool instead of only describing it.</li>
-        <li><b>Real units.</b> The depth readout uses metres along an adult gut (about 8.9 m in this draft).</li>
-        <li><b>Sound is off by default,</b> since the game pops up on a search page.</li>
-        <li><b>Original sprites.</b> The microbe art is drawn for this project in the style of the team's reference image, not copied from it.</li>
+        <li><b>Practical first.</b> Each stop starts with something the player recognises and ends with one tip. Scientific terms are kept for "Read the research".</li>
+        <li><b>Evidence badges.</b> Every source shows its strength (●●● strong, ●●○ good, ●○○ early), in words as well as dots.</li>
+        <li><b>IBS-specific advice.</b> Diet tips follow the IBS guideline (soluble fibre added slowly, a dietitian before strict diets), not general "gut health" advice.</li>
+        <li><b>No timer, and never punishing.</b> Wrong answers still move Michael down, and every answer explains itself.</li>
+        <li><b>A breathing break</b> halfway models a stress-calming tool instead of only describing it.</li>
+        <li><b>Sound is off by default</b> because it's on a search page.</li>
       </ul>
     </section>
 
     <section>
-      <h3>Fact-check before final</h3>
+      <h3>Fact-check before final (see EVIDENCE.md)</h3>
       <ul>
-        <li class="flag">"About 90% of the body's serotonin is made in the gut" is widely cited but is not in our two core readings. Add a supporting source.</li>
-        <li class="flag">"Some bacteria can sense stress hormones directly" (colon stop, Learn more) comes from microbial endocrinology research, not our two readings. Add a source or cut it.</li>
-        <li class="flag">Stomach acid "about pH 2", teeth grinding linked to stress, and GI tract lengths are general knowledge. Add a source for each.</li>
-        <li class="flag">"When to see a doctor" red flags follow standard IBS guidance. Check them against a current local guideline before publishing.</li>
-        <li class="flag">The crowding study was in rats. The game says so, and it should stay that way in later edits.</li>
+        <li class="flag">Serotonin "about 9 in 10 made in the gut": confirm Gershon &amp; Tack 2007 and add its link.</li>
+        <li class="flag">Stress and dry mouth: add a source.</li>
+        <li class="flag">"Regular meals" as first-line advice, and the "see a doctor" list: confirm against BSG 2021 or a local guideline.</li>
+        <li class="flag">Check every quoted number against the full paper.</li>
       </ul>
     </section>
 
     <section>
-      <h3>Core sources</h3>
+      <h3>Core readings</h3>
       <ul>
-        <li>Qin H-Y, Cheng C-W, Tang X-D, Bian Z-X. Impact of psychological stress on irritable bowel syndrome. <em>World J Gastroenterol</em> 2014;20(39):14126–31.</li>
-        <li>Vicario M, et al. Chronic psychosocial stress induces reversible mitochondrial damage and corticotropin-releasing factor receptor type-1 upregulation in the rat intestine and IBS-like gut dysfunction. <em>Psychoneuroendocrinology</em> 2012;37:65–77.</li>
+        <li>Qin H-Y, et al. Impact of psychological stress on irritable bowel syndrome. <em>World J Gastroenterol</em> 2014;20(39):14126–31.</li>
+        <li>Vicario M, et al. Chronic psychosocial stress … in the rat intestine and IBS-like gut dysfunction. <em>Psychoneuroendocrinology</em> 2012;37:65–77.</li>
       </ul>
+      <p>Newer sources are linked inside each stop's "Read the research" panel and listed in EVIDENCE.md.</p>
     </section>
   </div>
 </div>
@@ -322,217 +415,191 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
 <script>
 (() => {
 const TOTAL_M = 8.9;
+
 /* ---------------------------------------------------------------
-   Content. Each stop is one section of gut plus one question.
+   Content. Edit text here. Each stop = one part of the gut, one
+   moment in Sam's exam fortnight, one interaction, one tip and an
+   optional "Read the research" panel. Sources: EVIDENCE.md.
+   b: evidence badge (3 strong, 2 good, 1 early). No url = link pending.
 ---------------------------------------------------------------- */
+const L = {
+  oka:{t:"Oka et al. 2020 · global prevalence of IBS",u:"https://pubmed.ncbi.nlm.nih.gov/32702295/",b:3},
+  meds:{t:"IBS in medical students · meta-analysis",u:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12745469/",b:3},
+  brux:{t:"Stress and jaw clenching · systematic review, Frontiers in Neurology 2020",u:"https://www.frontiersin.org/articles/10.3389/fneur.2020.590779/full",b:2},
+  koloski:{t:"Koloski et al. 2012 · 12-year study, Gut",u:"https://gut.bmj.com/content/61/9/1284",b:2},
+  cryan:{t:"Cryan et al. 2019 · the microbiota–gut–brain axis",u:"https://doi.org/10.1152/physrev.00018.2018",b:3},
+  tache:{t:"Taché & Bonaz 2007 · stress signals and gut movement (free)",u:"https://doi.org/10.1172/JCI30085",b:2},
+  vicario:{t:"Vicario et al. 2012 · crowding stress in rats",u:"https://doi.org/10.1016/j.psyneuen.2011.05.005",b:1},
+  vanuytsel:{t:"Vanuytsel et al. 2014 · public speech and the gut lining, Gut",u:"https://gut.bmj.com/content/63/8/1293",b:2},
+  gershon:{t:"Gershon & Tack 2007 · gut serotonin, Gastroenterology",u:"",b:2},
+  qin:{t:"Qin et al. 2014 · stress and IBS review (free)",u:"https://doi.org/10.3748/wjg.v20.i39.14126",b:1},
+  zhang:{t:"Zhang et al. 2020 · probiotics and stress in healthy adults",u:"https://pubmed.ncbi.nlm.nih.gov/32662591/",b:3},
+  kadosh:{t:"Cohen Kadosh et al. 2021 · probiotics and anxiety in 10–24 year olds (free)",u:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8206413/",b:3},
+  pitta:{t:"Pittayanon et al. 2019 · gut bacteria in IBS",u:"https://experts.mcmaster.ca/scholarly-works/1636046",b:3},
+  exam:{t:"Exam stress and gut bacteria in students · 2025 trial",u:"https://www.nature.com/articles/s41522-025-00776-w",b:2},
+  bsg:{t:"British Society of Gastroenterology IBS guideline 2021",u:"https://pubmed.ncbi.nlm.nih.gov/33903147/",b:3},
+  fibre:{t:"La Torre, Verbeke & Dalile 2021 · fibre and the gut–brain axis (free)",u:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11406392/",b:1},
+  marx:{t:"Marx et al. 2017 · nutritional psychiatry",u:"https://doi.org/10.1017/S0029665117002026",b:1},
+  barbara:{t:"Barbara et al. 2004 · alarm cells next to gut nerves",u:"https://doi.org/10.1053/j.gastro.2003.11.055",b:2},
+  dickhaus:{t:"Dickhaus et al. 2003 · stress and gut sensitivity in IBS",u:"https://doi.org/10.1111/j.1572-0241.2003.07156.x",b:2},
+  black:{t:"Black et al. 2020 · talking therapies for IBS, Gut",u:"https://gut.bmj.com/content/69/8/1441",b:3},
+  johann:{t:"Johannesson et al. 2011 · exercise trial in IBS",u:"https://doi.org/10.1038/ajg.2010.480",b:2},
+  smith:{t:"Smith et al. 2019 · sleep and gut bacteria (free)",u:"https://doi.org/10.1371/journal.pone.0222394",b:2}
+};
+
+const INTRO_RESEARCH = {
+  text:"Doctors now diagnose IBS using a set of criteria called Rome IV. A review pooling studies of 82,476 people in 34 countries found about 3.8% meet them. Older, looser criteria gave about 9%, which is why you may see higher numbers elsewhere. Studies of medical students often find higher rates, but results vary a lot.",
+  links:[L.oka,L.meds]
+};
+
 const STOPS = [
 {
-  zone:"Mouth", depth:0.0,
-  say:"Teeth start breaking food down here. Stress can make your mouth go dry, and some people clench or grind their teeth.",
-  type:"mcq",
-  q:"Let's start simple. What is IBS (irritable bowel syndrome)?",
-  options:[
-    "A food-poisoning bug that clears up in a few days",
-    "A long-term gut condition with tummy pain and changed toilet habits, where the gut looks normal on tests",
-    "Another name for IBD (inflammatory bowel disease)",
-    "An allergy to gluten"
+  zone:"Mouth", depth:0.0, type:"mcq", kind:"Scenario",
+  say:"Teeth ahead! This is where digestion starts, and where stress often shows up first.",
+  scene:"It's the night before Sam's first exam. Their mouth feels dry and their jaw aches from clenching.",
+  q:"What's going on?",
+  options:["Sam's coming down with a cold","Sam's body has switched into \"alarm mode\"","Sam needs to brush their teeth more","It's unrelated to stress"],
+  answer:1,
+  right:"Stress flips your body into alarm mode. Digestion goes on hold, so saliva drops, and many people clench their jaw without noticing.",
+  wrong:"These are classic stress signs. Sam's body is in alarm mode, getting ready to act instead of digest.",
+  tip:"Notice the signs early. Unclench your jaw, sip some water, and breathe out slowly.",
+  research:{text:"When you're stressed, your nervous system switches into \"fight or flight\" and turns down jobs like digestion, which is why your mouth can go dry. Reviews link stress and anxiety to clenching your jaw during the day more than grinding at night. Noticing these early signs is the first step to managing stress.",
+    links:[L.brux], note:"A source on stress and dry mouth is being added."}
+},
+{
+  zone:"Oesophagus", depth:0.25, type:"tf", kind:"True or false",
+  say:"This tube is lined with nerves, and nerves carry messages between your gut and brain.",
+  scene:"Sam feels a lump in their throat walking into the exam hall.",
+  q:"Three quick ones. True or false?",
+  items:[
+    {s:"Stress only affects your mind, not your body.",a:false,fb:"Stress changes how your gut moves, feels and works."},
+    {s:"Gut problems can make you feel more anxious.",a:true,fb:"The gut sends signals to the brain too. It's a two-way street."},
+    {s:"Your gut has its own network of nerves.",a:true,fb:"It's sometimes called your \"second brain\"."}
   ],
-  answer:1,
-  right:"Yes. IBS is real and common, but it doesn't leave visible damage that a scan or scope can see.",
-  wrong:"Not quite. IBS is a long-term condition with tummy pain and changes in how often you go or what your poo is like. Tests usually show a normal-looking gut.",
-  more:`<p>About <b>1 in 9 people worldwide (11.2%)</b> have IBS. It mixes pain or discomfort with diarrhoea, constipation, or both.</p>
-  <ul>
-    <li><b>IBS is not IBD.</b> IBD (Crohn's disease, ulcerative colitis) causes visible inflammation and damage. IBS doesn't.</li>
-    <li><b>IBS is not coeliac disease</b> (the immune reaction to gluten). A doctor can test for this.</li>
-    <li>Researchers think IBS comes from the <b>immune, hormone and nervous systems</b> interacting. Stress, infections, diet and changes in gut microbes all play a part.</li>
-  </ul>`,
-  src:"Qin et al., 2014, World J Gastroenterol"
+  right:"Your brain and gut talk both ways. Stress shows up in your belly, and belly trouble can raise stress.",
+  wrong:"The key idea: your brain and gut talk both ways. Stress shows up in your belly, and belly trouble can raise stress.",
+  tip:"\"Gut feelings\" are real signals. Looking after one end helps the other.",
+  research:{text:"Researchers followed 1,002 Australian adults for 12 years. People who were anxious at the start were more likely to develop gut problems later, and people who started with gut problems were more likely to become anxious. Your gut talks to your brain through nerves (like the vagus nerve), hormones, immune signals and chemicals made by gut bacteria.",
+    links:[L.koloski,L.cryan]}
 },
 {
-  zone:"Oesophagus", depth:0.25,
-  say:"This muscle tube pushes food down in waves. Nerves run those waves, and nerves are where stress gets in.",
-  type:"mcq",
-  q:"Your brain and your gut are connected. Which way do the messages travel?",
-  options:["Only brain → gut","Only gut → brain","Both ways","They aren't connected"],
-  answer:2,
-  right:"Correct. It's a two-way line called the brain–gut axis.",
-  wrong:"It's actually both ways. Your brain changes your gut, and your gut sends signals back that change how you feel.",
-  more:`<p>Your gut has its own nervous system, the <b>enteric nervous system</b>, nicknamed the "little brain". It runs digestion and talks to your brain through nerves (like the vagus nerve), hormones, immune signals and chemicals made by microbes.</p>
-  <ul>
-    <li><b>Top-down:</b> stress in the brain → changes in gut movement, sensitivity and lining.</li>
-    <li><b>Bottom-up:</b> gut pain and discomfort → more anxiety and low mood.</li>
-    <li>These can feed a loop. That's one reason <b>40–60% of people with IBS</b> also live with a mental health condition such as anxiety or depression.</li>
-  </ul>`,
-  src:"Qin et al., 2014, World J Gastroenterol"
-},
-{
-  zone:"Stomach", depth:0.45,
-  say:"Splash! Stomach acid here is about pH 2, strong enough to kill lots of microbes. Stress can leave your stomach feeling knotted too.",
-  type:"sa",
-  q:"It's exam week. Glands on top of your kidneys release the main stress hormone. What's it called?",
-  placeholder:"One word",
-  hint:"It starts with C and rhymes (sort of) with \"sort of all\".",
-  accept:["cortisol","hydrocortisone","cortisone","corticosterone"],
-  close:[{keys:["adrenaline","adrenalin","epinephrine","noradrenaline","norepinephrine"],msg:"Close! Adrenaline is the fast, seconds-long stress hormone. The one we're after is cortisol, the slower one that stays high during long-term stress."}],
-  model:"Cortisol.",
-  right:"That's it. Cortisol is made by your adrenal glands when your brain senses stress.",
-  wrong:"The answer is cortisol, made by your adrenal glands when your brain senses stress.",
-  more:`<p>The stress response runs down a chain called the <b>HPA axis</b>:</p>
-  <div class="chain"><span>Hypothalamus</span><i>→ CRF →</i><span>Pituitary</span><i>→ ACTH →</i><span>Adrenal glands</span><i>→</i><span>Cortisol</span></div>
-  <ul>
-    <li><b>Short-term stress</b> (a presentation) triggers fight-or-flight, then switches itself off once the threat passes.</li>
-    <li><b>Long-term stress</b> (months of deadlines, money worries, moving out) can keep the system switched on, so the body never fully resets.</li>
-    <li>CRF, cortisol and the nervous system all act directly on the gut and on its microbes.</li>
-  </ul>`,
-  src:"Qin et al., 2014, World J Gastroenterol"
-},
-{
-  zone:"Duodenum", depth:0.75,
-  say:"First stretch of the small intestine. Bile from your liver and gallbladder joins in here. That's the yellow tint.",
-  type:"mcq",
-  q:"Scientists kept rats in crowded cages for 15 days, a bit like a packed share-house in exam season. Afterwards their colons had about 4× more of something. What?",
-  options:["Helpful bacteria","\"Docking stations\" (receptors) for the stress messenger CRF","Vitamin C","Muscle"],
-  answer:1,
-  right:"Right. More docking stations means the gut picks up stress signals more strongly.",
-  wrong:"It was CRF receptors, the docking stations for the first stress messenger. More of them means the gut picks up stress signals more strongly.",
-  more:`<p>CRF is the brain's first stress messenger, and the gut has its own CRF receptors. In this rat study:</p>
-  <ul>
-    <li>Stress hormone levels were about <b>3.5× higher</b> in crowded rats (165 vs 47 ng/mL).</li>
-    <li>CRF receptor type-1 in the colon rose about <b>4×</b>. The most stressed rats (those that gained the least weight) had the most receptors.</li>
-    <li>Crowded rats pooed more often, and their poo was mushier, during the stress period.</li>
-  </ul>
-  <p><b>Keep in mind:</b> this was in rats. It shows a likely mechanism, but people aren't identical to rats.</p>`,
-  src:"Vicario et al., 2012, Psychoneuroendocrinology"
-},
-{
-  zone:"Jejunum", depth:2.0,
-  say:"Most of your food is absorbed here, through a lining only one cell thick.",
-  type:"mcq",
-  q:"Your gut lining is a wall one cell thick that keeps microbes and food bits inside the gut. What does ongoing stress do to it?",
-  options:["Makes it thicker and stronger","Makes it leakier, so more slips through","Nothing. The lining can't sense stress","Dissolves it completely"],
-  answer:1,
-  right:"Yes. Stress loosens the seals between gut cells, so the barrier gets leakier.",
-  wrong:"Stress actually makes the lining leakier. The seals between gut cells loosen, so more slips through.",
-  more:`<p>Stress switches on <b>mast cells</b>, immune "alarm" cells in the gut wall. They release chemicals (serotonin, proteases, cytokines) that:</p>
-  <ul>
-    <li>loosen the seals between gut cells, so the barrier leaks</li>
-    <li>change how much fluid the gut releases and how fast it moves</li>
-    <li>make gut nerves more sensitive</li>
-  </ul>
-  <p>In the rat study, the lining stayed leakier for <b>up to 7 days after the stress ended</b>. The mitochondria (energy factories) in gut cells were also damaged, though they recovered. When more slips through, the immune system reacts, which can cause low-grade inflammation.</p>`,
-  src:"Qin et al., 2014; Vicario et al., 2012"
-},
-{
-  zone:"Ileum", depth:4.5,
-  say:"The longest stretch so far, packed with cells that make chemical messengers.",
-  type:"sa",
-  q:"Serotonin is often called a \"happy chemical\". Where in the body is most of it made?",
-  placeholder:"One word",
-  hint:"You're in it right now.",
-  accept:["gut","intestine","intestines","intestinal","bowel","bowels","digestive","gi","gastrointestinal","colon","small intestine","enterochromaffin"],
-  close:[{keys:["brain","head"],msg:"That's the common guess. The brain uses serotonin, but most of the body's serotonin is actually made in the gut."},
-         {keys:["stomach","tummy","belly"],msg:"Close! It's made along the gut lining, mostly in the intestines rather than the stomach itself."}],
-  model:"In the gut. Roughly 90% of the body's serotonin is made by cells in the gut lining.",
-  right:"Correct. Most of your serotonin is made in your gut, not your brain.",
-  wrong:"Most of it is made in the gut, by special cells in the gut lining.",
-  more:`<p>Gut serotonin (also called <b>5-HT</b>) doesn't mainly control mood. In the gut it controls:</p>
-  <ul>
-    <li>how fast things move through</li>
-    <li>how much fluid is released</li>
-    <li>how strongly pain signals are sent to the brain</li>
-  </ul>
-  <p>In animal studies, early-life stress increased the serotonin-making cells and the serotonin they make, and this is linked to IBS symptoms. That's why some IBS medicines target serotonin, and why low-dose antidepressants are sometimes prescribed for IBS. They act on gut–brain signalling, not only on mood.</p>`,
-  src:"Qin et al., 2014, World J Gastroenterol"
-},
-{
-  zone:"Colon", depth:7.2,
-  say:"Welcome to the big city. Trillions of microbes live here. This is my home!",
-  type:"mcq",
-  q:"What can long-term stress do to the microbiota, the community of microbes living in your gut?",
-  options:[
-    "Nothing. Microbes can't be affected by stress",
-    "Shift its balance (called dysbiosis) and help bacteria stick closer to the gut wall",
-    "Kill all the bacteria",
-    "Only change bacteria in your mouth"
+  zone:"Stomach", depth:0.45, type:"order", kind:"Put in order",
+  say:"Splash! Stomach acid! And the stress signal from Sam's brain just arrived.",
+  scene:"It's exam morning and Sam can't face breakfast.",
+  q:"Tap the stress chain in order, from first to last.",
+  steps:[
+    "Sam's brain spots the stress (hypothalamus)",
+    "A gland under the brain passes the message on (pituitary)",
+    "Glands on top of the kidneys release cortisol, the stress hormone (adrenal glands)",
+    "Sam's stomach slows down and their appetite drops"
   ],
-  answer:1,
-  right:"Exactly. The community's balance shifts, which is called dysbiosis.",
-  wrong:"Stress shifts the community's balance (dysbiosis) and helps bacteria cling closer to the gut wall.",
-  more:`<p>Stress changes the world microbes live in: how fast the gut moves, the mucus layer, immune activity and stress hormones. Some bacteria can even sense stress hormones directly.</p>
-  <ul>
-    <li><b>Dysbiosis:</b> the mix of microbe types shifts away from its healthy balance.</li>
-    <li>Bacteria <b>stick more to the gut wall</b>, closer to the immune system.</li>
-    <li>Microbes talk back to the brain through nerves, immune signals and the chemicals they make. Researchers call this the <b>microbiota–gut–brain axis</b>.</li>
-    <li>Rats stressed early in life had a changed poo microbiota. Microbe-based IBS treatments are an active research area.</li>
-  </ul>`,
-  src:"Qin et al., 2014, World J Gastroenterol"
+  right:"That's the body's stress alarm system. It's useful for a short burst, but if it stays switched on for weeks, the gut feels it.",
+  wrong:"Here's the right order. That's the body's stress alarm system, useful for a short burst but hard on the gut if it stays on for weeks.",
+  tip:"Losing your appetite under stress is common. Something small and plain beats skipping meals altogether.",
+  research:{text:"Stress messages travel from the brain to the adrenal glands, which release cortisol. The first messenger in this chain (called CRF) also acts directly on the gut, changing how fast the stomach and bowel move. Rats kept in crowded cages for two weeks had about three and a half times more stress hormone than calm rats. That was in rats, but it shows the chain at work.",
+    links:[L.tache,L.vicario]}
 },
 {
-  zone:"Sigmoid colon", depth:8.4,
-  say:"Nearly there. This S-shaped bend is where gut sensitivity is often measured.",
-  type:"mcq",
-  q:"True or false: if stress makes IBS worse, then IBS is \"all in your head\".",
-  options:["True","False"],
+  zone:"Small intestine", depth:1.2, type:"mcq", kind:"Scenario",
+  say:"Most food is absorbed here, through a wall just one cell thick.",
+  scene:"Sam has to give a class presentation, and their heart is racing.",
+  q:"What's most likely happening in Sam's small intestine?",
+  options:["Nothing. The intestine can't sense stress","The gut lining briefly lets more through, especially if Sam's stress hormone spikes","The intestine stops working completely","The gut lining gets thicker and stronger"],
   answer:1,
-  right:"False is right. Stress causes real, measurable changes in the gut.",
-  wrong:"It's false. Stress causes real, measurable changes in the gut. The pain is real.",
-  more:`<p>One of the biggest changes is <b>visceral hypersensitivity</b>: gut nerves turn their volume up, so normal gas or stretching feels painful.</p>
-  <ul>
-    <li>In the rat study, gut sensitivity stayed high for <b>up to 30 days after the stress ended</b>, longer than most other changes measured.</li>
-    <li>Stress changes the tiny channels in gut sensory nerves (more sodium channels, fewer potassium channels), so they fire more easily.</li>
-    <li>So IBS is best understood as an <b>"irritable bowel and irritable brain"</b> problem: real biology in both places, linked together.</li>
-  </ul>`,
-  src:"Qin et al., 2014; Vicario et al., 2012"
+  right:"In a study of healthy volunteers, a public speech made the gut lining leakier, but only in people whose stress hormone rose. A short burst like this usually settles.",
+  wrong:"The gut does react. Studies show stress can make the gut lining let more through for a while.",
+  tip:"Short stress passes. Weeks of stress with no break wear the gut down, so build rest into busy periods.",
+  research:{text:"Healthy volunteers who gave a public speech developed a leakier small intestine, but only those whose stress hormone went up. A drug that calms \"alarm cells\" in the gut wall (mast cells) stopped this happening. In rats, two weeks of crowding kept the lining leaky for up to a week after the stress ended. Scientists are still checking how big this effect is in everyday life.",
+    links:[L.vanuytsel,L.vicario]}
 },
 {
-  zone:"Exit", depth:8.9,
-  say:"End of the line. Let's finish with something useful.",
-  type:"sa", any:true,
-  q:"Name one thing that can help calm the stress–gut loop.",
-  placeholder:"e.g. a habit, a type of support…",
-  hint:"Think about your body, your mind, your food, or the people around you.",
-  model:"Options backed by research: learning about IBS, cognitive behavioural therapy (CBT), gut-directed hypnotherapy, regular exercise, diet changes with a GP or dietitian, and support from a doctor.",
-  right:"Good thinking.",
-  wrong:"No problem. Here are some options that have research behind them.",
-  more:`<p>Because IBS is stress-sensitive, care works best when it treats the gut and the stress response together:</p>
-  <ul>
-    <li><b>Understanding IBS</b> (you've just done this)</li>
-    <li><b>Cognitive behavioural therapy (CBT)</b> and <b>gut-directed hypnotherapy</b></li>
-    <li><b>Regular exercise</b> and good sleep</li>
-    <li><b>Diet changes</b>, ideally guided by a GP or dietitian. Probiotics help some people.</li>
-    <li><b>Biofeedback</b>, and a good relationship with your doctor</li>
-    <li><b>Medicines</b> when needed, including ones that act on serotonin or gut–brain signalling</li>
-  </ul>`,
-  src:"Qin et al., 2014, World J Gastroenterol"
+  zone:"Ileum", depth:4.5, type:"mcq", kind:"Fill the gap",
+  say:"The longest stretch, packed with cells that make chemical messengers.",
+  scene:"Sam has been rushing to the toilet all week.",
+  q:"Most of the body's serotonin, a key messenger chemical, is made in the…",
+  options:["brain","gut","blood","skin"],
+  answer:1,
+  right:"About 9 out of every 10 serotonin molecules are made in the gut lining. Stress can change these signals, so things can speed up (diarrhoea) or slow down (constipation).",
+  wrong:"It's the gut! About 9 out of every 10 serotonin molecules are made in the gut lining, where they set how fast things move.",
+  tip:"Toilet changes during stressful weeks are common. Noting when they happen helps you spot your triggers.",
+  research:{text:"Special cells in the gut lining make most of the body's serotonin. In the gut it controls how fast food moves, how much fluid is released and how strongly pain signals travel, rather than mood. That's why some IBS medicines target serotonin, and why low-dose antidepressants are sometimes prescribed for IBS. They act on gut–brain signals, not only on mood.",
+    links:[L.gershon,L.qin]}
+},
+{
+  zone:"Colon", depth:7.2, type:"mcq", kind:"Myth-buster",
+  say:"Welcome to the big city. Trillions of microbes live here, including me!",
+  scene:"Sam's flatmate says, \"Just take a probiotic. It fixes stress.\"",
+  q:"What does the research actually say?",
+  options:["Probiotics cure stress and anxiety","Some may slightly ease stress in healthy adults, but in young people they haven't been shown to help anxiety. They're no substitute for sleep, movement and support.","Probiotics are dangerous for everyone","Any yoghurt works the same as a probiotic supplement"],
+  answer:1,
+  right:"Probiotics aren't a fix. Effects are small and depend on the exact strain. For IBS, guidelines say one can be tried for up to 12 weeks, and if it doesn't help, stop.",
+  wrong:"The evidence is more modest. Some probiotics may slightly ease felt stress, but trials in young people found no clear effect on anxiety.",
+  tip:"Feed your gut community with regular meals and fibre that suits you. Treat probiotics as an optional extra, not a cure.",
+  research:{text:"Stress can shift the mix of bacteria in your gut. Studies of students at exam time find some changes, though results vary. People with IBS tend to have a different mix of gut bacteria, but scientists haven't shown this causes symptoms. In 7 trials, probiotics slightly lowered felt stress in healthy adults, with no effect on cortisol. In trials of 10- to 24-year-olds, there was no clear effect on anxiety.",
+    links:[L.zhang,L.kadosh,L.pitta,L.exam]},
+  more:{title:"Want more? Fibre, fermented foods and IBS",
+    text:"Fibre that gut bacteria can ferment helps them make substances that support the gut lining. For IBS, the type of fibre matters. Soluble fibre (oats, psyllium) tends to help, while wheat bran can make symptoms worse. Some high-fibre foods, like beans and onions, can trigger IBS symptoms, so a dietitian can help you find what suits you. Fermented foods (yoghurt, kefir, kimchi) are promising but not proven to ease stress.",
+    links:[L.bsg,L.fibre,L.marx]}
+},
+{
+  zone:"Sigmoid colon", depth:8.4, type:"tap", kind:"Tap the scene",
+  say:"Look! Some alarm cells are parked near a nerve.",
+  scene:"Sam's tummy pain keeps coming back, even after exams finish.",
+  q:"Tap the alarm cell that's turning up Sam's pain signals.",
+  fallback:{s:"If stress makes IBS worse, then IBS is \"all in your head\".",a:false,
+    right:"It's false. Stress can turn up the \"volume\" on gut nerves, so normal gas or stretching hurts. The pain is real.",
+    wrong:"It's actually false. Stress causes real changes in the gut, including turning up the \"volume\" on gut nerves, so normal gas or stretching hurts."},
+  right:"That alarm cell is right next to the nerve. Stress can turn up the \"volume\" on gut nerves, so normal gas or stretching hurts. The pain is real.",
+  wrong:"It was the one sitting right on the nerve. Stress can turn up the \"volume\" on gut nerves, so normal gas or stretching hurts. The pain is real.",
+  tip:"If gut pain keeps coming back, see a GP. It's real, and there's help.",
+  research:{text:"In people with IBS, activated alarm cells (mast cells) were found closer to gut nerves than usual, and this was linked to how much pain they reported. Under stress, people with IBS also felt gut stretching more strongly than people without IBS. In rats, gut oversensitivity lasted up to 30 days after the stress ended.",
+    links:[L.barbara,L.dickhaus,L.vicario]}
+},
+{
+  zone:"Exit", depth:8.9, type:"path", kind:"Choose Sam's path",
+  say:"Final stretch! You decide what Sam does next.",
+  scene:"The last exam is coming up. Every choice moves Sam's stress meter and gut meter.",
+  q:"What should Sam do?",
+  decisions:[
+    {moment:"Night before the last exam",
+     good:{t:"Revise until a set time, then sleep at the usual hour",why:"Sleep helps the stress system reset. A small study also linked better sleep with a more varied gut community (a link, not proof)."},
+     bad:{t:"Pull an all-nighter with energy drinks",why:"Missing sleep keeps the stress alarm switched on, and Sam walks into the exam running on empty."}},
+    {moment:"Exam-day lunch",
+     good:{t:"Have something small and plain",why:"Regular meals are standard first-line advice for IBS. Skipping meals adds to the stress load."},
+     bad:{t:"Skip it, there's no time",why:"Skipping meals adds to the stress load. Regular meals are first-line advice for IBS."}},
+    {moment:"The week after exams",
+     good:{t:"Go for a brisk 20–30 minute walk with a friend",why:"In a trial, people with IBS who exercised 3 to 5 times a week had fewer symptoms. Time with friends helps with stress too."},
+     bad:{t:"Stay in and scroll",why:"Moving your body and seeing people are two of the best-supported ways to calm the stress–gut loop."}}
+  ],
+  right:"Sam's calmer, and their gut community is happier.",
+  wrong:"Small choices add up. Sleep, regular meals, moving and seeing people all help calm the loop.",
+  tip:"Pick one small change, not ten. That's how habits stick.",
+  research:{text:"Across 41 trials, talking therapies like CBT (including online versions) and gut-directed hypnotherapy reduced IBS symptoms. In one trial, people with IBS who exercised 20 to 30 minutes, 3 to 5 times a week, had clearly fewer symptoms after 3 months. UK guidelines recommend regular exercise for everyone with IBS. A small study linked better sleep with a more varied gut community. It's a link, not proof.",
+    links:[L.black,L.johann,L.bsg,L.smith]}
 }
 ];
 
+const SORT_CARDS = [
+  {t:"A brisk walk most days",helps:true,fb:"Regular exercise is recommended for everyone with IBS."},
+  {t:"An all-nighter with energy drinks",helps:false,fb:"Poor sleep and a caffeine overload feed the stress loop."},
+  {t:"Talking to someone, or trying CBT",helps:true,fb:"Talking therapies have strong evidence for IBS."},
+  {t:"Loading up on wheat bran",helps:false,fb:"Insoluble fibre like wheat bran can make IBS worse."},
+  {t:"Regular, simple meals",helps:true,fb:"First-line advice for IBS."},
+  {t:"Cutting out whole food groups on your own",helps:false,fb:"Strict diets like low-FODMAP should be done with a dietitian."},
+  {t:"Oats or psyllium fibre, added slowly",helps:true,fb:"Soluble fibre helps IBS. Increase it gradually."},
+  {t:"A probiotic as a \"cure\"",helps:false,fb:"It's an optional extra to try, not a fix."}
+];
 
-/* ---------------------------------------------------------------
-   Pixel look for each stop.
-   pal = [lumen, wall dark, wall mid, wall edge highlight]
----------------------------------------------------------------- */
+/* Pixel look for each stop. pal = [lumen, wall dark, wall mid, wall edge] */
 const ZV = [
   {tex:"teeth",   width:.72, bugs:.10, food:.55, pal:["#2a0f1e","#6b1f3a","#a8395a","#e86f8c"]},
   {tex:"rings",   width:.34, bugs:.03, food:.35, pal:["#240d1b","#5e1b35","#92314f","#d3607d"]},
   {tex:"rugae",   width:.84, bugs:0,   food:.25, pal:["#210c1c","#551a36","#86304f","#c95a78"]},
-  {tex:"villi",   width:.50, bugs:.18, food:.2,  pal:["#24120f","#5b2a1c","#8e4a2c","#d08a4a"]},
-  {tex:"villi",   width:.48, bugs:.32, food:.12, pal:["#1f0c1a","#4f1834","#7f2a4c","#c4527a"]},
+  {tex:"villi",   width:.50, bugs:.22, food:.2,  pal:["#24120f","#5b2a1c","#8e4a2c","#d08a4a"]},
   {tex:"villi",   width:.46, bugs:.5,  food:.08, pal:["#1c0b19","#461632","#722747","#b34a72"]},
   {tex:"haustra", width:.70, bugs:1,   food:.04, pal:["#170a18","#3a1430","#5f2348","#95406e"]},
   {tex:"haustra", width:.60, bugs:.9,  food:.04, pal:["#140918","#32122d","#521f42","#823a66"]},
   {tex:"haustra", width:.42, bugs:.6,  food:0,   pal:["#10070f","#2a0f26","#461b3b","#70345c"]}
-];
-
-const COPING = [
-  {keys:["exercise","walk","run","gym","sport","yoga","swim","move","movement","cycling","bike","dance","pilates"],msg:"Moving your body is one of the best-supported ways to lower stress and help gut movement."},
-  {keys:["cbt","therapy","therapist","psycholog","counsel","cognitive","talk therapy"],msg:"CBT has good evidence for IBS. It helps break the loop between worry and gut symptoms."},
-  {keys:["hypno"],msg:"Gut-directed hypnotherapy is one of the better-studied IBS treatments."},
-  {keys:["sleep","rest","nap"],msg:"Sleep helps the stress system reset each night."},
-  {keys:["breath","breathing","meditat","mindful","relax","calm"],msg:"Slow breathing and mindfulness nudge your body toward rest-and-digest mode."},
-  {keys:["diet","fibre","fiber","food","fodmap","probiotic","eat","water","vegetable","fruit","yoghurt","yogurt","kefir","fermented"],msg:"Food matters. Changes work best with a GP or dietitian, and probiotics help some people."},
-  {keys:["friend","family","talk","support","social","doctor","gp","nurse","dietitian","help"],msg:"Support matters. Talking to people, and to a doctor, is part of good IBS care."},
-  {keys:["music","hobby","nature","outside","journal","read","game","art","break"],msg:"Anything that genuinely lowers your stress can help calm the loop."}
 ];
 
 /* ---------------------------------------------------------------
@@ -540,12 +607,12 @@ const COPING = [
 ---------------------------------------------------------------- */
 const S = {
   phase:"intro", idx:0, pos:0, depth:0, score:0, friends:[], answered:false,
-  mood:"happy", moodUntil:0, breathTimer:null, typeT:null
+  mood:"happy", moodUntil:0, breathTimer:null, typeT:null,
+  meters:{stress:7,gut:4}, kit:[], sortRight:0, pledge:null
 };
 const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const $ = s => document.querySelector(s);
 const sheet = $("#sheet");
-
 /* ---------------------------------------------------------------
    8-bit sound (off by default; starts only from a click)
 ---------------------------------------------------------------- */
@@ -576,31 +643,6 @@ $("#sfxBtn").addEventListener("click",e=>{
   if(sfx) beep([[784,.06],[1047,.1]]);
 });
 
-/* ---------------------------------------------------------------
-   Short-answer marking
----------------------------------------------------------------- */
-const norm = s => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9\s-]/g," ").replace(/\s+/g," ").trim();
-function lev(a,b){
-  const m=a.length,n=b.length; if(!m) return n; if(!n) return m;
-  let prev=Array.from({length:n+1},(_,j)=>j);
-  for(let i=1;i<=m;i++){
-    const cur=[i];
-    for(let j=1;j<=n;j++) cur[j]=Math.min(prev[j]+1,cur[j-1]+1,prev[j-1]+(a[i-1]===b[j-1]?0:1));
-    prev=cur;
-  }
-  return prev[n];
-}
-function hits(input,keys){
-  const t=norm(input), words=t.split(" ");
-  return keys.some(k=>{
-    k=norm(k);
-    if(!k) return false;
-    if(k.length<=3) return words.includes(k);          // short keys (gi, gp, cbt) must match a whole word
-    if(t.includes(k)) return true;
-    if(k.length>=5) return words.some(w=>w.length>=4 && lev(w,k)<=(k.length>7?2:1));
-    return false;
-  });
-}
 
 /* ---------------------------------------------------------------
    Pixel art: palettes, sprites, primitives
@@ -616,7 +658,7 @@ const COLS={
 };
 const COL_KEYS=Object.keys(COLS);
 
-const BIFI=[
+const MICHAEL=[
   "...kkkkkk...",
   "..klllgggk..",
   ".kllgggggdk.",
@@ -634,7 +676,7 @@ const BIFI=[
   "..kddddddk..",
   "...kkkkkk..."
 ];
-const BIFI_PAL={k:K,l:"#b9f27c",g:"#7ccf4a",d:"#3f8f2f",c:"#ff8fa3"};
+const MICHAEL_PAL={k:K,l:"#b9f27c",g:"#7ccf4a",d:"#3f8f2f",c:"#ff8fa3"};
 const TOOTH=["kkkkkkk.","kwwwwwwk","kwwwwwsk","kwwwwwsk","kwwwwssk","kswwssk.","kkkkkk.."];
 const TOOTH_PAL={k:K,w:"#f4f0e6",s:"#c9bfb2"};
 const ROD=[".kkkkk.","kllmmmk","kmmmmdk",".kkkkk."];
@@ -662,8 +704,8 @@ function disc(c,cx,cy,r,col){
   }
 }
 
-/* Bifi: 12x16 body + face that changes with mood */
-function drawBifi(c,x,y,mood,t,flagella){
+/* Michael: 12x16 body + face that changes with mood */
+function drawMichael(c,x,y,mood,t,flagella){
   x=Math.round(x); y=Math.round(y);
   if(flagella){
     for(const [i,bx] of [[0,3],[1,6],[2,9]].map(a=>a)){
@@ -673,7 +715,7 @@ function drawBifi(c,x,y,mood,t,flagella){
       }
     }
   }
-  spr(c,BIFI,x,y,BIFI_PAL);
+  spr(c,MICHAEL,x,y,MICHAEL_PAL);
   const blink=Math.sin(t*1.3)>0.97;
   if(blink){
     [[2,5],[3,5],[7,5],[8,5]].forEach(([i,j])=>px(c,x+i,y+j,K));
@@ -732,19 +774,34 @@ function drawMicrobe(c,type,x,y,col,t,ph){
   }
 }
 
+
+
 /* ---------------------------------------------------------------
-   Rendering the sheet
+   Sheet helpers
 ---------------------------------------------------------------- */
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const BADGE={3:"●●● Strong",2:"●●○ Good",1:"●○○ Early"};
+
+function linksHtml(links){
+  return `<ul class="links">${links.map(l=>`<li><span class="badge b${l.b}">${BADGE[l.b]}</span>${
+    l.u?`<a href="${l.u}" target="_blank" rel="noopener">${esc(l.t)}</a>`
+       :`<span class="pending">${esc(l.t)} (link added after fact-check)</span>`}</li>`).join("")}</ul>`;
+}
+function researchHtml(r,title){
+  return `<details class="more"><summary>${esc(title||"Read the research")}</summary><div class="more-body">
+    <p>${esc(r.text)}</p>${r.note?`<p class="note">${esc(r.note)}</p>`:""}${linksHtml(r.links)}
+    <p class="legend">●●● strong: guideline or review of many studies · ●●○ good: study in people · ●○○ early: animal study or narrative review</p>
+  </div></details>`;
+}
 
 function portrait(canvas,mood){
   canvas.width=15; canvas.height=17;
   const c=canvas.getContext("2d"); c.clearRect(0,0,15,17);
-  drawBifi(c,1,1,mood||"happy",0.2,false);
+  drawMichael(c,1,1,mood||"happy",0.2,false);
 }
 function sayBox(text){
   return `<div class="say px"><canvas width="15" height="17" aria-hidden="true"></canvas>
-    <div><span class="who">BIFI</span><span class="sr">${esc(text)}</span><span class="txt" aria-hidden="true"></span></div></div>`;
+    <div><span class="who">MICHAEL</span><span class="sr">${esc(text)}</span><span class="txt" aria-hidden="true"></span></div></div>`;
 }
 function typeInto(el,text){
   clearInterval(S.typeT);
@@ -759,130 +816,238 @@ function mountSay(text,mood){
   typeInto(txt,text);
   box.addEventListener("click",()=>{ clearInterval(S.typeT); txt.textContent=text; });
 }
+function setMood(m,ms){ S.mood=m; S.moodUntil=performance.now()+ms; }
 
+/* ---------------------------------------------------------------
+   Title screen
+---------------------------------------------------------------- */
 function renderIntro(){
   S.phase="intro";
   sheet.innerHTML = `
     <div class="title-card">
-      <p class="big"><span>Bifi's</span><br>Gut Dive</p>
-      <p>Ride 8.9 metres of gut with Bifi, a friendly gut microbe. Find out what stress does inside your gut, and how that links to IBS.</p>
-      <div class="meta"><span class="chip px">9 stops</span><span class="chip px">~4 min</span><span class="chip k px">No timer</span></div>
+      <p class="big"><span>Michael</span><br>the Microbe</p>
+      <p>Dive 8.9 metres through the gut with Michael, a friendly gut microbe. Follow Sam through a stressful exam fortnight and find out what stress does inside the gut, and what helps.</p>
+      <div class="meta"><span class="chip px">8 stops</span><span class="chip px">~5 min</span><span class="chip k px">No timer</span></div>
+    </div>
+    <div class="fb mid px">
+      <span class="v">Did you know?</span>
+      <p>About 1 in 25 people worldwide have IBS (irritable bowel syndrome). It causes repeated tummy pain together with diarrhoea, constipation or both. Tests usually show a normal-looking gut, but the symptoms are real.</p>
+      ${researchHtml(INTRO_RESEARCH)}
     </div>
     <button type="button" class="btn big px" id="startBtn">&#9654; Begin dive</button>
     <p class="fine">General health information, not medical advice. If gut symptoms are affecting your life, talk to a doctor.</p>`;
+  sheet.scrollTop=0;
   updateHud();
   $("#startBtn").addEventListener("click",()=>{ beep(SFX.start); descendTo(0); });
 }
 
-function renderQuestion(){
+/* ---------------------------------------------------------------
+   A stop: shared frame + one of five interactions
+---------------------------------------------------------------- */
+function renderStop(){
   const st=STOPS[S.idx];
   S.answered=false;
-  const n=S.idx+1;
-  let body="";
-  if(st.type==="mcq"){
-    body=`<div class="opts" role="group" aria-label="Answer options">${st.options.map((o,i)=>
-      `<button type="button" class="opt px" data-i="${i}"><span class="L">${"ABCD"[i]}</span><span>${esc(o)}</span></button>`).join("")}</div>`;
-  } else {
-    body=`<form class="sa" id="saForm" autocomplete="off">
-        <label for="saIn">Type your answer</label>
-        <input id="saIn" name="saIn" type="text" placeholder="${esc(st.placeholder||"")}" maxlength="120">
-        <button type="submit" class="btn px">Check</button>
-      </form>
-      <div class="row"><button type="button" class="ghost px" id="hintBtn">Hint</button><button type="button" class="ghost px" id="skipBtn">Not sure? Show me</button></div>
-      <p class="hint" id="hintTxt" hidden>${esc(st.hint)}</p>`;
-  }
   sheet.innerHTML=`
-    <div class="meta"><span class="chip px">Stop ${n}/${STOPS.length}</span><span class="chip px">${st.zone}</span><span class="chip k px">${st.type==="mcq"?"Multiple choice":"Short answer"}</span></div>
+    <div class="meta"><span class="chip px">Stop ${S.idx+1}/${STOPS.length}</span><span class="chip px">${esc(st.zone)}</span><span class="chip k px">${esc(st.kind)}</span></div>
     ${sayBox(st.say)}
+    <p class="scenario">${esc(st.scene)}</p>
     <p class="q" id="qText">${esc(st.q)}</p>
-    ${body}
+    <div id="play" style="display:flex;flex-direction:column;gap:10px"></div>
     <div id="fbSlot"></div>`;
   sheet.scrollTop=0;
   mountSay(st.say);
-  if(st.type==="mcq"){
-    sheet.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>answerMcq(+b.dataset.i)));
-  } else {
-    $("#saForm").addEventListener("submit",e=>{e.preventDefault();answerSa($("#saIn").value,false);});
-    $("#hintBtn").addEventListener("click",()=>{$("#hintTxt").hidden=false;});
-    $("#skipBtn").addEventListener("click",()=>answerSa("",true));
-  }
+  ({mcq:playMcq, tf:playTf, order:playOrder, tap:playTap, path:playPath})[st.type](st,$("#play"));
 }
 
-function feedback(kind,verdict,text,extraHtml=""){
+function reward(ok){
+  if(ok){
+    S.score++;
+    S.friends.push(makeFriend(S.friends.length));
+    $("#colonyN").textContent=1+S.friends.length;
+    setMood("wow",1800); beep(SFX.right);
+  } else { setMood("stressed",2200); beep(SFX.wrong); }
+  const pc=sheet.querySelector(".say canvas"); if(pc) portrait(pc,ok?"wow":"stressed");
+}
+
+function finish(kind,verdict,text,extra=""){
+  if(S.answered) return; S.answered=true;
+  reward(kind==="ok");
   const st=STOPS[S.idx];
   const last=S.idx===STOPS.length-1;
-  const nextLabel = last ? "See results" : (S.idx===3 ? "Breathe, then dive &#9660;" : "Keep diving &#9660;");
+  const nextLabel = last ? "Build Sam's gut kit &#9654;" : (S.idx===3 ? "Breathe, then dive &#9660;" : "Keep diving &#9660;");
   $("#fbSlot").innerHTML=`
     <div class="fb ${kind} px">
-      <span class="v">${verdict}</span>
+      <span class="v">${esc(verdict)}</span>
       <p>${esc(text)}</p>
-      ${extraHtml}
-      <details class="more"><summary>Learn more</summary>
-        <div class="more-body">${st.more}<p class="src">Source: <em>${esc(st.src)}</em></p></div>
-      </details>
+      ${extra}
+      <div class="tip px"><b>TRY THIS</b>${esc(st.tip)}</div>
+      ${researchHtml(st.research)}
+      ${st.more?researchHtml(st.more,st.more.title):""}
     </div>
     <button type="button" class="btn big px" id="nextBtn">${nextLabel}</button>`;
   $("#nextBtn").addEventListener("click",next);
   requestAnimationFrame(()=>$("#fbSlot").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"}));
 }
 
-function reward(correct){
-  if(correct){
-    S.score++;
-    S.friends.push(makeFriend(S.friends.length));
-    $("#colonyN").textContent=1+S.friends.length;
-    setMood("wow",1800); beep(SFX.right);
-  } else { setMood("stressed",2200); beep(SFX.wrong); }
-  const pc=sheet.querySelector(".say canvas"); if(pc) portrait(pc,correct?"wow":"stressed");
+/* 1. multiple choice (scenario, fill the gap, myth-buster) */
+function playMcq(st,el){
+  el.innerHTML=`<div class="opts" role="group" aria-labelledby="qText">${st.options.map((o,i)=>
+    `<button type="button" class="opt px" data-i="${i}"><span class="L">${"ABCD"[i]}</span><span>${esc(o)}</span></button>`).join("")}</div>`;
+  el.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+    if(S.answered) return;
+    const i=+b.dataset.i, ok=i===st.answer;
+    el.querySelectorAll(".opt").forEach(x=>{
+      const j=+x.dataset.i; x.disabled=true;
+      x.classList.add(j===st.answer?"right":j===i?"wrongpick":"dim");
+    });
+    finish(ok?"ok":"no", ok?"Correct! +1 microbe":"Not quite", ok?st.right:st.wrong);
+  }));
 }
 
-function answerMcq(i){
-  if(S.answered) return; S.answered=true;
-  const st=STOPS[S.idx], ok=i===st.answer;
-  sheet.querySelectorAll(".opt").forEach(b=>{
-    const j=+b.dataset.i; b.disabled=true;
-    if(j===st.answer) b.classList.add("right");
-    else if(j===i) b.classList.add("wrongpick");
-    else b.classList.add("dim");
+/* 2. true / false quick-fire */
+function tfItemHtml(it,label){
+  return `<div class="stmt px"><small>${label}</small>${esc(it.s)}</div>
+    <div class="duo"><button type="button" class="btn px" data-v="1">True</button><button type="button" class="btn px" data-v="0">False</button></div>`;
+}
+function playTf(st,el){
+  let k=0, c=0; const log=[];
+  const draw=()=>{
+    const it=st.items[k];
+    el.innerHTML=(log.length?`<ul class="log">${log.join("")}</ul>`:"")+(it?tfItemHtml(it,`${k+1} of ${st.items.length}`):"");
+    if(!it) return;
+    el.querySelectorAll("[data-v]").forEach(b=>b.addEventListener("click",()=>{
+      const ok=(b.dataset.v==="1")===it.a; if(ok) c++;
+      beep(ok?[[784,.06]]:[[220,.08]]);
+      log.push(`<li><span class="r ${ok?"ok":"no"}">${ok?"✔ Right":"✘ Not quite"} · it's ${it.a?"true":"false"}</span>${esc(it.s)} ${esc(it.fb)}</li>`);
+      k++; draw();
+      if(k===st.items.length) finish(c>=2?"ok":"no", c>=2?`${c}/3 right! +1 microbe`:`${c}/3 right`, c>=2?st.right:st.wrong);
+      else el.querySelector("[data-v]").focus();
+    }));
+  };
+  draw();
+}
+
+/* 3. put in order */
+function playOrder(st,el){
+  const shuffled=[2,0,3,1].filter(i=>i<st.steps.length);
+  let nextIdx=0, mistakes=0;
+  el.innerHTML=`
+    <ol class="slots">${st.steps.map((_,i)=>`<li class="slot px" id="slot${i}"><b>${i+1}</b><span>…</span></li>`).join("")}</ol>
+    <div class="opts" id="pool">${shuffled.map(i=>`<button type="button" class="opt px" data-i="${i}"><span class="L">+</span><span>${esc(st.steps[i])}</span></button>`).join("")}</div>
+    <button type="button" class="textbtn" id="showOrder">Stuck? Show me the order</button>`;
+  const done=(shown)=>{
+    $("#showOrder").remove();
+    const ok=!shown && mistakes<=1;
+    finish(ok?"ok":"no", ok?"Chain complete! +1 microbe":shown?"Here's the order":"Got there!", ok?st.right:st.wrong,
+      shown?"":`<p class="mist">${mistakes===0?"No wrong taps.":mistakes===1?"Just one wrong tap.":mistakes+" wrong taps along the way."}</p>`);
+  };
+  const place=i=>{
+    const s=$("#slot"+i); s.classList.add("filled"); s.querySelector("span").textContent=st.steps[i];
+    el.querySelector(`#pool [data-i="${i}"]`)?.remove();
+  };
+  el.querySelectorAll("#pool .opt").forEach(b=>b.addEventListener("click",()=>{
+    if(S.answered) return;
+    const i=+b.dataset.i;
+    if(i===nextIdx){
+      place(i); nextIdx++; beep([[523+nextIdx*80,.06]]);
+      if(nextIdx===st.steps.length) done(false);
+      else el.querySelector("#pool .opt")?.focus();
+    } else {
+      mistakes++; beep([[200,.08]]);
+      b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake");
+    }
+  }));
+  $("#showOrder").addEventListener("click",()=>{
+    if(S.answered) return;
+    for(let i=nextIdx;i<st.steps.length;i++) place(i);
+    done(true);
   });
-  reward(ok);
-  feedback(ok?"ok":"no", ok?"Correct! +1 microbe":"Not quite", ok?st.right:st.wrong);
 }
 
-function answerSa(raw,gaveUp){
-  if(S.answered) return;
-  const st=STOPS[S.idx];
-  const val=(raw||"").trim();
-  if(!gaveUp && !val){ $("#saIn").focus(); $("#saIn").placeholder="Type something first, or tap “Not sure? Show me”"; return; }
-  S.answered=true;
-  $("#saIn").disabled=true;
-  sheet.querySelectorAll("#saForm button, #hintBtn, #skipBtn").forEach(b=>b.disabled=true);
-  const you = val ? `<p class="model">You said: “${esc(val)}”</p>` : "";
-
-  if(st.any){
-    if(gaveUp){ reward(false); feedback("mid","Here are some ideas",st.wrong,`<p class="model">${esc(st.model)}</p>`); return; }
-    const tip=COPING.find(c=>hits(val,c.keys));
-    reward(true);
-    feedback("ok","Nice one! +1 microbe", tip?tip.msg:"Anything that genuinely lowers your stress can help. Here's what research supports most.", you+`<p class="model">${esc(st.model)}</p>`);
-    return;
-  }
-  if(!gaveUp && hits(val,st.accept)){
-    reward(true);
-    feedback("ok","Correct! +1 microbe",st.right,you+`<p class="model">Answer: ${esc(st.model)}</p>`);
-    return;
-  }
-  const near=!gaveUp && (st.close||[]).find(c=>hits(val,c.keys));
-  if(near){
-    reward(false);
-    feedback("mid","So close",near.msg,you+`<p class="model">Answer: ${esc(st.model)}</p>`);
-    return;
-  }
-  reward(false);
-  feedback(gaveUp?"mid":"no",gaveUp?"Here's the answer":"Not quite",st.wrong,you+`<p class="model">Answer: ${esc(st.model)}</p>`);
+/* 4. tap the scene (with true/false fallback) */
+const CELLS=[
+  {x:30,y:72,target:true, label:"Alarm cell, lower left"},
+  {x:70,y:34,target:false,label:"Alarm cell, upper right"},
+  {x:20,y:36,target:false,label:"Alarm cell, upper left"}
+];
+function drawMast(canvas){
+  canvas.width=15; canvas.height=15;
+  const c=canvas.getContext("2d");
+  disc(c,7,7,5,{m:"#ff5d73",d:"#b3263f",l:"#ffc2cb"});
+  [[5,5],[8,5],[6,8],[9,9],[7,7],[4,8],[10,7],[6,10]].forEach(([x,y],i)=>px(c,x,y,i%2?"#5c0f1f":"#fff0f2"));
+}
+function clearOverlay(){ document.querySelectorAll(".tapzone").forEach(n=>n.remove()); }
+function playTap(st,el){
+  clearOverlay();
+  const zone=document.createElement("div"); zone.className="tapzone";
+  zone.innerHTML=`<div class="nerve" aria-hidden="true"><span>NERVE</span></div>`+CELLS.map((c,i)=>
+    `<button type="button" class="cellbtn" data-i="${i}" style="left:${c.x}%;top:${c.y}%" aria-label="${c.label}"><canvas aria-hidden="true"></canvas></button>`).join("");
+  $("#sceneWrap").appendChild(zone);
+  zone.querySelectorAll("canvas").forEach(drawMast);
+  el.innerHTML=`<p class="hint2" style="text-align:left">Tap one of the three red alarm cells in the picture above.</p>
+    <button type="button" class="textbtn" id="fbk">Can't tap the picture? Answer a true/false question instead</button>`;
+  zone.querySelectorAll(".cellbtn").forEach(b=>b.addEventListener("click",()=>{
+    if(S.answered) return;
+    const ok=CELLS[+b.dataset.i].target;
+    zone.querySelectorAll(".cellbtn").forEach(x=>{ x.disabled=true; x.classList.add(CELLS[+x.dataset.i].target?"reveal":"miss"); });
+    $("#fbk")?.remove();
+    finish(ok?"ok":"no", ok?"Found it! +1 microbe":"Not that one", ok?st.right:st.wrong);
+  }));
+  $("#fbk").addEventListener("click",()=>{
+    clearOverlay();
+    const f=st.fallback;
+    el.innerHTML=tfItemHtml(f,"True or false");
+    el.querySelectorAll("[data-v]").forEach(b=>b.addEventListener("click",()=>{
+      if(S.answered) return;
+      const ok=(b.dataset.v==="1")===f.a;
+      el.querySelectorAll("[data-v]").forEach(x=>x.disabled=true);
+      finish(ok?"ok":"no", ok?"Correct! +1 microbe":"Not quite", ok?f.right:f.wrong);
+    }));
+    el.querySelector("[data-v]").focus();
+  });
 }
 
+/* 5. choose Sam's path */
+function meterHtml(){
+  const bar=v=>Array.from({length:10},(_,i)=>`<i class="${i<v?"on":""}"></i>`).join("");
+  return `<div class="meters" aria-label="Sam's stress ${S.meters.stress} out of 10, gut ${S.meters.gut} out of 10">
+    <div class="meter stress px"><div class="lab"><span>STRESS</span><span>${S.meters.stress}/10</span></div><div class="bar" aria-hidden="true">${bar(S.meters.stress)}</div></div>
+    <div class="meter gut px"><div class="lab"><span>GUT</span><span>${S.meters.gut}/10</span></div><div class="bar" aria-hidden="true">${bar(S.meters.gut)}</div></div>
+  </div>`;
+}
+function playPath(st,el){
+  S.meters={stress:7,gut:4};
+  let k=0, goods=0; const log=[];
+  const draw=()=>{
+    const d=st.decisions[k];
+    const opts = d ? (k%2 ? [["bad",d.bad],["good",d.good]] : [["good",d.good],["bad",d.bad]]) : [];
+    el.innerHTML=meterHtml()+(log.length?`<ul class="log">${log.join("")}</ul>`:"")+(d?`
+      <p class="moment">${k+1}/${st.decisions.length} · ${esc(d.moment)}</p>
+      <div class="opts">${opts.map(([key,o],i)=>`<button type="button" class="opt px" data-k="${key}"><span class="L">${"AB"[i]}</span><span>${esc(o.t)}</span></button>`).join("")}</div>`:"");
+    if(!d) return;
+    el.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
+      const good=b.dataset.k==="good"; if(good) goods++;
+      S.meters.stress=clamp(S.meters.stress+(good?-2:1),0,10);
+      S.meters.gut=clamp(S.meters.gut+(good?2:-1),0,10);
+      setMood(good?"wow":"stressed",1500); beep(good?[[659,.06],[784,.1]]:[[220,.1]]);
+      log.push(`<li><span class="r ${good?"ok":"no"}">${good?"✔ Good call":"✘ Hmm"} · ${esc(d.moment)}</span>${esc((good?d.good:d.bad).why)}</li>`);
+      k++; draw();
+      if(k===st.decisions.length){
+        const ok=goods>=2;
+        finish(ok?"ok":"no", ok?`${goods}/3 good calls! +1 microbe`:`${goods}/3 good calls`,
+          `${ok?st.right:st.wrong} Sam's stress ended at ${S.meters.stress}/10 and gut at ${S.meters.gut}/10.`);
+      } else el.querySelector(".opt").focus();
+    }));
+  };
+  draw();
+}
+
+/* ---------------------------------------------------------------
+   Flow between stops
+---------------------------------------------------------------- */
 function next(){
-  if(S.idx===STOPS.length-1){ renderEnd(); return; }
+  clearOverlay();
+  if(S.idx===STOPS.length-1){ renderSort(); return; }
   if(S.idx===3){ renderBreathe(); return; }
   beep(SFX.dive);
   descendTo(S.idx+1);
@@ -893,10 +1058,10 @@ function renderBreathe(){
   sheet.innerHTML=`
     <div class="breathe">
       <span class="chip k px">Halfway break</span>
-      <h2>Breathe with Bifi</h2>
+      <h2>Breathe with Michael</h2>
       <canvas id="bCv" width="15" height="17" aria-hidden="true"></canvas>
       <p class="bcount" id="bTxt" aria-live="polite">Get ready...</p>
-      <p style="color:var(--ink-soft);font-size:15px">Slow breathing nudges your nervous system toward "rest and digest", the opposite of fight-or-flight. It's one small way to turn down the stress signal reaching your gut.</p>
+      <p style="color:var(--ink-soft);font-size:15px">Slow breathing nudges your nervous system toward "rest and digest", the opposite of alarm mode. It's one small way to turn down the stress signal reaching your gut.</p>
       <button type="button" class="ghost px" id="bSkip">Skip and keep diving &#9660;</button>
     </div>`;
   const cv=$("#bCv"); portrait(cv,"happy");
@@ -922,26 +1087,91 @@ function endBreathe(){
   descendTo(S.idx+1);
 }
 
+/* ---------------------------------------------------------------
+   Ending: swipe to sort -> pick one -> results
+---------------------------------------------------------------- */
+function renderSort(){
+  S.phase="sort"; updateHud();
+  S.kit=SORT_CARDS.filter(c=>c.helps).map(c=>c.t); S.sortRight=0;
+  let k=0;
+  const draw=()=>{
+    const c=SORT_CARDS[k];
+    if(!c){ renderPledge(); return; }
+    sheet.innerHTML=`
+      <div class="meta"><span class="chip k px">Bonus · Sam's gut kit</span><span class="chip px">Card ${k+1}/${SORT_CARDS.length}</span></div>
+      <p class="q" id="sortQ">Does this help calm the stress–gut loop?</p>
+      <div class="sortwrap">
+        <div class="card px" id="card" tabindex="0" role="group" aria-labelledby="sortQ cardTxt"><small>SWIPE OR TAP A BUTTON</small><span id="cardTxt">${esc(c.t)}</span></div>
+        <div class="duo" id="sortBtns"><button type="button" class="btn alt px" id="noBtn">&#9664; Doesn't help</button><button type="button" class="btn px" id="yesBtn">Helps &#9654;</button></div>
+        <p class="hint2">Swipe right if it helps, left if it doesn't. Arrow keys work too.</p>
+        <div id="sortFb"></div>
+      </div>`;
+    sheet.scrollTop=0;
+    const card=$("#card"); let answered=false;
+    const choose=helps=>{
+      if(answered) return; answered=true;
+      const ok=helps===c.helps; if(ok) S.sortRight++;
+      beep(ok?[[784,.06],[988,.08]]:[[220,.1]]);
+      card.style.transform=reduce?"":`translateX(${helps?140:-140}%) rotate(${helps?12:-12}deg)`;
+      card.style.opacity=".25";
+      $("#sortBtns").remove();
+      $("#sortFb").innerHTML=`<div class="fb ${ok?"ok":"no"} px"><span class="v">${ok?"✔ Right":"✘ Not quite"} · ${c.helps?"it helps":"it doesn't help"}</span><p>${esc(c.fb)}</p></div>
+        <button type="button" class="btn big px" id="nextCard">${k+1<SORT_CARDS.length?"Next card &#9654;":"Pick your one thing &#9654;"}</button>`;
+      $("#nextCard").addEventListener("click",()=>{ k++; draw(); });
+      $("#nextCard").focus();
+    };
+    $("#yesBtn").addEventListener("click",()=>choose(true));
+    $("#noBtn").addEventListener("click",()=>choose(false));
+    card.addEventListener("keydown",e=>{ if(e.key==="ArrowRight") choose(true); if(e.key==="ArrowLeft") choose(false); });
+    let x0=null, dx=0;
+    card.addEventListener("pointerdown",e=>{ if(answered) return; x0=e.clientX; dx=0; card.classList.add("dragging"); card.setPointerCapture(e.pointerId); });
+    card.addEventListener("pointermove",e=>{ if(x0===null) return; dx=e.clientX-x0; card.style.transform=`translateX(${dx}px) rotate(${dx/18}deg)`; });
+    const end=()=>{ if(x0===null) return; x0=null; card.classList.remove("dragging");
+      if(Math.abs(dx)>70) choose(dx>0); else card.style.transform=""; };
+    card.addEventListener("pointerup",end); card.addEventListener("pointercancel",end);
+  };
+  draw();
+}
+
+function renderPledge(){
+  S.phase="pledge";
+  sheet.innerHTML=`
+    <div class="meta"><span class="chip k px">Your turn</span><span class="chip px">${S.sortRight}/${SORT_CARDS.length} sorted right</span></div>
+    <h2>Pick one thing to try this week</h2>
+    <p>Here's Sam's gut kit. One small change sticks better than ten.</p>
+    <div class="kit" role="group" aria-label="Sam's gut kit">${S.kit.map((t,i)=>`<button type="button" class="kitbtn px" aria-pressed="false" data-i="${i}">${esc(t)}</button>`).join("")}</div>
+    <button type="button" class="btn big px" id="doneBtn" disabled>See my results &#9654;</button>
+    <button type="button" class="textbtn" id="skipPledge">Skip this</button>`;
+  sheet.scrollTop=0;
+  sheet.querySelectorAll(".kitbtn").forEach(b=>b.addEventListener("click",()=>{
+    sheet.querySelectorAll(".kitbtn").forEach(x=>x.setAttribute("aria-pressed","false"));
+    b.setAttribute("aria-pressed","true"); S.pledge=S.kit[+b.dataset.i]; $("#doneBtn").disabled=false;
+  }));
+  $("#doneBtn").addEventListener("click",renderEnd);
+  $("#skipPledge").addEventListener("click",()=>{ S.pledge=null; renderEnd(); });
+}
+
 function renderEnd(){
-  S.phase="end"; updateHud();
+  S.phase="end"; S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M; updateHud();
   const total=STOPS.length;
-  const msg = S.score>=8 ? "Gut genius! Your colony is thriving."
-            : S.score>=5 ? "Solid dive! Your colony is growing."
+  const msg = S.score>=7 ? "Gut genius! Michael's colony is thriving."
+            : S.score>=4 ? "Solid dive! Michael's colony is growing."
             : "Dive complete! You now know more than most.";
   sheet.innerHTML=`
     <span class="chip k px" style="align-self:flex-start">Stage clear · 8.9 m</span>
     <h2>${msg}</h2>
     <div class="stats">
-      <div class="stat px"><b>${S.score}/${total}</b><span>questions right</span></div>
-      <div class="stat px"><b>${1+S.friends.length}</b><span>microbes in your colony</span></div>
-      <div class="stat px"><b>8.9m</b><span>of gut explored</span></div>
+      <div class="stat px"><b>${S.score}/${total}</b><span>stops cleared</span></div>
+      <div class="stat px"><b>${1+S.friends.length}</b><span>microbes in the colony</span></div>
+      <div class="stat px"><b>${S.sortRight}/${SORT_CARDS.length}</b><span>gut kit cards sorted</span></div>
     </div>
+    ${S.pledge?`<div class="pledge px"><b>YOUR ONE THING THIS WEEK</b>${esc(S.pledge)}</div>`:""}
     <p class="q" style="font-size:17px">Four things to remember</p>
     <ol class="take">
-      <li>Your brain and gut talk <b>both ways</b>. Stress can change your gut, and gut trouble can raise stress.</li>
-      <li>Long-term stress keeps the <b>cortisol</b> system switched on, makes the gut lining <b>leakier</b> and turns up gut <b>nerve sensitivity</b>.</li>
-      <li>Stress shifts the balance of your <b>gut microbes</b>, and they signal back to the brain.</li>
-      <li>IBS is <b>real, common and manageable</b>. Calming stress is part of treating it.</li>
+      <li>Your brain and gut talk <b>both ways</b>. Stress shows up in your belly, and belly trouble can raise stress.</li>
+      <li>Stress hormones can slow your stomach, make the gut lining <b>let more through</b>, and turn up gut <b>nerve sensitivity</b>. The pain is real.</li>
+      <li>Stress can shift your <b>gut bacteria</b>. Probiotics are an optional extra, not a fix.</li>
+      <li><b>Sleep, regular meals, moving and talking to someone</b> help calm the loop. IBS is common and manageable.</li>
     </ol>
     <div class="warn px"><b>See a doctor if you notice:</b> blood in your poo, weight loss you can't explain, symptoms that wake you at night, fever, or a family history of bowel cancer, coeliac disease or IBD. These need checking and aren't typical of IBS.</div>
     <div class="row">
@@ -949,18 +1179,18 @@ function renderEnd(){
       <button type="button" class="ghost px" id="shareBtn">Copy a message for a friend</button>
     </div>
     <p class="fine" id="shareMsg" aria-live="polite"></p>
-    <details class="more"><summary>Sources</summary>
+    <details class="more"><summary>All sources</summary>
       <div class="more-body">
-        <p class="src">Qin H-Y, Cheng C-W, Tang X-D, Bian Z-X. Impact of psychological stress on irritable bowel syndrome. <em>World J Gastroenterol</em> 2014;20(39):14126–31.</p>
-        <p class="src">Vicario M, et al. Chronic psychosocial stress induces reversible mitochondrial damage and CRF receptor type-1 upregulation in the rat intestine and IBS-like gut dysfunction. <em>Psychoneuroendocrinology</em> 2012;37:65–77.</p>
+        <p class="src">Core readings: Qin H-Y et al. 2014, <em>World J Gastroenterol</em> 20(39):14126–31 · Vicario M et al. 2012, <em>Psychoneuroendocrinology</em> 37:65–77.</p>
+        ${linksHtml([L.oka,L.koloski,L.vanuytsel,L.barbara,L.pitta,L.zhang,L.kadosh,L.black,L.bsg,L.johann])}
       </div>
     </details>
-    <p class="fine">General health information, not medical advice.</p>`;
+    <p class="fine">General health information, not medical advice. A concept Doodle made for a university project.</p>`;
   sheet.scrollTop=0;
   setMood("wow",2500); beep(SFX.end);
   $("#againBtn").addEventListener("click",restart);
   $("#shareBtn").addEventListener("click",()=>{
-    const text=`It's World IBS Day (19 April). I just did Bifi's Gut Dive and learned how stress changes your gut. ${S.score}/${total}. Can you beat me?`;
+    const text=`It's World IBS Day (19 April). I dived through the gut with Michael the Microbe and learned how stress changes your gut. ${S.score}/${total} stops cleared. Can you beat me?`;
     const out=$("#shareMsg");
     const fallback=()=>{ out.textContent=text; const r=document.createRange(); r.selectNodeContents(out); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); };
     try{ navigator.clipboard.writeText(text).then(()=>{out.textContent="Copied. Paste it in a group chat.";},fallback); }
@@ -969,7 +1199,8 @@ function renderEnd(){
 }
 
 function restart(){
-  S.score=0; S.friends=[]; $("#colonyN").textContent="1";
+  stopAll();
+  S.score=0; S.friends=[]; S.pledge=null; S.sortRight=0; $("#colonyN").textContent="1";
   S.idx=0; S.pos=0; S.depth=0;
   renderIntro();
 }
@@ -980,10 +1211,11 @@ function restart(){
 let anim=null;
 function descendTo(i){
   S.phase="descend";
-  clearInterval(S.typeT);
+  clearInterval(S.typeT); clearOverlay();
   const from=S.pos, to=i, d0=S.depth, d1=STOPS[i].depth;
-  sheet.innerHTML=`${sayBox("Diving to the "+STOPS[i].zone.toLowerCase()+"...")}`;
-  mountSay("Diving to the "+STOPS[i].zone.toLowerCase()+"...");
+  const line="Diving to the "+STOPS[i].zone.toLowerCase()+"...";
+  sheet.innerHTML=sayBox(line);
+  mountSay(line);
   const dur = reduce ? 0 : 1400 + Math.min(1200, Math.abs(d1-d0)*260);
   const t0=performance.now();
   if(anim) cancelAnimationFrame(anim);
@@ -995,25 +1227,25 @@ function descendTo(i){
     updateHud();
     if(t<1){ anim=requestAnimationFrame(step); return; }
     anim=null; S.idx=i; S.pos=i; S.depth=d1; S.phase="question";
-    updateHud(); renderQuestion();
+    updateHud(); renderStop();
   };
   anim=requestAnimationFrame(step);
 }
-function stopAll(){ if(anim) cancelAnimationFrame(anim); anim=null; clearTimeout(S.breathTimer); clearInterval(S.typeT); }
+function stopAll(){ if(anim) cancelAnimationFrame(anim); anim=null; clearTimeout(S.breathTimer); clearInterval(S.typeT); clearOverlay(); }
 function jumpTo(i){
   stopAll();
   S.idx=i; S.pos=i; S.depth=STOPS[i].depth; S.phase="question";
-  updateHud(); renderQuestion();
+  updateHud(); renderStop();
 }
 
 function updateHud(){
   $("#depthVal").textContent=S.depth.toFixed(2)+"m";
   $("#marker").style.top=`calc(${(S.depth/TOTAL_M*100).toFixed(2)}% - 2px)`;
   const zi=Math.min(STOPS.length-1,Math.round(S.pos));
-  $("#zoneTag").textContent=STOPS[zi].zone==="Sigmoid colon"?"Sigmoid":STOPS[zi].zone;
-  $("#stopVal").textContent=(S.phase==="intro"?0:S.phase==="end"?STOPS.length:zi+1)+"/"+STOPS.length;
+  $("#zoneTag").textContent=STOPS[zi].zone==="Sigmoid colon"?"Sigmoid":STOPS[zi].zone==="Small intestine"?"Small int.":STOPS[zi].zone;
+  const done=["sort","pledge","end"].includes(S.phase);
+  $("#stopVal").textContent=(S.phase==="intro"?0:done?STOPS.length:zi+1)+"/"+STOPS.length;
 }
-function setMood(m,ms){ S.mood=m; S.moodUntil=performance.now()+ms; }
 
 /* ---------------------------------------------------------------
    Scene: drawn at low resolution, scaled up with hard pixels
@@ -1150,7 +1382,7 @@ function frame(now){
       else drawMicrobe(ctx,o.type,x+Math.round(Math.sin(t*1.2+o.ph)),y+Math.round(Math.cos(t+o.ph)),o.col,t,o.ph);
     }
 
-    // Bifi and the friends that follow
+    // Michael and the friends that follow
     const by=Math.round(h*.5)-8+(reduce?0:Math.round(Math.sin(t*2.2)));
     const mid=rows[clamp(Math.round(h*.5),0,h-1)];
     const bx=Math.round((mid.l+mid.r)/2)-6;
@@ -1164,7 +1396,7 @@ function frame(now){
       drawMicrobe(ctx,f.type,f.x+Math.sin(t*1.5+f.ph),f.y,f.col,t,f.ph);
     });
     const mood = performance.now()<S.moodUntil ? S.mood : "happy";
-    drawBifi(ctx,bx,by,mood,t,true);
+    drawMichael(ctx,bx,by,mood,t,true);
 
     // acid bubbles in front
     if(top+h>ACID_TOP && top<ACID_BOT){
@@ -1181,12 +1413,20 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 
+
 /* ---------------------------------------------------------------
-   Pop-up chrome + run-through drawer
+   Doodle tile, pop-up chrome, run-through drawer
 ---------------------------------------------------------------- */
 portrait($("#pillIcon"),"happy");
+portrait($("#doodleIcon"),"wow");
+const openGame=()=>{
+  $("#pill").hidden=true; $("#popup").hidden=false; resize();
+  $("#popup").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"});
+  ($("#startBtn")||$("#closeBtn")).focus();
+};
+$("#doodle").addEventListener("click",openGame);
 $("#closeBtn").addEventListener("click",()=>{ $("#popup").hidden=true; $("#pill").hidden=false; $("#pill").focus(); });
-$("#pill").addEventListener("click",()=>{ $("#pill").hidden=true; $("#popup").hidden=false; resize(); $("#closeBtn").focus(); });
+$("#pill").addEventListener("click",openGame);
 
 const notes=$("#notes");
 $("#notesBtn").addEventListener("click",()=>{ notes.hidden=false; $("#notesClose").focus(); });
@@ -1194,17 +1434,20 @@ $("#notesClose").addEventListener("click",()=>{ notes.hidden=true; });
 notes.addEventListener("click",e=>{ if(e.target===notes) notes.hidden=true; });
 document.addEventListener("keydown",e=>{ if(e.key==="Escape" && !notes.hidden) notes.hidden=true; });
 
+const atEnd=()=>{ stopAll(); S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M; };
 const flowItems=[
-  {n:"Start",d:"Pop-up opens beside search results",s:"Title screen: Begin dive, 9 stops, no timer",go:()=>{ stopAll(); restart(); }},
-  ...STOPS.map((st,i)=>({n:`${st.depth.toFixed(2)} m`,d:`${i+1}. ${st.zone}: ${st.type==="mcq"?"multiple choice":"short answer"}`,s:st.q,go:()=>jumpTo(i)})),
-  {n:"End",d:"Results, takeaways, when to see a doctor",s:"Score, colony size, share message, sources",go:()=>{ stopAll(); S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M; renderEnd(); }}
+  {n:"Start",d:"Title screen and IBS fact card",s:"Begin dive, 8 stops, no timer",go:()=>restart()},
+  ...STOPS.map((st,i)=>({n:`${st.depth.toFixed(2)} m`,d:`${i+1}. ${st.zone}: ${st.kind.toLowerCase()}`,s:st.scene,go:()=>jumpTo(i)})),
+  {n:"Bonus",d:"Swipe to sort: build Sam's gut kit",s:"8 cards, helps or doesn't help",go:()=>{ atEnd(); renderSort(); }},
+  {n:"Pick",d:"Pick one thing to try this week",s:"Chosen from Sam's gut kit",go:()=>{ atEnd(); S.kit=SORT_CARDS.filter(c=>c.helps).map(c=>c.t); renderPledge(); }},
+  {n:"End",d:"Results, takeaways, when to see a doctor",s:"Score, colony, pledge, share message, sources",go:()=>{ atEnd(); renderEnd(); }}
 ];
-flowItems.splice(5,0,{n:"Break",d:"Breathe with Bifi (after stop 4)",s:"3 slow breaths, skippable",go:()=>{ stopAll(); S.idx=3; S.pos=3; S.depth=STOPS[3].depth; updateHud(); renderBreathe(); }});
+flowItems.splice(5,0,{n:"Break",d:"Breathe with Michael (after stop 4)",s:"3 slow breaths, skippable",go:()=>{ stopAll(); S.idx=3; S.pos=3; S.depth=STOPS[3].depth; updateHud(); renderBreathe(); }});
 const fl=$("#flowList");
 flowItems.forEach((it,k)=>{
   const li=document.createElement("li");
   li.innerHTML=`<span class="n">${esc(it.n)}</span><span class="d">${esc(it.d)}<small>${esc(it.s)}</small></span><button type="button" id="jump${k}">Jump</button>`;
-  li.querySelector("button").addEventListener("click",()=>{ notes.hidden=true; $("#popup").hidden=false; $("#pill").hidden=true; it.go(); });
+  li.querySelector("button").addEventListener("click",()=>{ notes.hidden=true; $("#popup").hidden=false; $("#pill").hidden=true; it.go(); $("#popup").scrollIntoView({block:"nearest"}); });
   fl.appendChild(li);
 });
 
@@ -1218,7 +1461,7 @@ function start(data){
     S.score=data.score||0;
     for(let i=0;i<(data.friends||0);i++) S.friends.push(makeFriend(i));
     $("#colonyN").textContent=1+S.friends.length;
-    if(data.phase==="end"){ S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M; renderEnd(); }
+    if(["sort","pledge","end"].includes(data.phase)){ atEnd(); renderEnd(); }
     else jumpTo(Math.min(STOPS.length-1,data.idx));
   } else renderIntro();
   requestAnimationFrame(frame);
