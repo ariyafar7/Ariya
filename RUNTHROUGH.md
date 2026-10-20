@@ -49,8 +49,8 @@ Each stop cleared and each mini-game completed adds a microbe to the colony that
 
 ## 3. The pixel scene
 The tunnel is kept calm so players can focus on the question.
-- **Background:** a few small, faded Michael-style and Bifi-style microbes, far behind the action. They scroll at half speed so they read as distant. They're sparser in the mouth, stomach and small intestine and a little busier in the colon. There are no food crumbs or mixed microbe shapes.
-- **Colony:** mini green and purple twins of Michael follow him, one per stop cleared or mini-game finished.
+- **Background:** small, faded Michael-style and Bifi-style microbes, far behind the action, scrolling slower than the walls so they read as distant. One more appears each section going down: 1 in the mouth, 2 in the oesophagus, 3 in the stomach, 4 in the small intestine, 5 in the ileum, and 6 in the colon, sigmoid colon and exit. There are no food crumbs or mixed microbe shapes.
+- **No pets:** nothing follows Michael around. The "Colony" counter in the corner still counts up as a score.
 - **Mouth:** rows of teeth
 - **Oesophagus:** muscle rings
 - **Stomach:** folded walls and a stomach-acid pool with a few bubbles
