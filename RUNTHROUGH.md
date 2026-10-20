@@ -48,12 +48,15 @@ Each stop cleared and each mini-game completed adds a microbe to the colony that
 **What changes between Sam and Alex:** every scenario line, the stress bubble labels, Bifi's opening line, the three end decisions, and the results heading. The science, questions and answers stay the same.
 
 ## 3. The pixel scene
+The tunnel is kept calm so players can focus on the question.
+- **Background:** a few small, faded Michael-style and Bifi-style microbes, far behind the action. They scroll at half speed so they read as distant. They're sparser in the mouth, stomach and small intestine and a little busier in the colon. There are no food crumbs or mixed microbe shapes.
+- **Colony:** mini green and purple twins of Michael follow him, one per stop cleared or mini-game finished.
 - **Mouth:** rows of teeth
 - **Oesophagus:** muscle rings
-- **Stomach:** folded walls and a bubbling stomach-acid pool
-- **Small intestine:** bile drips and finger-like villi
-- **Ileum:** more villi and more resident microbes
-- **Colon:** pouched walls and a crowded mixed community of rods, coccus clusters, bead chains, spiky and hairy microbes
+- **Stomach:** folded walls and a stomach-acid pool with a few bubbles
+- **Small intestine:** a few bile drips and finger-like villi
+- **Ileum:** more villi
+- **Colon:** pouched walls
 - **Sigmoid colon:** red alarm cells (mast cells) and a nerve appear for the tap activity
 - **Opening:** a night-sky scene with a person's silhouette, a faint pink outline of the GI tract inside them, and Michael at double size beside them. Sam holds a book; Alex holds a briefcase. The dive starts with a smooth zoom: the mouth opens, Michael glides in and shrinks, and the open mouth crossfades into the teeth tunnel.
 - **Mini-games:** pixel stress bubbles float over the scene; Bifi, Michael's purple twin, swims beside him during the chat
