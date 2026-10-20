@@ -1,12 +1,12 @@
-# Michael the Microbe: prototype run-through (v3)
+# Michael the Microbe: prototype run-through (v4)
 
-A concept 8-bit Doodle game for **World IBS Day (19 April)**. Michael, a green gut microbe, dives about 8.9 m through the gut, following **Sam**, a first-year student with a part-time job, through one stressful exam fortnight. Each part of the gut shows one moment in Sam's fortnight and one thing stress is doing inside them.
+A concept 8-bit Doodle game for **World IBS Day (19 April)**. It opens outside the body: Michael, a green gut microbe, stands beside a person's silhouette with a faint outline of their gut showing. The player chooses who to follow, **Sam** (a uni student) or **Alex** (a new graduate starting work). The scene then zooms into the person's mouth, and Michael dives about 8.9 m through the gut. Each stop shows a moment from the chosen person's stressful fortnight and one thing stress is doing inside them.
 
 - **Playable prototype:** `index.html` (also published as an Artifact)
-- **Question text and follow-up content:** `CONTENT.md`
-- **Sources, evidence badges and fact-check list:** `EVIDENCE.md`
+- **Question text and follow-up content:** `CONTENT.md` (the live text for both characters is in the `STOPS`, `MEET` and `CHARS` data near the top of the `<script>` in `index.html`)
+- **Sources and fact-check list:** `EVIDENCE.md`
 - **Audience:** mainly people moving into university or work; secondarily the general public
-- **Length:** 8 stops, a halfway breathing break, a sorting bonus and a results screen. About 5 minutes, with no timer.
+- **Length:** 8 stops, 2 mini-games, a breathing break, a sorting bonus and a results screen. About 6 minutes, with no timer.
 - **Not affiliated with any search engine.** The Doodle placement is a concept mock-up, and the prototype uses no real logos.
 
 ## 1. How people reach it
@@ -18,29 +18,34 @@ A concept 8-bit Doodle game for **World IBS Day (19 April)**. Michael, a green g
 
 | # | Screen | Depth | Interaction | Takeaway |
 |---|---|---|---|---|
-| 0 | Title + "Did you know?" | 0.00 m | Fact card with research panel | IBS affects about 1 in 25 people, and it's real |
+| 0 | Title: Michael beside the silhouette | outside | Michael introduces himself; "Did you know?" fact card | IBS affects about 1 in 25 people, and it's real |
+| 0b | Choose who to follow | outside | Sam (uni student) or Alex (new graduate at work), then a pixel zoom into the mouth | Stress looks different for everyone |
 | 1 | Mouth | 0.00 m | Scenario multiple choice | A dry mouth and clenched jaw are stress signs |
 | 2 | Oesophagus | 0.25 m | True/false quick-fire (3 statements) | The brain and gut talk both ways |
 | 3 | Stomach | 0.45 m | Put the stress chain in order | Stress hormones slow the stomach, so eat small rather than skip |
-| 4 | Small intestine | 1.20 m | Scenario: Sam's presentation | Stress can make the gut lining let more through, so build in rest |
-| ☁ | Breathing break | 1.20 m | 3 slow breaths (skippable) | A stress-calming tool to try now |
+| 🎮 | **Mini-game 1: pop the stress bubbles** | 0.60 m | Tap 6 bubbles labelled with the person's stressors. Each pop reveals one step of the stress chain, from the brain to the gut bacteria. | Stress travels all the way to the gut |
+| ☁ | Breathing break | 0.60 m | 3 slow breaths (skippable) | You can turn down how strongly your body reacts |
+| 4 | Small intestine | 1.20 m | Scenario: a presentation (class or team) | Stress can make the gut lining let more through, so build in rest |
 | 5 | Ileum | 4.50 m | Fill the gap | Most serotonin is made in the gut, and it sets gut speed |
-| 6 | Colon | 7.20 m | Myth-buster: "just take a probiotic" | Probiotics are an optional extra, not a fix (plus a "Want more?" card on fibre) |
+| 6 | Colon | 7.20 m | Myth-buster: "just take a probiotic" | Probiotics are an optional extra, not a fix |
+| 🎮 | **Mini-game 2: meet another microbe** | 7.80 m | Michael meets Fae, a fibre-loving bacterium. The player picks at least 2 of 4 questions, then Fae joins the colony. | Stress changes the microbes' world; fibre feeds them; microbes talk back to the brain |
 | 7 | Sigmoid colon | 8.40 m | Tap the alarm cell next to the nerve (true/false fallback) | Gut nerves get turned up, and the pain is real |
-| 8 | Exit | 8.90 m | Choose Sam's path: 3 decisions moving a stress meter and gut meter | Sleep, regular meals and a walk with a friend help |
-| ★ | Gut kit | 8.90 m | Swipe to sort 8 cards: helps or doesn't help (buttons and arrow keys work too) | What actually helps IBS |
+| 8 | Exit | 8.90 m | Choose the person's path: 3 decisions moving a stress meter and gut meter (different decisions for Sam and Alex) | Sleep, regular meals and a walk with a friend help |
+| ★ | Gut kit | 8.90 m | Swipe to sort 8 cards (buttons and arrow keys work too) | What actually helps IBS |
 | ★ | Pick one | 8.90 m | Choose one thing to try this week | Small changes stick |
-| ★ | Results | 8.90 m | Score, colony size, pledge, 4 takeaways, when to see a doctor, share, sources | |
+| ★ | Results | 8.90 m | Score, colony size, pledge, 4 takeaways, when to see a doctor, share, Read more | |
 
 **Every stop has the same parts:**
 1. Michael's line, typed out RPG-style
-2. Sam's scenario
+2. The person's scenario
 3. The interaction
 4. Feedback for right and wrong answers
 5. A **Try this** tip
-6. An optional **Read the research** panel: a plain-language summary under 100 words, with links and a strength badge (●●● strong, ●●○ good, ●○○ early)
+6. An optional **Read more** section: a short plain-language summary, then the papers behind it as further reading. There are no ratings or badges, and it stays closed unless opened.
 
-Each stop cleared adds a different microbe to the colony that follows Michael. Wrong answers still move Michael on.
+Each stop cleared and each mini-game completed adds a microbe to the colony that follows Michael. Wrong answers still move Michael on.
+
+**What changes between Sam and Alex:** every scenario line, the stress bubble labels, Fae's opening line, the three end decisions, and the results heading. The science, questions and answers stay the same.
 
 ## 3. The pixel scene
 - **Mouth:** rows of teeth
@@ -50,10 +55,14 @@ Each stop cleared adds a different microbe to the colony that follows Michael. W
 - **Ileum:** more villi and more resident microbes
 - **Colon:** pouched walls and a crowded mixed community of rods, coccus clusters, bead chains, spiky and hairy microbes
 - **Sigmoid colon:** red alarm cells (mast cells) and a nerve appear for the tap activity
+- **Opening:** a night-sky scene with a person's silhouette, a faint pink outline of the GI tract inside them, and Michael at double size beside them. Sam holds a book; Alex holds a briefcase. The dive starts with a chunky pixel zoom into the mouth.
+- **Mini-games:** pixel stress bubbles float over the scene; Fae (a teal rod-shaped bacterium) swims beside Michael during the chat
 
 ## 4. Design decisions (for the reflective report)
 - **Practical first.** Each stop starts with something the player recognises and ends with one thing to do. Scientific terms are kept for "Read the research".
-- **Evidence badges.** Every source shows its strength in words as well as dots, so colour is never the only cue.
+- **Read more, not ratings.** Papers are offered as optional further reading after a plain summary, so the main game stays free of scientific clutter.
+- **Personal stories.** Choosing Sam or Alex ties each mechanism to a realistic study or work moment.
+- **Science through characters.** The mini-games and Fae's conversation explain biology through story, not extra quiz questions.
 - **IBS-specific advice.** Diet tips follow the 2021 UK IBS guideline (soluble fibre added slowly, a dietitian before strict diets), not general "gut health" advice, which can trigger IBS symptoms.
 - **No timer, and never punishing.** The audience is already stressed.
 - **Tap-only interactions.** There's no typing on phones. Swiping also works with buttons and arrow keys, and the tap activity has a true/false fallback.

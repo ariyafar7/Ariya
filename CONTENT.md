@@ -211,3 +211,51 @@ A draft for the MEDN team to edit, rewrite in your own words, and fact-check. Ev
 - **Hedge every animal or correlational finding** in the write-ups ("in rats", "a link, not proof").
 - **Also check:** that "regular meals" is first-line advice in BSG 2021, and that Marx et al. 2017 covers fermented foods (otherwise find a fermented-foods source or cut the line).
 - **Before sign-off:** resolve every ⚠ item, and check each number against the full paper.
+
+
+---
+
+## v4 additions (now in the game)
+
+**Read more replaces badges.** The game no longer shows strength badges. Each stop ends with an optional **Read more** section: the plain summary, then "Further reading" links. Badges stay in `EVIDENCE.md` for the team's own use.
+
+### Two characters
+Players choose at the start:
+- **Sam:** a first-year uni student juggling assignments, exams, deadlines and a social life.
+- **Alex:** just finished uni and started a first full-time job, with new responsibilities, expectations and deadlines.
+
+Alex's versions of each scenario:
+
+| Stop | Alex's scenario |
+|---|---|
+| Mouth | It's the night before Alex's first day at the new job. Their mouth feels dry and their jaw aches from clenching. |
+| Oesophagus | Alex feels a lump in their throat walking into their first team meeting. |
+| Stomach | It's the morning of Alex's first big client call and they can't face breakfast. |
+| Small intestine | Alex has to present their first project update to the whole team, and their heart is racing. |
+| Ileum | Alex has been rushing to the toilet between meetings all week. |
+| Colon | A coworker tells Alex, "Just take a probiotic. It fixes stress." |
+| Sigmoid colon | Alex's tummy pain keeps coming back, even on weekends. |
+| Exit decisions | Night before the deadline (stop work at a set time and sleep, or work past midnight with energy drinks) · Lunch on a packed workday (step away for something small and plain, or skip lunch and keep answering emails) · The weekend after (a brisk walk with a friend, or stay in checking work email) |
+
+### Mini-game 1 (after stop 3): pop the stress bubbles
+Bubbles float down labelled with stressors. For Sam: Exam, Deadline, Group project, Rent, No sleep, Group chat. For Alex: Inbox 99+, Deadline, Manager, Commute, Rent, No sleep. Each pop reveals the next step of the stress chain:
+1. The brain spots the stress and sounds the alarm.
+2. Cortisol rises. Handy for a short burst.
+3. The gut speeds up or slows down.
+4. Alarm cells in the gut wall get twitchy.
+5. The gut lining lets more through.
+6. Gut bacteria feel the change too.
+
+Michael then says: "In real life you can't pop every stressor, but you can turn down how strongly your body reacts." This leads into the breathing break.
+
+### Mini-game 2 (after stop 6): meet Fae
+Fae is a fibre-loving, rod-shaped gut bacterium (loosely based on *Faecalibacterium*). The player asks at least 2 of these 4 questions:
+
+| Question | Fae's answer (summary) | Source |
+|---|---|---|
+| Why is everything moving so differently? | Stress signals change how fast the gut moves. | Taché & Bonaz 2007 |
+| Why are some microbes crowding the wall? | Long-term stress can shift the mix of microbes and bring some closer to the gut wall. Scientists are still working out how much this matters for IBS. | Qin 2014; Pittayanon 2019 |
+| What do you need to thrive? | Fibre, fermented into short-chain fatty acids that help the gut lining. For IBS, gentle soluble fibre added slowly. | La Torre 2021; BSG 2021 |
+| Can microbes talk back to the brain? | Yes, through nerves like the vagus and through the immune system: the microbiota–gut–brain axis. | Cryan 2019 |
+
+Fae then joins the colony: "Look after {name}'s stress and you look after all of us."
