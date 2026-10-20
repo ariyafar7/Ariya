@@ -6,7 +6,7 @@ A concept 8-bit Doodle game for **World IBS Day (19 April)**. It opens outside t
 - **Question text and follow-up content:** `CONTENT.md` (the live text for both characters is in the `STOPS`, `MEET` and `CHARS` data near the top of the `<script>` in `index.html`)
 - **Sources and fact-check list:** `EVIDENCE.md`
 - **Audience:** mainly people moving into university or work; secondarily the general public
-- **Length:** 8 stops, 2 mini-games, a breathing break, a sorting bonus and a results screen. About 6 minutes, with no timer.
+- **Length:** 9 stops, 2 mini-games, a breathing break, a sorting bonus and a results screen. About 6 minutes, with no timer.
 - **Not affiliated with any search engine.** The Doodle placement is a concept mock-up, and the prototype uses no real logos.
 
 ## 1. How people reach it
@@ -30,7 +30,8 @@ A concept 8-bit Doodle game for **World IBS Day (19 April)**. It opens outside t
 | 6 | Colon | 7.20 m | Myth-buster: "just take a probiotic" | Probiotics are an optional extra, not a fix |
 | 🎮 | **Mini-game 2: meet another microbe** | 7.80 m | Michael meets Bifi, his purple twin, a fibre-loving bacterium (*Bifidobacterium*). The player picks at least 2 of 4 questions, then Bifi joins the colony. | Stress changes the microbes' world; fibre feeds them; microbes talk back to the brain |
 | 7 | Sigmoid colon | 8.40 m | Tap the alarm cell next to the nerve (true/false fallback) | Gut nerves get turned up, and the pain is real |
-| 8 | Exit | 8.90 m | Choose the person's path: 3 decisions moving a stress meter and gut meter (different decisions for Sam and Alex) | Sleep, regular meals and a walk with a friend help |
+| 8 | Rectum | 8.75 m | Choose the person's path: 3 decisions moving a stress meter and gut meter (different decisions for Sam and Alex) | Sleep, regular meals and a walk with a friend help |
+| 9 | Exit | 8.90 m | Poo chart: tap at least 3 of the 7 Bristol poo types, then a question on which IBS type a pattern of mushy or watery poo points to. A cute pixel poo appears beside Michael. | Poo type can show how IBS is affecting the gut: hard lumps lean IBS-C, mushy or watery lean IBS-D, both is IBS-M |
 | ★ | Gut kit | 8.90 m | Swipe to sort 8 cards (buttons and arrow keys work too) | What actually helps IBS |
 | ★ | Pick one | 8.90 m | Choose one thing to try this week | Small changes stick |
 | ★ | Results | 8.90 m | Score, colony size, pledge, 4 takeaways, when to see a doctor, share, Read more | |
@@ -49,7 +50,7 @@ Each stop cleared and each mini-game completed adds a microbe to the colony that
 
 ## 3. The pixel scene
 The tunnel is kept calm so players can focus on the question.
-- **Background:** small, faded Michael-style and Bifi-style microbes, far behind the action, scrolling slower than the walls so they read as distant. One more appears each section going down: 1 in the mouth, 2 in the oesophagus, 3 in the stomach, 4 in the small intestine, 5 in the ileum, and 6 in the colon, sigmoid colon and exit. There are no food crumbs or mixed microbe shapes.
+- **Background:** small, faded Michael-style and Bifi-style microbes, far behind the action, scrolling slower than the walls so they read as distant. One more appears each section going down: 1 in the mouth, 2 in the oesophagus, 3 in the stomach, 4 in the small intestine, 5 in the ileum, and 6 in the colon, sigmoid colon, rectum and exit. There are no food crumbs or mixed microbe shapes.
 - **No pets:** nothing follows Michael around. The "Colony" counter in the corner still counts up as a score.
 - **Mouth:** rows of teeth
 - **Oesophagus:** muscle rings
@@ -58,6 +59,8 @@ The tunnel is kept calm so players can focus on the question.
 - **Ileum:** more villi
 - **Colon:** pouched walls
 - **Sigmoid colon:** red alarm cells (mast cells) and a nerve appear for the tap activity
+- **Rectum:** pouched walls
+- **Exit:** ringed walls (the sphincter muscles) and a cute pixel poo with a face, which stays for the ending screens
 - **Opening:** a night-sky scene with a person's silhouette, a faint pink outline of the GI tract inside them, and Michael at double size beside them. Sam holds a book; Alex holds a briefcase. The dive starts with a smooth zoom: the mouth opens, Michael glides in and shrinks, and the open mouth crossfades into the teeth tunnel.
 - **Mini-games:** pixel stress bubbles float over the scene; Bifi, Michael's purple twin, swims beside him during the chat
 

@@ -216,3 +216,14 @@ The second resource list (10 sources) was checked one by one against search resu
 - **Adds:** a clearer picture of probiotics for young people (Zhang 2020; Cohen Kadosh 2021), the fibre mechanism (La Torre 2021), and sleep (Smith 2019). Its overall message, "no single fix; combine diet, movement, sleep and stress management", matches the IBS guideline.
 - **Needs care:** the list is about general gut–brain and mental-health research, **not IBS**. Its diet advice ("more legumes and plant diversity, fibre of any kind, fermented foods") can **trigger IBS symptoms**. For an IBS Day game, follow the BSG 2021 IBS guideline: soluble fibre added slowly, avoid wheat bran, and see a dietitian before low-FODMAP or other restrictive diets.
 - **For the reflective report:** finding and correcting these citation errors is a good concrete example of "verifying AI-generated content", as the assignment's AI policy requires.
+
+
+---
+
+## 7. Sources added for the poo chart (stop 9)
+
+| Claim | Source | Status |
+|---|---|---|
+| Poo form falls into 7 types, and form tracks how fast food moves through the gut | Lewis SJ, Heaton KW. Stool form scale as a useful guide to intestinal transit time. *Scand J Gastroenterol* 1997;32(9):920–4 · [doi:10.3109/00365529709011203](https://doi.org/10.3109/00365529709011203) | ✅ citation confirmed; findings from secondary sources |
+| IBS subtypes by stool form: IBS-C (>25% types 1–2, <25% types 6–7), IBS-D (the reverse), IBS-M (>25% of each), judged on days with abnormal bowel movements | Rome Foundation Bristol Stool Form Scale card · [PDF](https://theromefoundation.org/wp-content/uploads/Bristol-Stool-Form-Scale-Card-2021.pdf); Lacy BE et al. Bowel Disorders (Rome IV). *Gastroenterology* 2016 | ⚠ thresholds confirmed via secondary tables; open the Lacy paper to confirm year and wording |
+| Blood or black poo needs checking | Standard red-flag advice | ⚠ confirm against BSG 2021 or a local guideline |

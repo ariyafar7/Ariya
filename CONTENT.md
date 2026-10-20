@@ -259,3 +259,28 @@ Bifi is Michael's purple twin: the same sprite in purple, a fibre-loving gut bac
 | Can microbes talk back to the brain? | Yes, through nerves like the vagus and through the immune system: the microbiota–gut–brain axis. | Cryan 2019 |
 
 Bifi then joins the colony: "Look after {name}'s stress and you look after all of us."
+
+
+---
+
+## v5 addition: Stop 9 · Exit (poo chart)
+
+The old "Exit" stop (choose the path) is now **Rectum** (8.75 m). A new final stop, **Exit** (8.9 m), adds a cute pixel poo beside Michael and teaches the **Bristol Stool Form Scale**.
+
+**Interaction:** tap at least 3 of the 7 poo types, then answer one multiple-choice question.
+
+| Type | Name | Looks like | Can mean | Label |
+|---|---|---|---|---|
+| 1 | Hard lumps | Separate hard lumps, like nuts | Constipation: food moved through slowly | Linked to IBS-C |
+| 2 | Lumpy sausage | Sausage-shaped but lumpy | Mild constipation | Linked to IBS-C |
+| 3 | Cracked sausage | Sausage with surface cracks | Normal | Healthy range |
+| 4 | Smooth snake | Smooth and soft | Normal, easiest to pass | Healthy range |
+| 5 | Soft blobs | Soft blobs, clear-cut edges | On the soft side | Borderline |
+| 6 | Mushy | Fluffy pieces, ragged edges | Mild diarrhoea: food moved fast | Linked to IBS-D |
+| 7 | Watery | No solid pieces | Diarrhoea | Linked to IBS-D |
+
+**Question:** In bad weeks, {name}'s poo is mostly types 6 and 7. Doctors would call that pattern… IBS-C / **IBS-D ✔** / IBS-M / Nothing worth noting.
+
+**Science note:** Under the Rome IV criteria, IBS subtype is based on stool form on days with abnormal bowel movements. IBS-C is more than 25% types 1–2 and less than 25% types 6–7. IBS-D is the reverse. IBS-M is more than 25% of each. The game says "often" to keep it simple.
+
+**Sources:** [Lewis & Heaton 1997](https://doi.org/10.3109/00365529709011203) · [Rome Foundation Bristol Stool Form Scale card](https://theromefoundation.org/wp-content/uploads/Bristol-Stool-Form-Scale-Card-2021.pdf) · Lacy et al. 2016, Rome IV Bowel Disorders, *Gastroenterology* (⚠ add a verified link)

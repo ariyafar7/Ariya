@@ -318,6 +318,16 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
   .bubble.pop{animation:none;opacity:0}
 }
 
+/* poo chart */
+.bristol{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.ptype{background:var(--plum-2);border:0;color:var(--ink-soft);padding:7px 4px 6px;display:flex;flex-direction:column;align-items:center;gap:5px;cursor:pointer;
+  font-family:var(--f-pixel);font-size:6.5px;box-shadow:inset -3px -3px 0 rgba(0,0,0,.35)}
+.ptype canvas{width:66px;max-width:100%;height:36px;image-rendering:pixelated}
+.ptype:hover{background:#4c2142}
+.ptype.seen{color:var(--g3)}
+.ptype[aria-pressed="true"]{background:#4c2142;box-shadow:inset 0 0 0 3px var(--acid)}
+.ptype:focus-visible{outline:3px solid var(--acid);outline-offset:-5px}
+
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
 .btn:disabled{opacity:.45;cursor:default}
@@ -325,7 +335,7 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
 </style>
 
 <div class="draft-bar">
-  <span class="tag">Prototype v4</span>
+  <span class="tag">Prototype v5</span>
   <p>Michael the Microbe: a concept 8-bit Doodle game for World IBS Day (19 April). Not affiliated with any search engine. Main audience: people moving into university or work.</p>
   <button type="button" id="notesBtn">Run-through notes</button>
 </div>
@@ -415,7 +425,8 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
         <li><b>True/false quick-fire</b>: oesophagus</li>
         <li><b>Put in order</b>: the stress chain in the stomach</li>
         <li><b>Tap the scene</b>: find the alarm cell next to the nerve (with a true/false fallback)</li>
-        <li><b>Choose Sam's path</b>: 3 decisions that move a stress meter and a gut meter</li>
+        <li><b>Choose the path</b> (rectum): 3 decisions that move a stress meter and a gut meter</li>
+        <li><b>Poo chart</b> (exit): tap the 7 poo types of the Bristol Stool Form Scale, then a question on how IBS types show up in poo. A cute pixel poo waves goodbye.</li>
         <li><b>Swipe to sort</b>: build the gut kit, then pick one thing to try this week</li>
       </ul>
       <p><b>Mini-games every three questions:</b></p>
@@ -499,7 +510,9 @@ const P = {
   dickhaus:{t:"Dickhaus et al. 2003 · stress and gut sensitivity in IBS",u:"https://doi.org/10.1111/j.1572-0241.2003.07156.x"},
   black:{t:"Black et al. 2020 · talking therapies for IBS, Gut",u:"https://gut.bmj.com/content/69/8/1441"},
   johann:{t:"Johannesson et al. 2011 · exercise trial in IBS",u:"https://doi.org/10.1038/ajg.2010.480"},
-  smith:{t:"Smith et al. 2019 · sleep and gut bacteria",u:"https://doi.org/10.1371/journal.pone.0222394"}
+  smith:{t:"Smith et al. 2019 · sleep and gut bacteria",u:"https://doi.org/10.1371/journal.pone.0222394"},
+  bristol:{t:"Lewis & Heaton 1997 · the Bristol Stool Form Scale",u:"https://doi.org/10.3109/00365529709011203"},
+  romecard:{t:"Rome Foundation · Bristol Stool Form Scale card",u:"https://theromefoundation.org/wp-content/uploads/Bristol-Stool-Form-Scale-Card-2021.pdf"}
 };
 
 const INTRO_MORE = {
@@ -615,8 +628,8 @@ const STOPS = [
     papers:[P.barbara,P.dickhaus,P.vicario]}
 },
 {
-  zone:"Exit", depth:8.9, type:"path", kind:"Choose {name}'s path",
-  say:"Final stretch! You decide what {name} does next.",
+  zone:"Rectum", depth:8.75, type:"path", kind:"Choose {name}'s path",
+  say:"Nearly out! You decide what {name} does next.",
   scene:{sam:"The last exam is coming up. Every choice moves Sam's stress meter and gut meter.",
          alex:"A big work deadline is coming up. Every choice moves Alex's stress meter and gut meter."},
   q:"What should {name} do?",
@@ -649,7 +662,33 @@ const STOPS = [
   tip:"Pick one small change, not ten. That's how habits stick.",
   more:{text:"Across 41 trials, talking therapies like CBT (including online versions) and gut-directed hypnotherapy reduced IBS symptoms. In one trial, people with IBS who exercised 20 to 30 minutes, 3 to 5 times a week, had clearly fewer symptoms after 3 months. UK guidelines recommend regular exercise for everyone with IBS.",
     papers:[P.black,P.johann,P.bsg,P.smith]}
+},
+{
+  zone:"Exit", depth:8.9, type:"poo", kind:"Poo chart",
+  say:"Out we go! Say hi to my friend the poo. Poo comes in seven types, and they can say a lot about the gut.",
+  scene:{sam:"After weeks of exams, Sam notices their poo keeps changing: hard lumps some days, mushy on others.",
+         alex:"Since starting the job, Alex notices their poo keeps changing: hard lumps some days, mushy on others."},
+  q:"Doctors use a 7-type poo chart. Tap at least 3 types to see what they mean.",
+  q2:"In bad weeks, {name}'s poo is mostly types 6 and 7. Doctors would call that pattern…",
+  options:["IBS with constipation (IBS-C)","IBS with diarrhoea (IBS-D)","Mixed IBS (IBS-M)","Nothing worth noting"],
+  answer:1,
+  right:"Mushy or watery poo (types 6–7) on bad days points to IBS-D. Often hard lumps (types 1–2) points to IBS-C, and often both is mixed IBS (IBS-M). Only a doctor can diagnose IBS.",
+  wrong:"Types 6–7 (mushy or watery) on bad days point to IBS with diarrhoea (IBS-D). Often types 1–2 points to IBS-C, and often both is mixed IBS (IBS-M). Only a doctor can diagnose IBS.",
+  tip:"Jot down your poo type for a week or two. It makes a GP visit much easier. Blood or black poo always needs checking.",
+  more:{text:"The Bristol Stool Form Scale sorts poo into 7 types, from hard lumps (type 1) to watery (type 7). Harder types usually mean food moved through slowly, and looser types that it moved fast. For IBS, doctors look at poo on days with symptoms: often types 1–2 is IBS with constipation, often types 6–7 is IBS with diarrhoea, and often both is mixed IBS. Stress can speed the gut up or slow it down, so many people see their type shift in stressful weeks.",
+    papers:[P.bristol,P.romecard]}
 }
+];
+
+/* The 7 poo types (Bristol Stool Form Scale), in plain words */
+const POO_TYPES = [
+  {n:1,name:"Hard lumps",look:"Separate hard lumps, like nuts. Hard to pass.",means:"Constipation: food moved through slowly.",tag:"Linked to IBS-C"},
+  {n:2,name:"Lumpy sausage",look:"Sausage-shaped but lumpy.",means:"Mild constipation.",tag:"Linked to IBS-C"},
+  {n:3,name:"Cracked sausage",look:"Like a sausage, with cracks on the surface.",means:"Normal.",tag:"Healthy range"},
+  {n:4,name:"Smooth snake",look:"Smooth and soft, like a sausage or snake.",means:"Normal, and usually the easiest to pass.",tag:"Healthy range"},
+  {n:5,name:"Soft blobs",look:"Soft blobs with clear-cut edges. Easy to pass.",means:"On the soft side. Often fine, but leaning loose.",tag:"Borderline"},
+  {n:6,name:"Mushy",look:"Fluffy, mushy pieces with ragged edges.",means:"Mild diarrhoea: food moved through fast.",tag:"Linked to IBS-D"},
+  {n:7,name:"Watery",look:"Watery, with no solid pieces.",means:"Diarrhoea.",tag:"Linked to IBS-D"}
 ];
 
 /* Mini-game 1 (after stop 3): pop the stress bubbles */
@@ -706,7 +745,8 @@ const ZV = [
   {tex:"villi",   width:.46, bugs:.5,  food:.08, pal:["#1c0b19","#461632","#722747","#b34a72"]},
   {tex:"haustra", width:.70, bugs:1,   food:.04, pal:["#170a18","#3a1430","#5f2348","#95406e"]},
   {tex:"haustra", width:.60, bugs:.9,  food:.04, pal:["#140918","#32122d","#521f42","#823a66"]},
-  {tex:"haustra", width:.42, bugs:.6,  food:0,   pal:["#10070f","#2a0f26","#461b3b","#70345c"]}
+  {tex:"haustra", width:.50, bugs:.6,  food:0,   pal:["#10070f","#2a0f26","#461b3b","#70345c"]},
+  {tex:"rings",   width:.46, bugs:.6,  food:0,   pal:["#1d0b17","#4a1730","#7a2a4c","#c4527a"]}
 ];
 
 /* ---------------------------------------------------------------
@@ -939,6 +979,43 @@ function addFriend(type,col){
   S.friends.push(f); $("#colonyN").textContent=1+S.friends.length;
 }
 
+/* Poo: a cute pixel poo for the exit, plus the 7 Bristol chart icons */
+const POO_COL={b:"#8a5a2b",l:"#b8834c",d:"#5a3a1b"};
+function ell(c,cx,cy,rx,ry,fill,out){
+  for(let dy=-Math.ceil(ry)-1;dy<=Math.ceil(ry)+1;dy++) for(let dx=-Math.ceil(rx)-1;dx<=Math.ceil(rx)+1;dx++){
+    const e=(dx*dx)/(rx*rx)+(dy*dy)/(ry*ry), e2=(dx*dx)/((rx+1)*(rx+1))+(dy*dy)/((ry+1)*(ry+1));
+    if(e<=1) px(c,Math.round(cx+dx),Math.round(cy+dy),typeof fill==="function"?fill(dx,dy):fill);
+    else if(out && e2<=1) px(c,Math.round(cx+dx),Math.round(cy+dy),out);
+  }
+}
+const shadeOf=col=>(dx,dy)=>dy<0&&dx<0?col.l:(dy>0?col.d:col.b);
+function drawPoo(c,x,y,t){
+  x=Math.round(x); y=Math.round(y)+(reduce?0:-Math.round(Math.abs(Math.sin(t*3))));
+  const cx=x+8, sh=shadeOf(POO_COL);
+  px(c,cx+1,y+1,K); px(c,cx+1,y+2,POO_COL.l);
+  ell(c,cx,y+4,3.4,1.9,sh,K);          // top swirl
+  ell(c,cx,y+7.5,5.5,2.4,sh,K);        // middle
+  ell(c,cx,y+12,7.5,3,sh,K);           // bottom (front), holds the face
+  [[-3,11],[-2,11],[-3,12],[2,11],[3,11],[2,12]].forEach(([i,j])=>px(c,cx+i,y+j,"#ffffff"));
+  px(c,cx-2,y+12,K); px(c,cx+3,y+12,K);
+  [[-2,13],[2,13],[-1,14],[0,14],[1,14]].forEach(([i,j])=>px(c,cx+i,y+j,K));
+  px(c,cx-5,y+13,"#ff8fa3"); px(c,cx+5,y+13,"#ff8fa3");
+}
+function drawBristol(cv,type){
+  cv.width=22; cv.height=12;
+  const c=cv.getContext("2d"); c.clearRect(0,0,22,12);
+  const dark={b:"#6b4423",l:"#8a5a2b",d:"#4a2e16"}, soft={b:"#a8763f",l:"#c99a62",d:"#7d5530"}, wet={b:"#b88a55",l:"#d9b38c",d:"#8e6a40"};
+  switch(type){
+    case 1: [[4,6],[9,4],[13,7],[18,5]].forEach(([x,y])=>ell(c,x,y,1.6,1.6,shadeOf(dark),K)); break;
+    case 2: [[5,6],[9,5],[13,6],[17,5]].forEach(([x,y])=>ell(c,x,y,2.6,2.6,shadeOf(dark),K)); break;
+    case 3: ell(c,11,6,8,2.6,shadeOf(POO_COL),K); [[6,4],[10,4],[14,4]].forEach(([x,y])=>{ px(c,x,y,K); px(c,x+1,y+1,POO_COL.d); }); break;
+    case 4: ell(c,11,6,8.5,2.3,shadeOf(POO_COL),K); break;
+    case 5: [[5,6],[11,6],[17,6]].forEach(([x,y])=>ell(c,x,y,2.4,2.1,shadeOf(soft),K)); break;
+    case 6: ell(c,11,6,7.5,2.8,shadeOf(soft),K); [[4,4],[7,3],[15,3],[18,5],[6,9],[16,9]].forEach(([x,y])=>ell(c,x,y,1.3,1.3,shadeOf(soft),null)); break;
+    case 7: ell(c,11,8,9.4,1.6,shadeOf(wet),K); [[7,8],[13,8]].forEach(([x,y])=>px(c,x,y,wet.l)); px(c,6,4,wet.b); px(c,15,3,wet.b); px(c,10,5,wet.l); break;
+  }
+}
+
 /* Bifi: Michael's purple twin (a Bifidobacterium, a fibre-loving gut bacterium) */
 function drawBifi(c,x,y,t,mood){ drawMichael(c,x,y,mood||"happy",t,true,BIFI_PAL); }
 
@@ -952,8 +1029,8 @@ function renderIntro(){
   sheet.innerHTML = `
     <div class="title-card"><p class="big"><span>Michael</span><br>the Microbe</p></div>
     ${sayBox(hello)}
-    <p>Pick someone to follow, then shrink down with Michael and dive through their gut from mouth to colon. You'll see what stress does in there, and what helps.</p>
-    <div class="meta"><span class="chip px">8 stops</span><span class="chip px">2 mini-games</span><span class="chip px">~6 min</span><span class="chip k px">No timer</span></div>
+    <p>Pick someone to follow, then shrink down with Michael and dive through their gut from mouth to exit. You'll see what stress does in there, and what helps.</p>
+    <div class="meta"><span class="chip px">9 stops</span><span class="chip px">2 mini-games</span><span class="chip px">~6 min</span><span class="chip k px">No timer</span></div>
     <div class="fb mid px">
       <span class="v">Did you know?</span>
       <p>About 1 in 25 people worldwide have IBS (irritable bowel syndrome). It causes repeated tummy pain together with diarrhoea, constipation or both. Tests usually show a normal-looking gut, but the symptoms are real.</p>
@@ -1024,7 +1101,7 @@ function renderStop(){
     <div id="fbSlot"></div>`;
   sheet.scrollTop=0;
   mountSay(fmt(st.say));
-  ({mcq:playMcq, tf:playTf, order:playOrder, tap:playTap, path:playPath})[st.type](st,$("#play"));
+  ({mcq:playMcq, tf:playTf, order:playOrder, tap:playTap, path:playPath, poo:playPoo})[st.type](st,$("#play"));
 }
 
 function reward(ok){
@@ -1210,6 +1287,32 @@ function playPath(st,el){
     }));
   };
   draw();
+}
+
+/* 6. poo chart: explore the 7 types, then one question */
+function playPoo(st,el){
+  const seen=new Set();
+  el.innerHTML=`
+    <div class="bristol" role="group" aria-label="The 7 poo types">
+      ${POO_TYPES.map(p=>`<button type="button" class="ptype px" aria-pressed="false" data-n="${p.n}"><canvas aria-hidden="true"></canvas><span>TYPE ${p.n}</span></button>`).join("")}
+    </div>
+    <div class="fb mid px" id="pooInfo" aria-live="polite"><span class="v">Tap a type</span><p>See what each type looks like and what it can mean. Tap at least 3 to unlock the question.</p></div>
+    <div id="pooQ" style="display:flex;flex-direction:column;gap:10px"></div>`;
+  el.querySelectorAll(".ptype canvas").forEach((c,i)=>drawBristol(c,i+1));
+  el.querySelectorAll(".ptype").forEach(b=>b.addEventListener("click",()=>{
+    const p=POO_TYPES[+b.dataset.n-1]; seen.add(p.n);
+    el.querySelectorAll(".ptype").forEach(x=>x.setAttribute("aria-pressed","false"));
+    b.setAttribute("aria-pressed","true"); b.classList.add("seen");
+    beep([[440+p.n*40,.05]]);
+    $("#pooInfo").innerHTML=`<span class="v">Type ${p.n} · ${esc(p.name)}</span>
+      <p>${esc(p.look)}</p><p class="model">${esc(p.means)}</p><span class="chip px ${p.tag.startsWith("Healthy")?"k":""}" style="align-self:flex-start">${esc(p.tag)}</span>
+      ${seen.size<3?`<p class="hint2" style="text-align:left">${3-seen.size} more to unlock the question.</p>`:""}`;
+    if(seen.size>=3 && !$("#pooQ").childElementCount){
+      $("#pooQ").innerHTML=`<p class="moment">Quick question</p><p class="q">${esc(fmt(st.q2))}</p><div id="pooOpts"></div>`;
+      playMcq(st,$("#pooOpts"));
+      $("#pooQ").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"});
+    }
+  }));
 }
 
 /* ---------------------------------------------------------------
@@ -1407,10 +1510,10 @@ function renderPledge(){
 function renderEnd(){
   S.phase="end"; S.outside=false; S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M; updateHud();
   const total=STOPS.length;
-  const msg = S.score>=7 ? "Gut genius! Michael's colony is thriving."
-            : S.score>=4 ? "Solid dive! Michael's colony is growing."
+  const msg = S.score>=8 ? "Gut genius! Michael's colony is thriving."
+            : S.score>=5 ? "Solid dive! Michael's colony is growing."
             : "Dive complete! You now know more than most.";
-  const allPapers=[P.oka,P.koloski,P.tache,P.vanuytsel,P.barbara,P.pitta,P.cryan,P.zhang,P.kadosh,P.fibre,P.black,P.johann,P.bsg];
+  const allPapers=[P.oka,P.koloski,P.tache,P.vanuytsel,P.barbara,P.pitta,P.cryan,P.zhang,P.kadosh,P.fibre,P.black,P.johann,P.bsg,P.bristol,P.romecard];
   sheet.innerHTML=`
     <span class="chip k px" style="align-self:flex-start">Stage clear · 8.9 m</span>
     <h2>${msg}</h2>
@@ -1573,7 +1676,7 @@ function drawMini(c,x,y,pal,t,ph){
 /* One more distant microbe per section going down: 1 in the mouth up to 6 in the colon.
    Each section's microbes sit around its stop, so the count on screen matches. */
 const BG_PAR=.7;                       // scroll speed vs the walls (slower = further away)
-const BG_COUNT=[1,2,3,4,5,6,6,6];      // mouth, oesophagus, stomach, small int., ileum, colon, sigmoid, exit
+const BG_COUNT=[1,2,3,4,5,6,6,6,6];    // mouth, oesophagus, stomach, small int., ileum, colon, sigmoid, rectum, exit
 const BG_SLOTS=[[.28,.18],[.72,.82],[.46,.1],[.3,.84],[.8,.24],[.6,.9],[.86,.62],[.22,.6]]; // [y, x] as shares of the view
 const BG_PALS=[COLS.green,COLS.purple,COLS.teal];
 const BG=[];
@@ -1673,6 +1776,7 @@ function frame(now){
     const mood = performance.now()<S.moodUntil ? S.mood : "happy";
     drawMichael(ctx,bx,by,mood,t,true);
     if(S.guest) drawBifi(ctx,bx+18,by+2+(reduce?0:Math.round(Math.sin(t*2+1))),t);
+    if(S.idx===STOPS.length-1 && Math.abs(S.pos-S.idx)<.01 && ["question","sort","pledge","end"].includes(S.phase)) drawPoo(ctx,bx+15,by,t);
     S.mx=bx; S.my=by;
 
     // acid bubbles in front
