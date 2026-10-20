@@ -248,14 +248,14 @@ Bubbles float down labelled with stressors. For Sam: Exam, Deadline, Group proje
 
 Michael then says: "In real life you can't pop every stressor, but you can turn down how strongly your body reacts." This leads into the breathing break.
 
-### Mini-game 2 (after stop 6): meet Fae
-Fae is a fibre-loving, rod-shaped gut bacterium (loosely based on *Faecalibacterium*). The player asks at least 2 of these 4 questions:
+### Mini-game 2 (after stop 6): meet Bifi
+Bifi is Michael's purple twin: the same sprite in purple, a fibre-loving gut bacterium named after *Bifidobacterium*. Bifi opens with: "Hi, Michael. I'm Bifi, short for Bifidobacterium." The player asks at least 2 of these 4 questions:
 
-| Question | Fae's answer (summary) | Source |
+| Question | Bifi's answer (summary) | Source |
 |---|---|---|
 | Why is everything moving so differently? | Stress signals change how fast the gut moves. | Taché & Bonaz 2007 |
 | Why are some microbes crowding the wall? | Long-term stress can shift the mix of microbes and bring some closer to the gut wall. Scientists are still working out how much this matters for IBS. | Qin 2014; Pittayanon 2019 |
 | What do you need to thrive? | Fibre, fermented into short-chain fatty acids that help the gut lining. For IBS, gentle soluble fibre added slowly. | La Torre 2021; BSG 2021 |
 | Can microbes talk back to the brain? | Yes, through nerves like the vagus and through the immune system: the microbiota–gut–brain axis. | Cryan 2019 |
 
-Fae then joins the colony: "Look after {name}'s stress and you look after all of us."
+Bifi then joins the colony: "Look after {name}'s stress and you look after all of us."

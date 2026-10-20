@@ -305,11 +305,12 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
 
 .convo{display:flex;flex-direction:column;gap:7px}
 .line{display:flex;gap:9px;align-items:flex-start;background:var(--night);padding:8px 10px;font-size:15px;line-height:1.4;color:var(--ink-soft)}
-.line.fae{background:#123029}
+.line.bifi{background:#24163a}
 .line canvas{flex:0 0 auto;width:36px;height:40px;image-rendering:pixelated}
 .line .who{display:block;font-family:var(--f-pixel);font-size:7px;color:var(--g3);margin-bottom:4px}
-.line.fae .who{color:#a2ecd6}
+.line.bifi .who{color:#d6c0f2}
 
+.scene #zoomcv{pointer-events:none}
 .rm-h{font-family:var(--f-pixel);font-size:7.5px;color:var(--ink-faint);letter-spacing:.04em;text-transform:uppercase}
 
 @media (prefers-reduced-motion: reduce){
@@ -358,6 +359,7 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
       </header>
       <div class="scene" id="sceneWrap">
         <canvas id="scene" aria-hidden="true"></canvas>
+        <canvas id="zoomcv" aria-hidden="true"></canvas>
         <div class="hud" aria-hidden="true">
           <div class="box">Depth<b id="depthVal">0.00m</b></div>
           <div class="box zone">Zone<b id="zoneTag">Mouth</b></div>
@@ -419,7 +421,7 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
       <p><b>Mini-games every three questions:</b></p>
       <ul>
         <li><b>After stop 3, pop the stress bubbles:</b> bubbles labelled with the person's stressors float down. Each pop reveals one step of the stress chain, from the brain to the gut bacteria. A breathing break follows.</li>
-        <li><b>After stop 6, meet another microbe:</b> Michael meets Fae, a fibre-loving gut bacterium. The player picks questions, and Fae explains how stress changes the microbes' world, what she needs to thrive, and how microbes talk back to the brain. Fae then joins the colony.</li>
+        <li><b>After stop 6, meet another microbe:</b> Michael meets Bifi, his purple twin, a fibre-loving gut bacterium (<i>Bifidobacterium</i>). The player picks questions, and Bifi explains how stress changes the microbes' world, what she needs to thrive, and how microbes talk back to the brain. Bifi then joins the colony.</li>
       </ul>
       <p>Everything works by tapping, so there's no typing on a phone. Swiping also works with the buttons or the arrow keys.</p>
     </section>
@@ -429,7 +431,7 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
       <ul>
         <li><b>Practical first.</b> Each stop starts with something the player recognises and ends with one tip. Scientific terms are kept for "Read the research".</li>
         <li><b>Read more, not ratings.</b> Each stop has an optional "Read more" section: a short plain-language summary plus the papers behind it as further reading. It stays closed unless the player opens it.</li>
-        <li><b>Story first.</b> The mini-games and Fae's conversation carry the science through characters instead of extra quiz questions.</li>
+        <li><b>Story first.</b> The mini-games and Bifi's conversation carry the science through characters instead of extra quiz questions.</li>
         <li><b>IBS-specific advice.</b> Diet tips follow the IBS guideline (soluble fibre added slowly, a dietitian before strict diets), not general "gut health" advice.</li>
         <li><b>No timer, and never punishing.</b> Wrong answers still move Michael down, and every answer explains itself.</li>
         <li><b>A breathing break</b> halfway models a stress-calming tool instead of only describing it.</li>
@@ -660,11 +662,11 @@ const POP_FACTS = [
   "Gut bacteria feel the change too."
 ];
 
-/* Mini-game 2 (after stop 6): meet Fae, a fibre-loving microbe */
+/* Mini-game 2 (after stop 6): meet Bifi, Michael's purple twin (a fibre-loving Bifidobacterium) */
 const MEET = {
   open:[
-    ["fae","Oh! Hi, Michael. Sorry, I'm a bit frazzled. Ever since {stressor} started, our neighbourhood has changed."],
-    ["michael","I'm Michael. What's going on down here?"]
+    ["bifi","Oh! Hi, Michael. I'm Bifi, short for Bifidobacterium. Sorry, I'm a bit frazzled. Ever since {stressor} started, our neighbourhood has changed."],
+    ["michael","Nice to meet you, Bifi. We could be twins! What's going on down here?"]
   ],
   questions:[
     {ask:"Why is everything moving so differently?",
@@ -677,8 +679,8 @@ const MEET = {
      reply:"We sure can. We make chemicals that send signals through nerves like the vagus nerve and through the immune system. Scientists call it the microbiota–gut–brain axis."}
   ],
   close:[
-    ["michael","Thanks, Fae. Want to come along for the rest of the dive?"],
-    ["fae","Count me in! Look after {name}'s stress and you look after all of us."]
+    ["michael","Thanks, Bifi. Want to come along for the rest of the dive?"],
+    ["bifi","Count me in! Look after {name}'s stress and you look after all of us."]
   ],
   more:{text:"Stress can change how fast the gut moves and the mix of microbes living there. Fibre that bacteria can ferment helps them make substances that support the gut lining. For IBS, guidelines suggest soluble fibre (like oats or psyllium), added gradually. Wheat bran can make IBS worse.",
     papers:[P.tache,P.cryan,P.fibre,P.bsg]}
@@ -714,7 +716,7 @@ const S = {
   phase:"intro", idx:0, pos:0, depth:0, score:0, friends:[], answered:false,
   mood:"happy", moodUntil:0, breathTimer:null, typeT:null,
   meters:{stress:7,gut:4}, kit:[], sortRight:0, pledge:null,
-  char:null, outside:true, zoom:0, fade:0, guest:false
+  char:null, outside:true, zoom:0, zoomOp:1, fade:0, guest:false
 };
 const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const $ = s => document.querySelector(s);
@@ -783,6 +785,7 @@ const MICHAEL=[
   "...kkkkkk..."
 ];
 const MICHAEL_PAL={k:K,l:"#b9f27c",g:"#7ccf4a",d:"#3f8f2f",c:"#ff8fa3"};
+const BIFI_PAL={k:K,l:"#e2ccff",g:"#a77bd8",d:"#6a46a0",c:"#ff8fa3"};
 const TOOTH=["kkkkkkk.","kwwwwwwk","kwwwwwsk","kwwwwwsk","kwwwwssk","kswwssk.","kkkkkk.."];
 const TOOTH_PAL={k:K,w:"#f4f0e6",s:"#c9bfb2"};
 const ROD=[".kkkkk.","kllmmmk","kmmmmdk",".kkkkk."];
@@ -811,17 +814,17 @@ function disc(c,cx,cy,r,col){
 }
 
 /* Michael: 12x16 body + face that changes with mood */
-function drawMichael(c,x,y,mood,t,flagella){
+function drawMichael(c,x,y,mood,t,flagella,pal=MICHAEL_PAL){
   x=Math.round(x); y=Math.round(y);
   if(flagella){
     for(const [i,bx] of [[0,3],[1,6],[2,9]].map(a=>a)){
       for(let k=1;k<=6;k++){
         const wx=bx+Math.round(Math.sin(t*8-k*.9+i*1.7)*1.2);
-        px(c,x+wx,y-k,k%2?"#7ccf4a":"#3f8f2f");
+        px(c,x+wx,y-k,k%2?pal.g:pal.d);
       }
     }
   }
-  spr(c,MICHAEL,x,y,MICHAEL_PAL);
+  spr(c,MICHAEL,x,y,pal);
   const blink=Math.sin(t*1.3)>0.97;
   if(blink){
     [[2,5],[3,5],[7,5],[8,5]].forEach(([i,j])=>px(c,x+i,y+j,K));
@@ -866,7 +869,7 @@ function drawMicrobe(c,type,x,y,col,t,ph){
       }
       disc(c,x,y,3,col); px(c,Math.round(x)-1,Math.round(y)+1,col.d); px(c,Math.round(x)+1,Math.round(y)-1,col.d);
       break;
-    case "fae": drawFae(c,x-7,y-4,t); break;
+    case "bifi": drawBifi(c,x-6,y-8,t); break;
     case "ciliate": {
       const rx=3, ry=5; x=Math.round(x); y=Math.round(y);
       for(let dy=-ry-2;dy<=ry+2;dy++) for(let dx=-rx-2;dx<=rx+2;dx++){
@@ -908,10 +911,10 @@ function portrait(canvas,mood){
   const c=canvas.getContext("2d"); c.clearRect(0,0,15,17);
   drawMichael(c,1,1,mood||"happy",0.2,false);
 }
-function faePortrait(canvas){
-  canvas.width=16; canvas.height=17;
-  const c=canvas.getContext("2d"); c.clearRect(0,0,16,17);
-  drawFae(c,1,5,0.3);
+function bifiPortrait(canvas){
+  canvas.width=15; canvas.height=17;
+  const c=canvas.getContext("2d"); c.clearRect(0,0,15,17);
+  drawMichael(c,1,1,"happy",0.2,false,BIFI_PAL);
 }
 function sayBox(text){
   return `<div class="say px"><canvas width="15" height="17" aria-hidden="true"></canvas>
@@ -936,23 +939,8 @@ function addFriend(type,col){
   S.friends.push(f); $("#colonyN").textContent=1+S.friends.length;
 }
 
-/* Fae: a rod-shaped, fibre-loving gut bacterium (14x8) */
-const FAE=[
-  "..kkkkkkkkkk..",
-  ".kllmmmmmmmmk.",
-  "klmmwkmmwkmmdk",
-  "kmmmwwmmwwmmdk",
-  "kmmmmmkkmmmmdk",
-  "kmmmmmmmmmmddk",
-  ".kmmmmmmmmddk.",
-  "..kkkkkkkkkk.."
-];
-const FAE_PAL={k:K,l:"#a2ecd6",m:"#4fc3a1",d:"#23806a",w:"#ffffff"};
-function drawFae(c,x,y,t){
-  x=Math.round(x); y=Math.round(y);
-  for(let k=1;k<=4;k++) px(c,x+13+k,y+3+Math.round(Math.sin(t*7-k)*1.2),"#a2ecd6");
-  spr(c,FAE,x,y,FAE_PAL);
-}
+/* Bifi: Michael's purple twin (a Bifidobacterium, a fibre-loving gut bacterium) */
+function drawBifi(c,x,y,t,mood){ drawMichael(c,x,y,mood||"happy",t,true,BIFI_PAL); }
 
 /* ---------------------------------------------------------------
    Opening: title -> choose a person -> zoom into the body
@@ -1007,20 +995,16 @@ function startDive(){
   const line=fmt("Shrinking down... next stop, {name}'s mouth!");
   sheet.innerHTML=sayBox(line); mountSay(line);
   beep(SFX.dive);
-  const dur=reduce?0:2600, t0=performance.now();
+  const dur=reduce?0:3600, t0=performance.now();
+  const smooth=x=>x*x*(3-2*x);
   if(anim) cancelAnimationFrame(anim);
   const step=now=>{
     const z=dur?Math.min(1,(now-t0)/dur):1;
-    S.zoom=z; S.fade=clamp((z-.72)/.28,0,1);
+    S.zoom=z; S.zoomOp=1-smooth(clamp((z-.76)/.24,0,1));
     if(z<1){ anim=requestAnimationFrame(step); return; }
-    S.outside=false; S.zoom=0; S.pos=0; S.depth=0; S.idx=0; updateHud();
-    const f0=performance.now(), fd=reduce?0:650;
-    const fadeStep=n=>{
-      const k=fd?Math.min(1,(n-f0)/fd):1; S.fade=1-k;
-      if(k<1){ anim=requestAnimationFrame(fadeStep); return; }
-      S.fade=0; anim=null; S.phase="question"; renderStop();
-    };
-    anim=requestAnimationFrame(fadeStep);
+    anim=null; S.outside=false; S.zoom=0; S.zoomOp=1;
+    S.pos=0; S.depth=0; S.idx=0; S.phase="question";
+    updateHud(); renderStop();
   };
   anim=requestAnimationFrame(step);
 }
@@ -1316,9 +1300,9 @@ function endBreathe(){
   descendTo(S.idx+1);
 }
 
-/* Mini-game 2: meet Fae and ask what's going on */
+/* Mini-game 2: meet Bifi and ask what's going on */
 function lineHtml([w,text]){
-  return `<div class="line ${w} px"><canvas aria-hidden="true" data-w="${w}"></canvas><div><span class="who">${w==="fae"?"FAE":"MICHAEL"}</span>${esc(fmt(text))}</div></div>`;
+  return `<div class="line ${w} px"><canvas aria-hidden="true" data-w="${w}"></canvas><div><span class="who">${w==="bifi"?"BIFI":"MICHAEL"}</span>${esc(fmt(text))}</div></div>`;
 }
 function playMeet(){
   S.phase="mini2"; S.guest=true; updateHud();
@@ -1329,22 +1313,22 @@ function playMeet(){
       <div class="meta"><span class="chip k px">Mini-game 2</span><span class="chip px">Meet another microbe</span></div>
       <div class="convo">${lines.map(lineHtml).join("")}</div>
       <div id="choices" style="display:flex;flex-direction:column;gap:8px"></div>`;
-    sheet.querySelectorAll(".line canvas").forEach(c=>c.dataset.w==="fae"?faePortrait(c):portrait(c,"happy"));
+    sheet.querySelectorAll(".line canvas").forEach(c=>c.dataset.w==="bifi"?bifiPortrait(c):portrait(c,"happy"));
     const ch=$("#choices");
     if(!ended){
-      ch.innerHTML=`<p class="moment">${asked.size?"Ask something else, or wrap up":"Ask Fae a question"}</p>
+      ch.innerHTML=`<p class="moment">${asked.size?"Ask something else, or wrap up":"Ask Bifi a question"}</p>
         <div class="opts">${left.map(i=>`<button type="button" class="opt px" data-q="${i}"><span class="L">?</span><span>${esc(MEET.questions[i].ask)}</span></button>`).join("")}</div>
         ${asked.size>=2?`<button type="button" class="btn big px" id="wrapUp">Wrap up the chat &#9654;</button>`:`<p class="hint2" style="text-align:left">Ask at least two questions.</p>`}`;
       ch.querySelectorAll("[data-q]").forEach(b=>b.addEventListener("click",()=>{
         const q=MEET.questions[+b.dataset.q]; asked.add(+b.dataset.q);
-        lines.push(["michael",q.ask],["fae",q.reply]); beep([[660,.05],[740,.05]]);
+        lines.push(["michael",q.ask],["bifi",q.reply]); beep([[660,.05],[740,.05]]);
         draw(); sheet.querySelector(".convo .line:last-child").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"});
         (sheet.querySelector("[data-q]")||$("#wrapUp"))?.focus({preventScroll:true});
       }));
       $("#wrapUp")?.addEventListener("click",()=>{ ended=true; lines.push(...MEET.close); draw(); });
     } else {
-      S.guest=false; addFriend("fae"); setMood("wow",1800); beep(SFX.right);
-      ch.innerHTML=`<div class="fb ok px"><span class="v">Fae joined the colony! +1 microbe</span>
+      S.guest=false; addFriend("bifi"); setMood("wow",1800); beep(SFX.right);
+      ch.innerHTML=`<div class="fb ok px"><span class="v">Bifi joined the colony! +1 microbe</span>
           <p>${esc(fmt("Stress changes the world gut microbes live in, and they talk back to the brain. Looking after {name}'s stress, sleep and food looks after them too."))}</p>
           ${moreHtml(MEET.more)}
         </div>
@@ -1501,7 +1485,7 @@ function descendTo(i){
 function stopAll(){
   if(anim) cancelAnimationFrame(anim); anim=null;
   clearTimeout(S.breathTimer); clearInterval(S.typeT); clearOverlay();
-  S.fade=0; S.zoom=0; S.guest=false; S.moodUntil=0;
+  S.fade=0; S.zoom=0; S.zoomOp=1; S.guest=false; S.moodUntil=0;
 }
 function jumpTo(i){
   stopAll(); if(!S.char) S.char="sam";
@@ -1526,6 +1510,7 @@ function updateHud(){
    Scene: drawn at low resolution, scaled up with hard pixels
 ---------------------------------------------------------------- */
 const cv=$("#scene"), ctx=cv.getContext("2d");
+const zcv=$("#zoomcv"), zctx=zcv.getContext("2d");   // full-resolution layer for the opening zoom
 let PX=3, w=0, h=0;
 const SP=170;                 // world pixels between stops
 function resize(){
@@ -1536,6 +1521,9 @@ function resize(){
   cv.width=w; cv.height=h;
   cv.style.width=(w*PX)+"px"; cv.style.height=(h*PX)+"px";
   ctx.imageSmoothingEnabled=false;
+  zcv.width=w*PX; zcv.height=h*PX;
+  zcv.style.width=(w*PX)+"px"; zcv.style.height=(h*PX)+"px";
+  zctx.imageSmoothingEnabled=false;
 }
 new ResizeObserver(resize).observe($("#sceneWrap"));
 
@@ -1586,8 +1574,7 @@ const ACID_TOP=2*SP-26, ACID_BOT=2*SP+58;
 
 function frame(now){
   const t=now/1000;
-  if(w&&h&&S.outside){ drawOutside(t); }
-  else if(w&&h){
+  if(w&&h){
     const cam=S.pos*SP, top=Math.round(cam-h*.5);
     const rows=new Array(h);
 
@@ -1673,7 +1660,8 @@ function frame(now){
     });
     const mood = performance.now()<S.moodUntil ? S.mood : "happy";
     drawMichael(ctx,bx,by,mood,t,true);
-    if(S.guest) drawFae(ctx,bx+16,by+5+(reduce?0:Math.round(Math.sin(t*2+1))),t);
+    if(S.guest) drawBifi(ctx,bx+18,by+2+(reduce?0:Math.round(Math.sin(t*2+1))),t);
+    S.mx=bx; S.my=by;
 
     // acid bubbles in front
     if(top+h>ACID_TOP && top<ACID_BOT){
@@ -1687,6 +1675,7 @@ function frame(now){
       }
     }
   }
+  if(w&&h) drawZoomLayer(t);
   if(w&&h&&S.fade>0){ ctx.fillStyle=`rgba(13,7,16,${S.fade.toFixed(3)})`; ctx.fillRect(0,0,w,h); }
   requestAnimationFrame(frame);
 }
@@ -1741,9 +1730,13 @@ function drawPerson(c,G,t){
 
   // x-ray of the GI tract
   const u=G.u, T=G.torsoTop;
-  c.globalAlpha=.6+.25*Math.sin(t*2.2);
+  const open=G.open||0;
+  // the mouth: a dark opening that widens as the zoom starts
+  const mh=1+Math.round(2*open);
+  c.fillStyle="#a8395a"; c.fillRect(cx-3,G.mouthY-1,7,mh+2);
+  c.fillStyle="#2a0f1e"; c.fillRect(cx-2,G.mouthY,5,mh);
+  c.globalAlpha=(.6+.25*Math.sin(t*2.2))*(1-open);
   const pink="#ff8fa3", line=(x,y,wd,ht)=>{ c.fillStyle=pink; c.fillRect(x,y,wd,ht); };
-  line(cx-2,G.mouthY,5,1);                                   // mouth
   line(cx,G.mouthY+1,1,T+Math.round(8*u)-G.mouthY);          // oesophagus
   const sx=cx+Math.round(4*u), sy=T+Math.round(10*u), sr=Math.max(2,Math.round(4*u));
   for(let a=0;a<24;a++){ const an=a/24*Math.PI*2; px(c,Math.round(sx+Math.cos(an)*sr),Math.round(sy+Math.sin(an)*sr*.8),pink); } // stomach
@@ -1771,12 +1764,20 @@ function drawPerson(c,G,t){
   }
 }
 
+function drawZoomLayer(t){
+  const op=S.outside?S.zoomOp:0;
+  if(op<=0){ if(zcv.style.display!=="none") zcv.style.display="none"; return; }
+  zcv.style.display="block"; zcv.style.opacity=op.toFixed(3);
+  drawOutside(t);
+}
+
 function drawOutside(t){
   if(!OFF||OFF.width!==w||OFF.height!==h){
     OFF=document.createElement("canvas"); OFF.width=w; OFF.height=h;
     offCtx=OFF.getContext("2d"); offCtx.imageSmoothingEnabled=false;
   }
   const c=offCtx;
+  const z=S.zoom||0, e=.5-.5*Math.cos(Math.PI*z);           // ease in and out
   const sky=["#1a0b17","#1f0d1b","#24101f","#2b1226"];
   for(let y=0;y<h;y++){
     const f=y/h*4, b=Math.floor(f);
@@ -1793,25 +1794,31 @@ function drawOutside(t){
   for(let x=1;x<w;x+=6) px(c,x,base+3,"#2b1226");
 
   const H=Math.min(base-8,96), G=personGeom(base,H);
+  G.open=Math.min(1,e*2.5);
   drawPerson(c,G,t);
 
-  // Michael at 2x beside the person; during the zoom he hops into the mouth
-  const z=S.zoom||0, e=z*z*(3-2*z);
+  // zoom: exponential scale so the speed feels even; the mouth glides to
+  // where the tunnel's centre will be, then this layer fades into the tunnel
+  const Smax=34, s=Math.pow(Smax,e);
+  const fx=G.cx+.5, fy=G.mouthY+.5+Math.round(e*1);
+  const tx=(S.mx??(w-8)/2-6)+6, ty=(S.my??h*.5-8)+8;
+  const Px=fx+(tx-fx)*e, Py=fy+(ty-fy)*e;
+  const sw=w/s, sh=h/s, sx=fx-Px/s, sy=fy-Py/s;
+  const ZW=zcv.width, ZH=zcv.height;
+  zctx.imageSmoothingEnabled=false;
+  zctx.fillStyle="#2a0f1e"; zctx.fillRect(0,0,ZW,ZH);
+  zctx.drawImage(OFF,sx,sy,sw,sh,0,0,ZW,ZH);
+
+  // Michael glides from beside the person into the mouth, shrinking to his tunnel size
   const mood = performance.now()<S.moodUntil ? S.mood : "happy";
   mctx.clearRect(0,0,15,17); drawMichael(mctx,1,1,mood,t,false);
-  const sc=2-1.6*e;
-  const x0=G.cx+Math.floor(G.torsoW/2)+G.armW+Math.round(12*G.u), y0=base-34+(reduce?0:Math.round(Math.abs(Math.sin(t*2.4))*-2));
-  const x1=G.cx-15*sc/2, y1=G.mouthY-17*sc/2;
-  const hop=Math.sin(e*Math.PI)*-18;
-  c.drawImage(MSPR,Math.round(x0+(x1-x0)*e),Math.round(y0+(y1-y0)*e+hop),Math.round(15*sc),Math.round(17*sc));
-
-  // zoom toward the mouth with chunky pixels
-  const s=1+13*e, sw=w/s, sh=h/s;
-  const fx=G.cx, fy=G.mouthY;
-  const sx=fx-sw*((fx/w)*(1-e)+.5*e), sy=fy-sh*((fy/h)*(1-e)+.5*e);
-  ctx.imageSmoothingEnabled=false;
-  ctx.clearRect(0,0,w,h);
-  ctx.drawImage(OFF,sx,sy,sw,sh,0,0,w,h);
+  const k=Math.min(1,e*1.12), km=k*k*(3-2*k);
+  const x0=G.cx+Math.floor(G.torsoW/2)+G.armW+Math.round(12*G.u), y0=base-34+(reduce||z>0?0:Math.round(Math.abs(Math.sin(t*2.4))*-2));
+  const x1=(S.mx??(w-8)/2-6)-1, y1=(S.my??h*.5-8)-1;
+  const size=2-km;
+  const hop=Math.sin(km*Math.PI)*-14;
+  const MX=x0+(x1-x0)*km, MY=y0+(y1-y0)*km+hop;
+  zctx.drawImage(MSPR,Math.round(MX*PX),Math.round(MY*PX),Math.round(15*size*PX),Math.round(17*size*PX));
 }
 
 /* ---------------------------------------------------------------
@@ -1844,7 +1851,7 @@ const flowItems=[
   {n:"End",d:"Results, takeaways, when to see a doctor",s:"Score, colony, pledge, share message, sources",go:()=>{ atEnd(); renderEnd(); }}
 ];
 flowItems.splice(5,0,{n:"Mini 1",d:"Pop the stress bubbles, then breathe",s:"After stop 3",go:()=>{ stopAll(); if(!S.char) S.char="sam"; S.outside=false; S.idx=2; S.pos=2.5; S.depth=0.6; playBubbles(); }});
-flowItems.splice(9,0,{n:"Mini 2",d:"Meet Fae, another microbe",s:"After stop 6",go:()=>{ stopAll(); if(!S.char) S.char="sam"; S.outside=false; S.idx=5; S.pos=5.5; S.depth=7.8; playMeet(); }});
+flowItems.splice(9,0,{n:"Mini 2",d:"Meet Bifi, Michael's purple twin",s:"After stop 6",go:()=>{ stopAll(); if(!S.char) S.char="sam"; S.outside=false; S.idx=5; S.pos=5.5; S.depth=7.8; playMeet(); }});
 const fl=$("#flowList");
 flowItems.forEach((it,k)=>{
   const li=document.createElement("li");
