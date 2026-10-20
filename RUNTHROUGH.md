@@ -34,7 +34,8 @@ A concept 8-bit Doodle game for **World IBS Day (19 April)**. It opens outside t
 | 9 | Exit | 8.90 m | Poo chart: tap at least 3 of the 7 Bristol poo types, then a question on which IBS type a pattern of mushy or watery poo points to. A cute pixel poo appears beside Michael. | Poo type can show how IBS is affecting the gut: hard lumps lean IBS-C, mushy or watery lean IBS-D, both is IBS-M |
 | ★ | Gut kit | 8.90 m | Swipe to sort 8 cards (buttons and arrow keys work too) | What actually helps IBS |
 | ★ | Pick one | 8.90 m | Choose one thing to try this week | Small changes stick |
-| ★ | Results | 8.90 m | Score, colony size, pledge, 4 takeaways, when to see a doctor, share, Read more | |
+| ★ | Finale | toilet | Michael fades and glides into the poo (which sprouts his green tails), the scene fades to a pixel bathroom, and the poo drops into a toilet, splashes and is flushed. | |
+| ★ | THE END | toilet | "THE END" over the toilet, a big Dive again button, then score, pledge, 4 takeaways, when to see a doctor, share, Read more | |
 
 **Every stop has the same parts:**
 1. Michael's line, typed out RPG-style
@@ -60,7 +61,8 @@ The tunnel is kept calm so players can focus on the question.
 - **Colon:** pouched walls
 - **Sigmoid colon:** red alarm cells (mast cells) and a nerve appear for the tap activity
 - **Rectum:** pouched walls
-- **Exit:** ringed walls (the sphincter muscles) and a cute pixel poo with a face, which stays for the ending screens
+- **Exit:** ringed walls (the sphincter muscles) and a cute pixel poo with a face, which stays for the gut kit and pledge screens
+- **Finale:** Michael fades into the poo with sparkles. The poo gains Michael's three green tails, then the scene fades to a tiled pixel bathroom where the poo drops into a toilet, splashes and swirls away. "THE END" drops in above the toilet.
 - **Opening:** a night-sky scene with a person's silhouette, a faint pink outline of the GI tract inside them, and Michael at double size beside them. Sam holds a book; Alex holds a briefcase. The dive starts with a smooth zoom: the mouth opens, Michael glides in and shrinks, and the open mouth crossfades into the teeth tunnel.
 - **Mini-games:** pixel stress bubbles float over the scene; Bifi, Michael's purple twin, swims beside him during the chat
 

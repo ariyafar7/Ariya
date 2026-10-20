@@ -328,6 +328,12 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
 .ptype[aria-pressed="true"]{background:#4c2142;box-shadow:inset 0 0 0 3px var(--acid)}
 .ptype:focus-visible{outline:3px solid var(--acid);outline-offset:-5px}
 
+/* finale */
+.theend{position:absolute;left:0;right:26px;top:13%;text-align:center;font-family:var(--f-pixel);font-size:24px;line-height:1.2;color:var(--acid);
+  text-shadow:3px 3px 0 var(--k);letter-spacing:.06em;pointer-events:none;animation:endIn .7s steps(5) both}
+@keyframes endIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion: reduce){ .theend{animation:none} }
+
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
 .btn:disabled{opacity:.45;cursor:default}
@@ -756,7 +762,8 @@ const S = {
   phase:"intro", idx:0, pos:0, depth:0, score:0, friends:[], answered:false,
   mood:"happy", moodUntil:0, breathTimer:null, typeT:null,
   meters:{stress:7,gut:4}, kit:[], sortRight:0, pledge:null,
-  char:null, outside:true, zoom:0, zoomOp:1, fade:0, guest:false
+  char:null, outside:true, zoom:0, zoomOp:1, fade:0, guest:false,
+  scene:"tunnel", morph:0, drop:0, flush:0
 };
 const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const $ = s => document.querySelector(s);
@@ -989,9 +996,10 @@ function ell(c,cx,cy,rx,ry,fill,out){
   }
 }
 const shadeOf=col=>(dx,dy)=>dy<0&&dx<0?col.l:(dy>0?col.d:col.b);
-function drawPoo(c,x,y,t){
+function drawPoo(c,x,y,t,tails){
   x=Math.round(x); y=Math.round(y)+(reduce?0:-Math.round(Math.abs(Math.sin(t*3))));
   const cx=x+8, sh=shadeOf(POO_COL);
+  if(tails) [[-2,0],[1,1],[4,2]].forEach(([bx,i])=>{ for(let k=1;k<=4;k++) px(c,cx+bx+Math.round(Math.sin(t*8-k*.9+i*1.7)*1.1),y+1-k,k%2?"#7ccf4a":"#3f8f2f"); });
   px(c,cx+1,y+1,K); px(c,cx+1,y+2,POO_COL.l);
   ell(c,cx,y+4,3.4,1.9,sh,K);          // top swirl
   ell(c,cx,y+7.5,5.5,2.4,sh,K);        // middle
@@ -1496,27 +1504,63 @@ function renderPledge(){
     <h2>Pick one thing to try this week</h2>
     <p>${esc(fmt("Here's {name}'s gut kit. It works for you too. One small change sticks better than ten."))}</p>
     <div class="kit" role="group" aria-label="Gut kit">${S.kit.map((t,i)=>`<button type="button" class="kitbtn px" aria-pressed="false" data-i="${i}">${esc(t)}</button>`).join("")}</div>
-    <button type="button" class="btn big px" id="doneBtn" disabled>See my results &#9654;</button>
+    <button type="button" class="btn big px" id="doneBtn" disabled>Finish the dive &#9654;</button>
     <button type="button" class="textbtn" id="skipPledge">Skip this</button>`;
   sheet.scrollTop=0;
   sheet.querySelectorAll(".kitbtn").forEach(b=>b.addEventListener("click",()=>{
     sheet.querySelectorAll(".kitbtn").forEach(x=>x.setAttribute("aria-pressed","false"));
     b.setAttribute("aria-pressed","true"); S.pledge=S.kit[+b.dataset.i]; $("#doneBtn").disabled=false;
   }));
-  $("#doneBtn").addEventListener("click",renderEnd);
-  $("#skipPledge").addEventListener("click",()=>{ S.pledge=null; renderEnd(); });
+  $("#doneBtn").addEventListener("click",startFinale);
+  $("#skipPledge").addEventListener("click",()=>{ S.pledge=null; startFinale(); });
+}
+
+/* Finale: Michael turns into the poo, leaves the body and is flushed. Then THE END. */
+function showTheEnd(on){
+  let el=$("#theEnd");
+  if(on && !el){ el=document.createElement("div"); el.id="theEnd"; el.className="theend"; el.textContent="THE END"; $("#sceneWrap").appendChild(el); }
+  if(!on && el) el.remove();
+}
+function startFinale(){
+  S.phase="finale"; S.outside=false; S.scene="tunnel"; S.morph=0; S.drop=0; S.flush=0; S.fade=0;
+  S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M; updateHud();
+  clearInterval(S.typeT); clearOverlay(); showTheEnd(false);
+  const line=fmt("That's the end of the line. Time for me to go! Bye, {name}. Look after that gut.");
+  sheet.innerHTML=sayBox(line); mountSay(line,"wow");
+  beep([[784,.08],[659,.08],[523,.08],[392,.16]]);
+  if(reduce){ renderEnd(); return; }
+  const T={morph:[0,1700],fadeOut:[1700,2200],toilet:2200,fadeIn:[2200,2650],drop:[2450,3300],flush:[3300,4500],end:4100,done:4700};
+  const k=(now,[a,b])=>clamp((now-a)/(b-a),0,1);
+  let splashed=false;
+  const t0=performance.now();
+  if(anim) cancelAnimationFrame(anim);
+  const step=n=>{
+    const now=n-t0;
+    S.morph=k(now,T.morph);
+    if(now<T.toilet) S.fade=k(now,T.fadeOut);
+    else { S.scene="toilet"; S.fade=1-k(now,T.fadeIn); updateHud(); }
+    S.drop=k(now,T.drop); S.flush=k(now,T.flush);
+    if(S.drop>=1 && !splashed){ splashed=true; beep([[220,.06],[330,.06],[180,.2]]); }
+    if(now>=T.end) showTheEnd(true);
+    if(now<T.done){ anim=requestAnimationFrame(step); return; }
+    anim=null; renderEnd();
+  };
+  anim=requestAnimationFrame(step);
 }
 
 function renderEnd(){
-  S.phase="end"; S.outside=false; S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M; updateHud();
+  S.phase="end"; S.outside=false; S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M;
+  S.scene="toilet"; S.morph=1; S.drop=1; S.flush=1; S.fade=0; showTheEnd(true); updateHud();
   const total=STOPS.length;
   const msg = S.score>=8 ? "Gut genius! Michael's colony is thriving."
             : S.score>=5 ? "Solid dive! Michael's colony is growing."
             : "Dive complete! You now know more than most.";
   const allPapers=[P.oka,P.koloski,P.tache,P.vanuytsel,P.barbara,P.pitta,P.cryan,P.zhang,P.kadosh,P.fibre,P.black,P.johann,P.bsg,P.bristol,P.romecard];
   sheet.innerHTML=`
-    <span class="chip k px" style="align-self:flex-start">Stage clear · 8.9 m</span>
-    <h2>${msg}</h2>
+    <span class="chip k px" style="align-self:flex-start">The end · 8.9 m</span>
+    <h2>Thanks for diving with Michael!</h2>
+    <button type="button" class="btn big px" id="againBtn">&#9654; Dive again</button>
+    <p class="q" style="font-size:16px">${msg}</p>
     <div class="stats">
       <div class="stat px"><b>${S.score}/${total}</b><span>stops cleared</span></div>
       <div class="stat px"><b>${1+S.friends.length}</b><span>microbes in the colony</span></div>
@@ -1532,7 +1576,6 @@ function renderEnd(){
     </ol>
     <div class="warn px"><b>See a doctor if you notice:</b> blood in your poo, weight loss you can't explain, symptoms that wake you at night, fever, or a family history of bowel cancer, coeliac disease or IBD. These need checking and aren't typical of IBS.</div>
     <div class="row">
-      <button type="button" class="btn px" id="againBtn">Dive again</button>
       <button type="button" class="ghost px" id="shareBtn">Copy a message for a friend</button>
     </div>
     <p class="fine" id="shareMsg" aria-live="polite"></p>
@@ -1589,6 +1632,7 @@ function stopAll(){
   if(anim) cancelAnimationFrame(anim); anim=null;
   clearTimeout(S.breathTimer); clearInterval(S.typeT); clearOverlay();
   S.fade=0; S.zoom=0; S.zoomOp=1; S.guest=false; S.moodUntil=0;
+  S.scene="tunnel"; S.morph=0; S.drop=0; S.flush=0; showTheEnd(false);
 }
 function jumpTo(i){
   stopAll(); if(!S.char) S.char="sam";
@@ -1597,6 +1641,10 @@ function jumpTo(i){
 }
 
 function updateHud(){
+  if(S.scene==="toilet"){
+    $("#depthVal").textContent=TOTAL_M.toFixed(2)+"m"; $("#zoneTag").textContent="Toilet"; $("#stopVal").textContent=STOPS.length+"/"+STOPS.length;
+    $("#marker").style.top="calc(100% - 2px)"; return;
+  }
   if(S.outside){
     $("#depthVal").textContent="0.00m"; $("#zoneTag").textContent="Outside"; $("#stopVal").textContent="0/"+STOPS.length;
     $("#marker").style.top="-2px"; return;
@@ -1695,7 +1743,8 @@ const ACID_TOP=2*SP-26, ACID_BOT=2*SP+58;
 
 function frame(now){
   const t=now/1000;
-  if(w&&h){
+  if(w&&h&&S.scene==="toilet"){ drawToilet(t); }
+  else if(w&&h){
     const cam=S.pos*SP, top=Math.round(cam-h*.5);
     const rows=new Array(h);
 
@@ -1774,9 +1823,11 @@ function frame(now){
     const mid=rows[clamp(Math.round(h*.5),0,h-1)];
     const bx=Math.round((mid.l+mid.r)/2)-6;
     const mood = performance.now()<S.moodUntil ? S.mood : "happy";
-    drawMichael(ctx,bx,by,mood,t,true);
+    const mo=S.morph||0;
+    if(mo<1){ ctx.globalAlpha=1-mo; drawMichael(ctx,bx+Math.round(mo*13),by+Math.round(mo*2),mood,t,true); ctx.globalAlpha=1; }
+    if(mo>0 && mo<1) for(let s2=0;s2<6;s2++){ const a=t*4+s2*1.05, d=10+4*Math.sin(t*6+s2); px(ctx,Math.round(bx+23+Math.cos(a)*d),Math.round(by+8+Math.sin(a)*d*.7),s2%2?"#f2d14a":"#b9f27c"); }
     if(S.guest) drawBifi(ctx,bx+18,by+2+(reduce?0:Math.round(Math.sin(t*2+1))),t);
-    if(S.idx===STOPS.length-1 && Math.abs(S.pos-S.idx)<.01 && ["question","sort","pledge","end"].includes(S.phase)) drawPoo(ctx,bx+15,by,t);
+    if(S.idx===STOPS.length-1 && Math.abs(S.pos-S.idx)<.01 && ["question","sort","pledge","end","finale"].includes(S.phase)) drawPoo(ctx,bx+15,by,t,(S.morph||0)>.6);
     S.mx=bx; S.my=by;
 
     // acid bubbles in front
@@ -1796,6 +1847,54 @@ function frame(now){
   requestAnimationFrame(frame);
 }
 
+
+/* The finale bathroom: tiled wall, checked floor and a pixel toilet.
+   The poo (now wearing Michael's tails) drops in, splashes and is flushed. */
+function drawToilet(t){
+  const c=ctx, base=h-10, cx=Math.round((w-8)/2);
+  c.fillStyle="#1f2d44"; c.fillRect(0,0,w,base);
+  c.fillStyle="#2b3f5e";
+  for(let y=0;y<base;y+=8){ c.fillRect(0,y,w,1); for(let x=((y/8)%2)*4;x<w;x+=8) c.fillRect(x,y,1,8); }
+  for(let y=base;y<h;y+=3) for(let x=0;x<w;x+=3){ c.fillStyle=((x/3+y/3)|0)%2?"#3d1a35":"#2b1226"; c.fillRect(x,y,3,3); }
+  c.fillStyle="#6b2d55"; c.fillRect(0,base,w,1);
+  const W="#f4f0e6", Sh="#c9bfb2";
+  // tank
+  const tw=26, th=15, tx=cx-tw/2, ty=base-53;
+  c.fillStyle=K; c.fillRect(tx-1,ty-1,tw+2,th+2);
+  c.fillStyle=W; c.fillRect(tx,ty,tw,th);
+  c.fillStyle=Sh; c.fillRect(tx+tw-4,ty,4,th); c.fillRect(tx,ty+th-2,tw,2);
+  c.fillStyle="#a0a8b8"; c.fillRect(tx+3,ty+3,5,2);
+  // bowl
+  for(let y=base-31;y<base;y++){
+    const k=(y-(base-31))/31, half=Math.round(15-k*7);
+    c.fillStyle=K; c.fillRect(cx-half-1,y,half*2+2,1);
+    c.fillStyle=W; c.fillRect(cx-half,y,half*2,1);
+    c.fillStyle=Sh; c.fillRect(cx+half-4,y,4,1);
+  }
+  const wy=base-34;
+  ell(c,cx,wy,17,5,(dx,dy)=>dy<0?W:Sh,K);           // seat
+  ell(c,cx,wy,13,3.2,"#3f8fc4",null);               // water
+  px(c,cx-7,wy-1,"#8fd3ff"); px(c,cx-6,wy-1,"#8fd3ff"); px(c,cx+4,wy+1,"#8fd3ff");
+  // flush swirl
+  const fl=S.flush||0;
+  if(fl>0 && fl<1) for(let k=0;k<10;k++){ const a=t*9+k*.63, r=(1-fl)*11+1; px(c,Math.round(cx+Math.cos(a)*r),Math.round(wy+Math.sin(a)*r*.28),k%2?"#d4efff":"#8fd3ff"); }
+  // the poo falls in, then sinks below the water line
+  const dr=S.drop||0;
+  if(fl<1){
+    const e=dr*dr, py=Math.round(-20+(wy-12+20)*e+fl*16);
+    c.save(); c.beginPath(); c.rect(0,0,w,wy+(dr<1?h:0)); c.clip();
+    drawPoo(c,cx-8,py,t,true);
+    c.restore();
+  }
+  // front rim over the bowl so the poo looks inside it
+  for(let dy=0;dy<=6;dy++) for(let dx=-18;dx<=18;dx++){
+    const e=(dx*dx)/(17*17)+(dy*dy)/(5*5), e2=(dx*dx)/(18*18)+(dy*dy)/(6*6), ein=(dx*dx)/(13*13)+(dy*dy)/(3.2*3.2);
+    if(e<=1 && ein>1) px(c,cx+dx,wy+dy,Sh); else if(e>1 && e2<=1) px(c,cx+dx,wy+dy,K);
+  }
+  // splash
+  if(dr>=1 && fl<.45){ const s=fl/.45; for(let k=0;k<8;k++){ const dir=k<4?-1:1, sp=3+(k%4)*3; px(c,Math.round(cx+dir*sp*s*1.6),Math.round(wy-2-Math.sin(s*Math.PI)*(6+(k%4)*3)),"#8fd3ff"); } }
+  S.mx=cx-6; S.my=wy-16;
+}
 
 /* ---------------------------------------------------------------
    Opening scene: a person's silhouette with a faint "x-ray" of the
@@ -1964,7 +2063,8 @@ const flowItems=[
   ...STOPS.map((st,i)=>({n:`${st.depth.toFixed(2)} m`,d:`${i+1}. ${st.zone}: ${st.kind.toLowerCase()}`,s:st.scene,go:()=>jumpTo(i)})),
   {n:"Bonus",d:"Swipe to sort: build the gut kit",s:"8 cards, helps or doesn't help",go:()=>{ atEnd(); renderSort(); }},
   {n:"Pledge",d:"Pick one thing to try this week",s:"Chosen from the gut kit",go:()=>{ atEnd(); S.kit=SORT_CARDS.filter(c=>c.helps).map(c=>c.t); renderPledge(); }},
-  {n:"End",d:"Results, takeaways, when to see a doctor",s:"Score, colony, pledge, share message, sources",go:()=>{ atEnd(); renderEnd(); }}
+  {n:"Finale",d:"Michael turns into the poo and is flushed",s:"Toilet scene, then THE END",go:()=>{ atEnd(); startFinale(); }},
+  {n:"End",d:"THE END: Dive again, results, takeaways, see a doctor",s:"Score, pledge, share message, Read more",go:()=>{ atEnd(); renderEnd(); }}
 ];
 flowItems.splice(5,0,{n:"Mini 1",d:"Pop the stress bubbles, then breathe",s:"After stop 3",go:()=>{ stopAll(); if(!S.char) S.char="sam"; S.outside=false; S.idx=2; S.pos=2.5; S.depth=0.6; playBubbles(); }});
 flowItems.splice(9,0,{n:"Mini 2",d:"Meet Bifi, Michael's purple twin",s:"After stop 6",go:()=>{ stopAll(); if(!S.char) S.char="sam"; S.outside=false; S.idx=5; S.pos=5.5; S.depth=7.8; playMeet(); }});
@@ -1986,7 +2086,7 @@ function start(data){
     S.score=data.score||0; S.char=data.char||"sam";
     for(let i=0;i<(data.friends||0);i++) S.friends.push(makeFriend(i));
     $("#colonyN").textContent=1+S.friends.length;
-    if(["sort","pledge","end"].includes(data.phase)){ atEnd(); renderEnd(); }
+    if(["sort","pledge","end","finale"].includes(data.phase)){ atEnd(); renderEnd(); }
     else jumpTo(Math.min(STOPS.length-1,data.idx));
   } else renderIntro();
   requestAnimationFrame(frame);
