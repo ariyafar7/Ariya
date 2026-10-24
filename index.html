@@ -2334,7 +2334,17 @@ dcv.width=DW; dcv.height=DH; dctx.imageSmoothingEnabled=false;
 const D_BASE=document.createElement("canvas"); D_BASE.width=DW; D_BASE.height=DH;
 const DSPR=document.createElement("canvas"); DSPR.width=15; DSPR.height=24;
 const dsc=DSPR.getContext("2d");
-let dHover=false, dPortal=false;   // dPortal: Michael opens wide while the player dives into his mouth
+let dHover=false, dMouth=0;   // dMouth: how wide Michael's mouth is open on the Doodle (0 = smiling, 3 = wide "ahh")
+/* Michael's mouth opening in three steps, in sprite pixels: [x, y, colour key] ("k" dark, "r" tongue). */
+const MOUTH_STEPS=[null,
+  [[5,7,"k"],[6,7,"k"],[5,8,"k"],[6,8,"k"]],
+  [[4,7,"k"],[5,7,"k"],[6,7,"k"],[7,7,"k"],[4,8,"k"],[5,8,"r"],[6,8,"r"],[7,8,"k"],[5,9,"k"],[6,9,"k"]],
+  [[3,7,"k"],[4,7,"k"],[5,7,"k"],[6,7,"k"],[7,7,"k"],[8,7,"k"],[3,8,"k"],[4,8,"k"],[5,8,"k"],[6,8,"k"],[7,8,"k"],[8,8,"k"],
+   [3,9,"k"],[4,9,"k"],[5,9,"r"],[6,9,"r"],[7,9,"k"],[8,9,"k"],[4,10,"k"],[5,10,"k"],[6,10,"k"],[7,10,"k"]]];
+function drawMouth(c,x,y,step){
+  for(let j=7;j<=10;j++) for(let i=3;i<=8;i++) px(c,x+i,y+j,MICHAEL_PAL.g);   // wipe the smile
+  for(const [i,j,k] of MOUTH_STEPS[step]) px(c,x+i,y+j,k==="r"?"#ff6b6b":K);
+}
 
 const GLYPH={
   e:[".....",".....",".###.","#...#","#####","#....",".####",".....","....."],
@@ -2427,14 +2437,16 @@ function drawDoodle(t){
     if(s.ch!=="M" && s.ch!=="B") continue;
     const ph=s.ch==="M"?0:1.6;
     dsc.clearRect(0,0,15,24);
-    drawMichael(dsc,1,7,(dHover||dPortal)?"wow":"happy",t+ph,true,s.ch==="M"?MICHAEL_PAL:BIFI_PAL);
-    const bob=(reduce||dPortal)?0:Math.round(Math.sin(t*(dHover?6:2.2)+ph)*(dHover?2:1));
+    const isM=s.ch==="M";
+    drawMichael(dsc,1,7,(dHover||dMouth)&&!(isM&&dMouth)?"wow":"happy",t+ph,true,isM?MICHAEL_PAL:BIFI_PAL);
+    if(isM && dMouth) drawMouth(dsc,1,7,dMouth);
+    const bob=(reduce||dMouth)?0:Math.round(Math.sin(t*(dHover?6:2.2)+ph)*(dHover?2:1));
     c.drawImage(DSPR,s.x,baseline-46+bob,30,48);
   }
 }
 
-/* Michael's open mouth in Doodle pixels: the dark row of his "wow" face, sprite (4-7, 7), drawn at 2x. */
-const MOUTH=(()=>{ const s=D_SLOTS.find(d=>d.ch==="M"); return {u:s.x+14, v:LOGO.y+28-46+(7+7)*2+1}; })();
+/* The middle of Michael's wide-open mouth in Doodle pixels: sprite (3-8, 7-8), drawn at 2x. */
+const MOUTH=(()=>{ const s=D_SLOTS.find(d=>d.ch==="M"); return {u:s.x+14, v:LOGO.y+28-46+(7+8)*2}; })();
 
 const dBtn=$("#doodle");
 ["mouseenter","focus"].forEach(ev=>dBtn.addEventListener(ev,()=>{ dHover=true; }));
@@ -2454,7 +2466,6 @@ function portalZoom(inward,dur,done){
   const r=dcv.getBoundingClientRect(), s0=r.width/DW;
   const mx0=r.left+MOUTH.u*s0, my0=r.top+MOUTH.v*s0;
   const Zmax=Math.max(W,H)*1.4/(2*s0);          // the dark mouth (2 Doodle pixels tall) ends up bigger than the screen
-  dPortal=true;
   const t0=performance.now();
   const step=n=>{
     const p=clamp((n-t0)/dur,0,1), e=inward?p:1-p, ez=e*e*(3-2*e);
@@ -2467,7 +2478,7 @@ function portalZoom(inward,dur,done){
     const k=clamp((ez-.7)/.3,0,1);              // the inside of the mouth closes in
     if(k>0){ pctx.fillStyle=`rgba(13,7,16,${k})`; pctx.fillRect(0,0,W,H); }
     if(p<1){ requestAnimationFrame(step); return; }
-    dPortal=false; done();
+    done();
   };
   requestAnimationFrame(step);
 }
@@ -2482,10 +2493,23 @@ function openGame(animate=true){
   if(document.body.classList.contains("playing") || portalBusy) return;
   if(!animate || reduce){ showGame(); return; }
   portalBusy=true;
-  portalZoom(true,1500,()=>{
-    showGame();
-    portal.animate([{opacity:1},{opacity:0}],{duration:450,easing:"ease-out"}).onfinish=()=>{ portal.hidden=true; portalBusy=false; };
-  });
+  // first, on the Doodle itself, Michael says "ahh" and opens wide
+  const cap=$("#doodleCap"), capWas=cap.innerHTML;
+  cap.textContent="Say ahh!";
+  beep([[392,.08],[523,.1],[659,.18]]);
+  stepMouth(0,3,170,()=>setTimeout(()=>{
+    portalZoom(true,1400,()=>{
+      dMouth=0; cap.innerHTML=capWas;
+      showGame();
+      portal.animate([{opacity:1},{opacity:0}],{duration:450,easing:"ease-out"}).onfinish=()=>{ portal.hidden=true; portalBusy=false; };
+    });
+  },380));
+}
+/* Open or close Michael's Doodle mouth one step at a time. */
+function stepMouth(from,to,gap,done){
+  dMouth=from;
+  if(from===to){ done(); return; }
+  setTimeout(()=>stepMouth(from+(to>from?1:-1),to,gap,done),from===0&&to>0?0:gap);
 }
 /* The game's X zooms back out of Michael's mouth to the Doodle; progress is kept. */
 function closeGame(){
@@ -2493,7 +2517,11 @@ function closeGame(){
   document.body.classList.remove("playing");
   if(reduce){ $("#doodle").focus({preventScroll:true}); return; }
   portalBusy=true;
-  portalZoom(false,900,()=>{ portal.hidden=true; portalBusy=false; $("#doodle").focus({preventScroll:true}); });
+  dMouth=3;
+  portalZoom(false,900,()=>{
+    portal.hidden=true; $("#doodle").focus({preventScroll:true});
+    setTimeout(()=>stepMouth(3,0,130,()=>{ portalBusy=false; }),250);   // Michael closes his mouth again
+  });
 }
 $("#doodle").addEventListener("click",()=>openGame(true));
 $("#egLucky").addEventListener("click",()=>openGame(true));
