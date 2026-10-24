@@ -3,13 +3,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;600;700&display=swap">
 <style>
-/* Layout: a plain mock search homepage (with a concept Doodle tile) is the backdrop; the game is an 8-bit pop-up cartridge, with a pixel gut map beside it.
+/* Layout: a parody 'elgoog' homepage whose pixel Doodle opens the game; the 8-bit game window grows out of the Doodle, with a pixel gut map beside it.
    Top = low-resolution canvas (drawn at ~130px wide, scaled up with hard pixels) with a game HUD.
    Bottom = an RPG-style dialog box holding the question. One deliberate look, so no theme switching. */
 :root{
   color-scheme: light;
   /* backdrop: mock search page */
-  --page:#e8ebee; --page-card:#ffffff; --page-ink:#262a2e; --page-muted:#68707a; --page-line:#d3d8dd;
+  --page:#ffffff; --page-card:#ffffff; --page-ink:#202124; --page-muted:#5f6368; --page-line:#dfe1e5;
   /* 8-bit palette */
   --k:#0d0710;        /* outline black */
   --night:#1a0b17;    /* lumen / card */
@@ -354,33 +354,70 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
   .gm-title{grid-area:title} #mapcv{grid-area:cv;width:140px;height:248px} .gm-zone{grid-area:zone;text-align:left} .gm-sub{grid-area:sub;text-align:left;margin:0} .gm-key{grid-area:key}
 }
 
+/* ---------- elgoog homepage ---------- */
+.eg-top{display:flex;justify-content:flex-end;padding:10px 16px 0}
+.eg-notes{background:transparent;border:0;border-radius:4px;color:var(--page-muted);font:13px system-ui,-apple-system,"Segoe UI",sans-serif;padding:7px 10px;cursor:pointer}
+.eg-notes:hover{background:#f1f3f4;color:var(--page-ink)}
+.eg-notes:focus-visible{outline:2px solid #1a73e8;outline-offset:2px}
+.home{display:flex;justify-content:center;align-items:flex-start;flex-wrap:wrap;gap:24px;padding:56px 16px 32px;box-sizing:border-box;flex:1}
+.hero{width:min(560px,100%);display:flex;flex-direction:column;align-items:center;gap:18px;transform-origin:top left}
+.eg-doodle{display:block;width:100%;padding:0;border:0;background:none;cursor:pointer;line-height:0}
+#doodlecv{width:100%;height:auto;aspect-ratio:186/98;image-rendering:pixelated;display:block}
+.eg-doodle:focus-visible{outline:3px solid #1a73e8;outline-offset:4px}
+.eg-cap{margin:-6px 0 0;font-family:var(--f-pixel);font-size:9px;line-height:1.5;color:var(--page-muted);text-align:center}
+.eg-search{width:100%;display:flex;align-items:center;gap:12px;border:1px solid var(--page-line);border-radius:24px;padding:0 16px;height:46px;box-sizing:border-box;background:#fff}
+.eg-search:hover,.eg-search:focus-within{box-shadow:0 1px 6px rgba(32,33,36,.28);border-color:transparent}
+.eg-search input{flex:1;min-width:0;border:0;outline:none;font:16px system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--page-ink);background:transparent}
+.eg-search svg{flex:0 0 auto;width:20px;height:20px}
+.eg-btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.eg-btns button{background:#f8f9fa;border:1px solid #f8f9fa;border-radius:4px;color:#3c4043;font:14px system-ui,-apple-system,"Segoe UI",sans-serif;padding:9px 16px;cursor:pointer}
+.eg-btns button:hover{border-color:#dadce0;box-shadow:0 1px 1px rgba(0,0,0,.1)}
+.eg-btns button:focus-visible{outline:2px solid #1a73e8;outline-offset:2px}
+.eg-foot{font:12px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;color:#70757a;text-align:center;max-width:52ch;margin:4px 0 0}
+body:not(.playing) #popup, body:not(.playing) #gutmap{display:none}
+body.playing .home{padding-top:20px}
+body.playing .hero{width:min(430px,100%)}
+.home .popup{position:relative;top:auto;right:auto;height:min(760px,calc(100dvh - 90px));min-height:600px}
+.home .gutmap{position:relative;top:auto;right:auto}
+@media (max-width: 900px){
+  .home{padding-top:28px}
+  body.playing .hero{width:min(320px,100%)}
+  body.playing .eg-search, body.playing .eg-btns, body.playing .eg-foot{display:none}
+  .home .popup{width:100%;max-width:420px;height:min(760px,calc(100dvh - 40px));min-height:560px}
+}
+
+.eg-cap{font-variant-ligatures:none}
+@media (min-width: 901px) and (max-width: 1240px){ body.playing .hero{width:min(320px,100%)} body.playing .eg-foot{display:none} }
+
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
 .btn:disabled{opacity:.45;cursor:default}
 .duo .btn{font-size:9px}
 </style>
 
-<div class="draft-bar">
-  <span class="tag">Prototype v5</span>
-  <p>Michael the Microbe: a concept 8-bit Doodle game for World IBS Day (19 April). Not affiliated with any search engine. Main audience: people moving into university or work.</p>
-  <button type="button" id="notesBtn">Run-through notes</button>
-</div>
+<header class="eg-top">
+  <button type="button" class="eg-notes" id="notesBtn">Prototype notes</button>
+</header>
 
-<div class="stage">
-  <div class="mock">
-    <button type="button" class="doodle" id="doodle" aria-label="Open the Michael the Microbe game">
-      <canvas id="doodleIcon" width="15" height="17" aria-hidden="true"></canvas>
-      <span><span class="dt"><span>Michael</span> the Microbe</span><small>World IBS Day · tap to play the concept Doodle</small></span>
+<main class="home" id="home">
+  <section class="hero" id="hero">
+    <button type="button" class="eg-doodle" id="doodle" aria-label="elgoog Doodle for World IBS Day. Play Michael the Microbe, a game about stress and the gut.">
+      <canvas id="doodlecv" aria-hidden="true"></canvas>
     </button>
-    <div class="mock-search" aria-hidden="true">
-      <span class="mock-word">Search</span>
-      <div class="mock-q">why does stress mess with my stomach</div>
+    <p class="eg-cap" id="doodleCap">&#9654; Tap Michael &amp; Bifi to play</p>
+    <form class="eg-search" id="egSearch" role="search">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="#5f6368" stroke-width="2"/><path d="M15.5 15.5 21 21" stroke="#5f6368" stroke-width="2" stroke-linecap="round"/></svg>
+      <label class="sr" for="egQ">Search</label>
+      <input id="egQ" name="egQ" type="search" placeholder="Search elgoog" autocomplete="off">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3" fill="#5f6368"/><path d="M6 11a6 6 0 0 0 12 0M12 17v4" stroke="#5f6368" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z" fill="none" stroke="#5f6368" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.2" fill="none" stroke="#5f6368" stroke-width="2"/></svg>
+    </form>
+    <div class="eg-btns">
+      <button type="button" id="egSearchBtn">elgoog Search</button>
+      <button type="button" id="egLucky">I'm Feeling Gutsy</button>
     </div>
-    <p class="mock-note" aria-hidden="true">Placeholder homepage and results. On 19 April the Doodle opens the game, and searches about IBS, gut pain or stress show it beside the results.</p>
-    <div class="mock-res" aria-hidden="true"><div class="u"></div><div class="t"></div><div class="l"></div><div class="l s"></div></div>
-    <div class="mock-res" aria-hidden="true"><div class="u"></div><div class="t"></div><div class="l"></div><div class="l"></div><div class="l s"></div></div>
-    <div class="mock-res" aria-hidden="true"><div class="u"></div><div class="t"></div><div class="l"></div><div class="l s"></div></div>
-  </div>
+    <p class="eg-foot" id="egFoot">A concept Doodle for World IBS Day, 19 April. "elgoog" is a parody spelling; this university prototype isn't affiliated with any search engine.</p>
+  </section>
 
   <section class="popup" id="popup" role="dialog" aria-labelledby="gameTitle">
    <div class="frame px px-lg">
@@ -428,8 +465,7 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
    </div>
   </aside>
 
-  <button type="button" class="pill" id="pill" hidden><canvas id="pillIcon" width="15" height="17" aria-hidden="true"></canvas>Resume Michael</button>
-</div>
+</main>
 
 <div class="notes" id="notes" hidden>
   <div class="notes-inner" role="dialog" aria-labelledby="notesTitle">
@@ -440,7 +476,7 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
 
     <section>
       <h3>How people find it</h3>
-      <p>This is a <b>concept</b> Doodle, not an official one. On World IBS Day (19 April), a pixel Michael tile on the search homepage opens the game. Searches about IBS, gut pain or stress also show it beside the results. On a phone it opens full-screen. One tap closes it to a small "Resume" pill.</p>
+      <p>This is a <b>concept</b> Doodle on a parody homepage spelled "elgoog" (Google backwards), so no real logo is used. On World IBS Day (19 April) the Doodle spells "elgoog" in colourful microbe dots, with Michael and Bifi as the two o's and "WORLD IBS DAY" underneath. Clicking the Doodle slides the logo aside and grows the game out of it as a popup next to the logo, with the gut map alongside. "I'm Feeling Gutsy" opens it too. The game's × button shrinks it back into the Doodle, and progress is kept.</p>
     </section>
 
     <section>
@@ -1878,6 +1914,7 @@ function frame(now){
   }
   if(w&&h) drawZoomLayer(t);
   drawMap(t);
+  drawDoodle(t);
   if(w&&h&&S.fade>0){ ctx.fillStyle=`rgba(13,7,16,${S.fade.toFixed(3)})`; ctx.fillRect(0,0,w,h); }
   requestAnimationFrame(frame);
 }
@@ -2211,18 +2248,165 @@ function updateMapLabel(){
 }
 
 /* ---------------------------------------------------------------
+   The elgoog Doodle: a pink pixel frame around a starry navy sky,
+   "elgoog" in colourful microbe dots with Michael and Bifi as the
+   two o's, and WORLD IBS DAY underneath.
+---------------------------------------------------------------- */
+const DW=186, DH=98;
+const dcv=$("#doodlecv"), dctx=dcv.getContext("2d");
+dcv.width=DW; dcv.height=DH; dctx.imageSmoothingEnabled=false;
+const D_BASE=document.createElement("canvas"); D_BASE.width=DW; D_BASE.height=DH;
+const DSPR=document.createElement("canvas"); DSPR.width=15; DSPR.height=24;
+const dsc=DSPR.getContext("2d");
+let dHover=false;
+
+const GLYPH={
+  e:[".....",".....",".###.","#...#","#####","#....",".####",".....","....."],
+  l:[".##..","..#..","..#..","..#..","..#..","..#..",".###.",".....","....."],
+  g:[".....",".....",".####","#...#","#...#",".####","....#","#...#",".###."]
+};
+const CAPS={
+  W:["#...#","#...#","#...#","#.#.#","#.#.#","##.##","#...#"],
+  O:[".###.","#...#","#...#","#...#","#...#","#...#",".###."],
+  R:["####.","#...#","#...#","####.","#.#..","#..#.","#...#"],
+  L:["#....","#....","#....","#....","#....","#....","#####"],
+  D:["####.","#...#","#...#","#...#","#...#","#...#","####."],
+  I:["#####","..#..","..#..","..#..","..#..","..#..","#####"],
+  B:["####.","#...#","#...#","####.","#...#","#...#","####."],
+  S:[".####","#....","#....",".###.","....#","....#","####."],
+  A:[".###.","#...#","#...#","#####","#...#","#...#","#...#"],
+  Y:["#...#","#...#",".#.#.","..#..","..#..","..#..","..#.."]
+};
+const DOTS=["#ff5d8f","#7ccf4a","#f2c94c","#a77bd8","#ff9d5c","#4fc3a1","#e86f8c","#b9f27c"];
+const D_STARS=[];
+const LOGO={x:15, y:28, gap:3};   // letters 20 px wide, the two microbes 30 px wide
+const D_SLOTS=(()=>{ const out=[]; let x=LOGO.x;
+  for(const ch of ["e","l","g","M","B","g"]){ const wd=(ch==="M"||ch==="B")?30:20; out.push({ch,x}); x+=wd+LOGO.gap; } return out; })();
+
+(function buildDoodle(){
+  const c=D_BASE.getContext("2d"); c.imageSmoothingEnabled=false;
+  let sd=21; const r=()=>(sd=(sd*16807)%2147483647)/2147483647;
+  const m=3, x0=m, y0=m, x1=DW-m, y1=DH-m;
+  // starry navy sky in pixel checks
+  for(let y=y0;y<y1;y+=6) for(let x=x0;x<x1;x+=6){
+    c.fillStyle=r()<.14?"#18305a":(((x+y)/6)%2?"#0d1a36":"#112246"); c.fillRect(x,y,Math.min(6,x1-x),Math.min(6,y1-y));
+  }
+  for(let i=0;i<18;i++){
+    const sx=x0+8+Math.floor(r()*(x1-x0-16)), sy=y0+8+Math.floor(r()*(y1-y0-16));
+    D_STARS.push([sx,sy,r()*6.28]);
+    c.fillStyle="#3d5f94"; c.fillRect(sx-1,sy,3,1); c.fillRect(sx,sy-1,1,3);
+  }
+  // pink pixel frame, 7 px deep, lightly dithered
+  const band=["#4a1422","#7a2236","#c0485e","#c0485e","#e86f8c","#c0485e","#3a0f1c"];
+  const alt=["#7a2236","#c0485e","#e86f8c","#f4b6c4"];
+  for(let y=y0;y<y1;y++) for(let x=x0;x<x1;x++){
+    const d=Math.min(x-x0,y-y0,x1-1-x,y1-1-y); if(d>6) continue;
+    const corner=(Math.min(x-x0,x1-1-x)<2 && Math.min(y-y0,y1-1-y)<2);
+    if(corner){ c.clearRect(x,y,1,1); continue; }
+    c.fillStyle=(d>0&&d<6&&r()<.2)?alt[Math.floor(r()*alt.length)]:band[d]; c.fillRect(x,y,1,1);
+  }
+  // little pixel tabs poking out of the frame
+  c.fillStyle="#f4b6c4";
+  for(let x=x0+14;x<x1-14;x+=30){ c.fillRect(x,0,5,3); c.fillRect(x+12,DH-3,5,3); }
+  for(let y=y0+14;y<y1-14;y+=26){ c.fillRect(0,y,3,4); c.fillRect(DW-3,y+10,3,4); }
+  // "e l g _ _ g" in microbe dots
+  let k=0;
+  for(const s of D_SLOTS){
+    const gl=GLYPH[s.ch]; if(!gl) continue;
+    gl.forEach((row,ri)=>[...row].forEach((ch,ci)=>{
+      if(ch!=="#") return;
+      const px0=s.x+ci*4, py0=LOGO.y+ri*4, col=DOTS[(k++*5+ri)%DOTS.length];
+      c.fillStyle="#060c1a"; c.fillRect(px0-1,py0-1,5,5);
+      c.fillStyle=col; c.fillRect(px0,py0,3,3);
+      c.fillStyle="rgba(255,255,255,.45)"; c.fillRect(px0,py0,1,1);
+    }));
+  }
+  // WORLD IBS DAY in clear pixel capitals
+  const text="WORLD IBS DAY", cell=2, adv=6*cell, tw=text.length*adv-cell, tx=Math.round((DW-tw)/2), ty=70;
+  [...text].forEach((ch,i)=>{
+    const gl=CAPS[ch]; if(!gl) return;
+    const inIBS=i>=6&&i<=8;
+    gl.forEach((row,ri)=>[...row].forEach((v,ci)=>{
+      if(v!=="#") return;
+      const x=tx+i*adv+ci*cell, y=ty+ri*cell;
+      c.fillStyle="#060c1a"; c.fillRect(x+1,y+1,cell,cell);
+      c.fillStyle=inIBS?"#ff8fa3":"#fff4e8"; c.fillRect(x,y,cell,cell);
+    }));
+  });
+})();
+
+function drawDoodle(t){
+  if(!dcv.offsetParent) return;
+  const c=dctx;
+  c.clearRect(0,0,DW,DH);
+  c.drawImage(D_BASE,0,0);
+  // twinkling stars
+  for(const [sx,sy,ph] of D_STARS){
+    const b=Math.sin(t*2+ph);
+    if(b>.2){ c.fillStyle=b>.75?"#ffffff":"#cfe8ff"; c.fillRect(sx,sy,1,1); if(b>.75){ c.fillRect(sx-1,sy,3,1); c.fillRect(sx,sy-1,1,3); } }
+  }
+  // Michael and Bifi as the two o's (they get excited on hover)
+  const baseline=LOGO.y+28;
+  for(const s of D_SLOTS){
+    if(s.ch!=="M" && s.ch!=="B") continue;
+    const ph=s.ch==="M"?0:1.6;
+    dsc.clearRect(0,0,15,24);
+    drawMichael(dsc,1,7,dHover?"wow":"happy",t+ph,true,s.ch==="M"?MICHAEL_PAL:BIFI_PAL);
+    const bob=reduce?0:Math.round(Math.sin(t*(dHover?6:2.2)+ph)*(dHover?2:1));
+    c.drawImage(DSPR,s.x,baseline-46+bob,30,48);
+  }
+}
+
+const dBtn=$("#doodle");
+["mouseenter","focus"].forEach(ev=>dBtn.addEventListener(ev,()=>{ dHover=true; }));
+["mouseleave","blur"].forEach(ev=>dBtn.addEventListener(ev,()=>{ dHover=false; }));
+
+/* ---------------------------------------------------------------
    Doodle tile, pop-up chrome, run-through drawer
 ---------------------------------------------------------------- */
-portrait($("#pillIcon"),"happy");
-portrait($("#doodleIcon"),"wow");
-const openGame=()=>{
-  $("#pill").hidden=true; $("#popup").hidden=false; resize();
-  $("#popup").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"});
-  ($("#startBtn")||$("#closeBtn")).focus();
-};
-$("#doodle").addEventListener("click",openGame);
-$("#closeBtn").addEventListener("click",()=>{ $("#popup").hidden=true; $("#pill").hidden=false; $("#pill").focus(); });
-$("#pill").addEventListener("click",openGame);
+const EASE="cubic-bezier(.2,.8,.2,1)";
+const centreShift=(from,to)=>`translate(${from.left+from.width/2-(to.left+to.width/2)}px,${from.top+from.height/2-(to.top+to.height/2)}px) scale(${from.width/to.width})`;
+/* Click the Doodle: the logo slides aside and the game grows out of it, next to the logo. */
+function openGame(animate=true){
+  const body=document.body;
+  if(!body.classList.contains("playing")){
+    const hero=$("#hero"), first=hero.getBoundingClientRect(), doodleRect=$("#doodle").getBoundingClientRect();
+    body.classList.add("playing");
+    resize();
+    if(animate && !reduce){
+      const last=hero.getBoundingClientRect();
+      hero.animate([{transform:`translate(${first.left-last.left}px,${first.top-last.top}px) scale(${first.width/last.width})`},{transform:"none"}],{duration:560,easing:EASE});
+      const pop=$("#popup"), pr=pop.getBoundingClientRect();
+      pop.animate([{transform:centreShift(doodleRect,pr),opacity:0},{opacity:1,offset:.3},{transform:"none",opacity:1}],{duration:680,easing:EASE});
+      $("#gutmap").animate([{opacity:0,transform:"translateY(18px)"},{opacity:1,transform:"none"}],{duration:520,delay:300,fill:"backwards",easing:"ease-out"});
+    }
+    $("#doodleCap").innerHTML="&#9654; Tap Michael &amp; Bifi to keep playing";
+  }
+  if(window.innerWidth<=900) $("#popup").scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"});
+  ($("#startBtn")||$("#closeBtn")).focus({preventScroll:true});
+}
+/* The game's × shrinks it back into the Doodle; progress is kept. */
+function closeGame(){
+  const body=document.body, hero=$("#hero"), pop=$("#popup");
+  if(!body.classList.contains("playing")) return;
+  const finish=()=>{
+    const first=hero.getBoundingClientRect();
+    body.classList.remove("playing");
+    if(!reduce){ const last=hero.getBoundingClientRect(); hero.animate([{transform:`translate(${first.left-last.left}px,${first.top-last.top}px) scale(${first.width/last.width})`},{transform:"none"}],{duration:500,easing:EASE}); }
+    $("#doodle").focus({preventScroll:true});
+  };
+  if(reduce){ finish(); return; }
+  const d=$("#doodle").getBoundingClientRect(), pr=pop.getBoundingClientRect();
+  const a=pop.animate([{transform:"none",opacity:1},{transform:centreShift(d,pr),opacity:0}],{duration:380,easing:"ease-in"});
+  $("#gutmap").animate([{opacity:1},{opacity:0}],{duration:300,easing:"ease-in"});
+  a.onfinish=finish;
+}
+$("#doodle").addEventListener("click",()=>openGame(true));
+$("#egLucky").addEventListener("click",()=>openGame(true));
+$("#closeBtn").addEventListener("click",closeGame);
+const egMsg=()=>{ $("#doodleCap").textContent="This is a mock search bar. Tap Michael & Bifi to play!"; };
+$("#egSearch").addEventListener("submit",e=>{ e.preventDefault(); egMsg(); });
+$("#egSearchBtn").addEventListener("click",egMsg);
 
 const notes=$("#notes");
 $("#notesBtn").addEventListener("click",()=>{ notes.hidden=false; $("#notesClose").focus(); });
@@ -2246,7 +2430,7 @@ const fl=$("#flowList");
 flowItems.forEach((it,k)=>{
   const li=document.createElement("li");
   li.innerHTML=`<span class="n">${esc(it.n)}</span><span class="d">${esc(it.d)}<small>${esc(it.s)}</small></span><button type="button" id="jump${k}">Jump</button>`;
-  li.querySelector("button").addEventListener("click",()=>{ notes.hidden=true; $("#popup").hidden=false; $("#pill").hidden=true; it.go(); $("#popup").scrollIntoView({block:"nearest"}); });
+  li.querySelector("button").addEventListener("click",()=>{ notes.hidden=true; openGame(false); it.go(); });
   fl.appendChild(li);
 });
 
@@ -2260,6 +2444,7 @@ function start(data){
     S.score=data.score||0; S.char=data.char||"sam";
     for(let i=0;i<(data.friends||0);i++) S.friends.push(makeFriend(i));
     $("#colonyN").textContent=1+S.friends.length;
+    openGame(false);
     if(["sort","pledge","end","finale"].includes(data.phase)){ atEnd(); renderEnd(); }
     else jumpTo(Math.min(STOPS.length-1,data.idx));
   } else renderIntro();

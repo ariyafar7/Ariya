@@ -10,9 +10,13 @@ A concept 8-bit Doodle game for **World IBS Day (19 April)**. It opens outside t
 - **Not affiliated with any search engine.** The Doodle placement is a concept mock-up, and the prototype uses no real logos.
 
 ## 1. How people reach it
-1. **On the homepage:** a pixel Michael tile ("Michael the Microbe · World IBS Day") opens the game.
-2. **In search results:** searches about IBS, gut pain or stress show the game beside the results. On a phone it opens full-screen.
-3. **Minimising:** × shrinks it to a "Resume Michael" pill.
+The page is a clean parody homepage spelled **"elgoog"** (Google backwards), so no real logo or name is used.
+
+1. **The Doodle:** a pixel artwork with a pink pixel frame around a starry navy sky. It spells "elgoog" in colourful microbe dots, with **Michael (green) and Bifi (purple) as the two o's**, and **WORLD IBS DAY** underneath in large pixel capitals ("IBS" in pink). The stars twinkle, and Michael and Bifi bob and grin when hovered.
+2. **Under the Doodle:** a search bar (a mock: searching just points back to the Doodle) and two buttons, "elgoog Search" and "I'm Feeling Gutsy".
+3. **Opening the game:** clicking the Doodle, or "I'm Feeling Gutsy", slides the logo aside and grows the game window out of the Doodle as a popup next to the logo. The gut map fades in beside it.
+4. **Closing the game:** the game's × button shrinks the game back into the Doodle. Progress is kept, and the caption changes to "Tap Michael & Bifi to keep playing".
+5. **Layout:** on phones the game opens below the Doodle and the search bar is hidden while playing. A footer line says it's a concept Doodle for a university project and not affiliated with any search engine. "Prototype notes" (top right) opens the run-through drawer.
 
 ## 2. Flow
 
