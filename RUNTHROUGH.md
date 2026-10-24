@@ -49,6 +49,16 @@ Each stop cleared and each mini-game completed adds a microbe to the colony that
 
 **What changes between Sam and Alex:** every scenario line, the stress bubble labels, Bifi's opening line, the three end decisions, and the results heading. The science, questions and answers stay the same.
 
+## 2c. Gut map (beside the game)
+
+A pixel person stands beside the game window with their whole digestive tract drawn in: mouth, oesophagus, stomach, small intestine coils, colon frame, sigmoid, rectum and exit.
+
+- **Magnifier:** a square magnifying glass follows Michael along the tract in real time, showing a zoomed-in view with Michael inside.
+- **Route:** a green trail shows the route he has travelled so far. Yellow dots mark the stops.
+- **Gut microbes:** tiny coloured dots along the tract, one more per section going down (few near the mouth, most in the colon), matching the background microbes in the game.
+- **Label:** under the figure, the current place (for example "Stomach") and "0.45 m in · stop 3 of 9". Before the dive Michael waits beside the person's feet. After the flush the map shows the poo outside the body and "Flushed away!".
+- **Layout:** on desktop it sits to the left of the game window. On phones it sits below the game as a compact card.
+
 ## 3. The pixel scene
 The tunnel is kept calm so players can focus on the question.
 - **Background:** small, faded Michael-style and Bifi-style microbes, far behind the action, scrolling slower than the walls so they read as distant. One more appears each section going down: 1 in the mouth, 2 in the oesophagus, 3 in the stomach, 4 in the small intestine, 5 in the ileum, and 6 in the colon, sigmoid colon, rectum and exit. There are no food crumbs or mixed microbe shapes.

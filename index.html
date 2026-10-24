@@ -3,7 +3,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;600;700&display=swap">
 <style>
-/* Layout: a plain mock search homepage (with a concept Doodle tile) is the backdrop; the game is an 8-bit pop-up cartridge.
+/* Layout: a plain mock search homepage (with a concept Doodle tile) is the backdrop; the game is an 8-bit pop-up cartridge, with a pixel gut map beside it.
    Top = low-resolution canvas (drawn at ~130px wide, scaled up with hard pixels) with a game HUD.
    Bottom = an RPG-style dialog box holding the question. One deliberate look, so no theme switching. */
 :root{
@@ -42,7 +42,7 @@ button{font:inherit;cursor:pointer}
 
 /* ---------- stage + mock search page ---------- */
 .stage{flex:1;position:relative;padding-inline:16px;padding-block:20px;display:flex;justify-content:center}
-.mock{width:100%;max-width:1040px;display:flex;flex-direction:column;gap:18px;padding-right:440px;box-sizing:border-box}
+.mock{width:100%;max-width:1040px;display:flex;flex-direction:column;gap:18px;padding-right:690px;box-sizing:border-box}
 .mock-search{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .mock-word{font-weight:800;font-size:22px;color:var(--page-muted)}
 .mock-q{flex:1;min-width:0;background:var(--page-card);border:1px solid var(--page-line);border-radius:999px;padding:10px 18px;font-size:15px;box-shadow:0 1px 3px rgba(30,35,40,.08)}
@@ -334,6 +334,26 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
 @keyframes endIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion: reduce){ .theend{animation:none} }
 
+/* gut map beside the game */
+.gutmap{position:absolute;top:20px;right:calc(max(16px, 50% - 520px) + 418px);width:236px;filter:drop-shadow(0 18px 28px rgba(26,11,23,.3))}
+.gutmap-in{background:var(--night);color:var(--ink);padding:14px 14px 16px;display:flex;flex-direction:column;align-items:center;gap:8px;
+  box-shadow:inset 0 0 0 4px var(--edge)}
+.gm-title{margin:0;font-family:var(--f-pixel);font-size:10px;color:var(--acid);letter-spacing:.08em}
+#mapcv{width:210px;height:372px;max-width:100%;image-rendering:pixelated;display:block}
+.gm-zone{margin:0;font-family:var(--f-pixel);font-size:10px;line-height:1.5;color:var(--g3);text-align:center}
+.gm-sub{margin:-4px 0 0;font-family:var(--f-body);font-size:13.5px;color:var(--ink-soft);text-align:center}
+.gm-key{list-style:none;margin:2px 0 0;padding:0;display:flex;flex-direction:column;gap:5px;font-family:var(--f-body);font-size:12.5px;color:var(--ink-faint);align-self:stretch}
+.gm-key li{display:flex;align-items:center;gap:8px}
+.gm-key i{flex:0 0 auto;width:12px;height:12px;display:inline-block}
+.gm-key .k-route{background:var(--g3);height:3px}
+.gm-key .k-lens{box-shadow:inset 0 0 0 2px #d4d8e2;width:10px;height:10px}
+.gm-key .k-bugs{background:radial-gradient(circle,#a77bd8 0 2px,transparent 2.5px) 0 0/6px 6px,radial-gradient(circle,#7ccf4a 0 2px,transparent 2.5px) 3px 3px/6px 6px}
+@media (max-width: 900px){
+  .gutmap{position:relative;top:auto;right:auto;width:100%;max-width:420px}
+  .gutmap-in{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"cv title" "cv zone" "cv sub" "cv key";column-gap:14px;row-gap:4px;align-items:start}
+  .gm-title{grid-area:title} #mapcv{grid-area:cv;width:140px;height:248px} .gm-zone{grid-area:zone;text-align:left} .gm-sub{grid-area:sub;text-align:left;margin:0} .gm-key{grid-area:key}
+}
+
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
 .btn:disabled{opacity:.45;cursor:default}
@@ -393,6 +413,20 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
     </div>
    </div>
   </section>
+
+  <aside class="gutmap" id="gutmap" aria-label="Gut map: where Michael is in the body">
+   <div class="gutmap-in px px-lg">
+    <p class="gm-title">GUT MAP</p>
+    <canvas id="mapcv" aria-hidden="true"></canvas>
+    <p class="gm-zone" id="mapZone">Outside the body</p>
+    <p class="gm-sub" id="mapSub">Pick someone to follow</p>
+    <ul class="gm-key">
+      <li><i class="k-route"></i>Michael's route so far</li>
+      <li><i class="k-lens"></i>Magnifier: where Michael is now</li>
+      <li><i class="k-bugs"></i>Gut microbes: few near the mouth, most in the colon</li>
+    </ul>
+   </div>
+  </aside>
 
   <button type="button" class="pill" id="pill" hidden><canvas id="pillIcon" width="15" height="17" aria-hidden="true"></canvas>Resume Michael</button>
 </div>
@@ -1084,7 +1118,7 @@ function startDive(){
   const smooth=x=>x*x*(3-2*x);
   if(anim) cancelAnimationFrame(anim);
   const step=now=>{
-    const z=dur?Math.min(1,(now-t0)/dur):1;
+    const z=dur?clamp((now-t0)/dur,0,1):1;
     S.zoom=z; S.zoomOp=1-smooth(clamp((z-.76)/.24,0,1));
     if(z<1){ anim=requestAnimationFrame(step); return; }
     anim=null; S.outside=false; S.zoom=0; S.zoomOp=1;
@@ -1614,7 +1648,7 @@ function travel(toPos,toDepth,line,onArrive){
   const t0=performance.now();
   if(anim) cancelAnimationFrame(anim);
   const step=now=>{
-    const t = dur ? Math.min(1,(now-t0)/dur) : 1;
+    const t = dur ? clamp((now-t0)/dur,0,1) : 1;
     const e = t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2;
     S.pos=from+(toPos-from)*e;
     S.depth=d0+(toDepth-d0)*e;
@@ -1843,6 +1877,7 @@ function frame(now){
     }
   }
   if(w&&h) drawZoomLayer(t);
+  drawMap(t);
   if(w&&h&&S.fade>0){ ctx.fillStyle=`rgba(13,7,16,${S.fade.toFixed(3)})`; ctx.fillRect(0,0,w,h); }
   requestAnimationFrame(frame);
 }
@@ -2034,6 +2069,145 @@ function drawOutside(t){
   const hop=Math.sin(km*Math.PI)*-14;
   const MX=x0+(x1-x0)*km, MY=y0+(y1-y0)*km+hop;
   zctx.drawImage(MSPR,Math.round(MX*PX),Math.round(MY*PX),Math.round(15*size*PX),Math.round(17*size*PX));
+}
+
+/* ---------------------------------------------------------------
+   Gut map: a pixel person with the whole digestive tract, Michael's
+   route so far, gut microbes along the way (more further down), and a
+   square magnifying glass that follows Michael.
+---------------------------------------------------------------- */
+const MW=70, MH=124;
+const mapCv=$("#mapcv"), mapCtx=mapCv.getContext("2d");
+mapCv.width=MW; mapCv.height=MH; mapCtx.imageSmoothingEnabled=false;
+const MAP_TMP=document.createElement("canvas"); MAP_TMP.width=MW; MAP_TMP.height=MH;
+const mtc=MAP_TMP.getContext("2d"); mtc.imageSmoothingEnabled=false;
+const MAP_BASE=document.createElement("canvas"); MAP_BASE.width=MW; MAP_BASE.height=MH;
+
+/* the route between stops (map pixels); stop i sits at the start of SEG[i] */
+const SEG=[
+  [[35,15],[35,25]],                                                        // mouth -> oesophagus
+  [[35,25],[35,30],[39,31],[43,33],[41,36]],                                // -> stomach
+  [[41,36],[42,39],[38,41],[36,44],[36,47]],                                // -> small intestine
+  [[36,47],[42,47],[42,50],[29,50],[29,53],[42,53],[42,56],[29,56],[29,59],[30,59]], // -> ileum (coils)
+  [[30,59],[26,61],[26,44],[35,44]],                                        // -> colon (caecum, ascending, transverse)
+  [[35,44],[45,44],[45,62],[42,65]],                                        // -> sigmoid
+  [[42,65],[38,67],[36,69]],                                                // -> rectum
+  [[36,69],[35,74]]                                                         // -> exit
+];
+const segLen=s=>{ let L=0; for(let i=1;i<s.length;i++) L+=Math.hypot(s[i][0]-s[i-1][0],s[i][1]-s[i-1][1]); return L; };
+function pointOn(s,f){
+  let target=segLen(s)*f;
+  for(let i=1;i<s.length;i++){
+    const d=Math.hypot(s[i][0]-s[i-1][0],s[i][1]-s[i-1][1]);
+    if(target<=d||i===s.length-1){ const k=d?Math.min(1,target/d):0; return [s[i-1][0]+(s[i][0]-s[i-1][0])*k, s[i-1][1]+(s[i][1]-s[i-1][1])*k]; }
+    target-=d;
+  }
+  return s[s.length-1];
+}
+function routePoint(pos){
+  const p=clamp(pos,0,SEG.length), i=Math.min(SEG.length-1,Math.floor(p));
+  return pointOn(SEG[i], p-i);
+}
+function line(c,x0,y0,x1,y1,col,wd){
+  const n=Math.max(Math.abs(x1-x0),Math.abs(y1-y0))*2||1;
+  for(let k=0;k<=n;k++){ const x=Math.round(x0+(x1-x0)*k/n), y=Math.round(y0+(y1-y0)*k/n); c.fillStyle=col; c.fillRect(x-Math.floor((wd-1)/2),y-Math.floor((wd-1)/2),wd,wd); }
+}
+function drawPath(c,s,col,wd,f=1){
+  let rest=segLen(s)*f;
+  for(let i=1;i<s.length && rest>0;i++){
+    const d=Math.hypot(s[i][0]-s[i-1][0],s[i][1]-s[i-1][1]), k=Math.min(1,rest/d);
+    line(c,s[i-1][0],s[i-1][1],s[i-1][0]+(s[i][0]-s[i-1][0])*k,s[i-1][1]+(s[i][1]-s[i-1][1])*k,col,wd);
+    rest-=d;
+  }
+}
+
+(function buildBase(){
+  const c=MAP_BASE.getContext("2d"); c.imageSmoothingEnabled=false;
+  c.fillStyle="#1a0b17"; c.fillRect(0,0,MW,MH);
+  for(let i=0;i<14;i++) px(c,(i*29+7)%MW,(i*17+3)%MH,"#2e1528");
+  // body
+  const body="#3a2340", rim="#5a3354";
+  for(let dy=-8;dy<=8;dy++) for(let dx=-8;dx<=8;dx++){ const d=dx*dx+dy*dy; if(d<=64) px(c,35+dx,11+dy,(dx<0&&d>42)?rim:body); }
+  c.fillStyle=body; c.fillRect(32,19,7,5);
+  c.fillRect(23,23,25,1); c.fillRect(22,24,27,1); c.fillRect(21,25,29,45);
+  c.fillRect(14,26,6,40); c.fillRect(51,26,6,40);
+  c.fillRect(23,70,11,46); c.fillRect(37,70,11,46);
+  c.fillStyle=rim; c.fillRect(21,25,1,45); c.fillRect(14,26,1,40); c.fillRect(23,70,1,46);
+  c.fillStyle="#2b1226"; c.fillRect(0,116,MW,8);
+  // organs
+  const tube="#a8395a", tubeHi="#e86f8c";
+  line(c,33,14,37,14,tubeHi,1);                                   // mouth
+  drawPath(c,SEG[0],tube,1); drawPath(c,[[35,25],[35,30]],tube,1); // oesophagus
+  ell(c,40.5,35,4.6,3.8,"#c95a78","#6b1f3a");                      // stomach
+  drawPath(c,SEG[3],"#e07a90",1);                                  // small intestine coils
+  drawPath(c,[[36,44],[36,47]],"#e07a90",1);
+  drawPath(c,[[30,59],[26,61],[26,44],[45,44],[45,62],[42,65],[38,67],[36,69]],"#95406e",3); // colon
+  drawPath(c,[[36,69],[35,74]],"#95406e",2);                       // rectum to exit
+  // gut microbes: one more each section down (mouth 1 ... colon 6)
+  let sd=7; const r=()=>(sd=(sd*16807)%2147483647)/2147483647;
+  const cols=["#7ccf4a","#a77bd8","#4fc3a1"];
+  [1,2,3,4,5,6,6,6].forEach((n,i)=>{ for(let k=0;k<n;k++){ const [x,y]=pointOn(SEG[i],r()); px(c,Math.round(x+(r()*4-2)),Math.round(y+(r()*4-2)),cols[(i+k)%3]); } });
+})();
+
+function drawMap(t){
+  updateMapLabel();
+  if(!mapCv.offsetParent) return;
+  const c=mtc;
+  c.drawImage(MAP_BASE,0,0);
+  const inBody=!S.outside && S.scene!=="toilet";
+  const pos = S.scene==="toilet" ? SEG.length : (S.outside ? 0 : clamp(S.pos||0,0,SEG.length));
+  // Michael's route so far
+  if(!S.outside){
+    const full=Math.min(SEG.length,Math.floor(pos));
+    for(let i=0;i<full;i++) drawPath(c,SEG[i],"#7ccf4a",1);
+    if(full<SEG.length) drawPath(c,SEG[full],"#7ccf4a",1,pos-full);
+  }
+  // stop markers
+  for(let i=0;i<=SEG.length;i++){
+    const [x,y]=i<SEG.length?SEG[i][0]:SEG[SEG.length-1].slice(-1)[0];
+    px(c,Math.round(x),Math.round(y),(!S.outside&&pos>=i)?"#b9f27c":"#f2d14a");
+  }
+  mapCtx.drawImage(MAP_TMP,0,0);
+  const pal=miniPal(COLS.green);
+  if(S.outside){
+    // Michael waits beside the person until the dive starts
+    drawMini(mapCtx,56,105,pal,t,0);
+    if(S.phase==="zoom"){ const [x,y]=routePoint(0); lens(x,y,t); }
+    return;
+  }
+  if(S.scene==="toilet"){ drawPoo(mapCtx,52,100,t,true); return; }
+  const [x,y]=routePoint(pos);
+  lens(x,y,t);
+}
+function lens(x,y,t){
+  const c=mapCtx, Z=7, L=Z*2;
+  let lx=Math.round(x-L/2), ly=Math.round(y-L/2);
+  lx=clamp(lx,2,MW-L-9); ly=clamp(ly,2,MH-L-9);
+  const sx=clamp(Math.round(x-Z/2),0,MW-Z), sy=clamp(Math.round(y-Z/2),0,MH-Z);
+  // handle
+  for(let k=0;k<7;k++){ c.fillStyle=K; c.fillRect(lx+L+1+k,ly+L+1+k,3,3); c.fillStyle="#8a5a2b"; c.fillRect(lx+L+2+k,ly+L+2+k,1,1); }
+  // frame
+  c.fillStyle=K; c.fillRect(lx-3,ly-3,L+6,L+6);
+  c.fillStyle="#d4d8e2"; c.fillRect(lx-2,ly-2,L+4,L+4);
+  c.fillStyle="#8a90a0"; c.fillRect(lx-2,ly+L,L+4,2); c.fillRect(lx+L,ly-2,2,L+4);
+  // zoomed view inside the glass
+  c.drawImage(MAP_TMP,sx,sy,Z,Z,lx,ly,L,L);
+  drawMini(c,lx+3,ly+2+(reduce?0:Math.round(Math.sin(t*3))),miniPal(COLS.green),t,0);
+  c.fillStyle="rgba(255,255,255,.35)"; c.fillRect(lx+1,ly+1,3,1); c.fillRect(lx+1,ly+1,1,3);
+}
+
+let mapText="";
+function updateMapLabel(){
+  let zone, sub;
+  if(S.scene==="toilet"){ zone="Flushed away!"; sub="Out of the body: the end"; }
+  else if(S.outside){ zone=S.phase==="zoom"?"Into the mouth":"Outside the body"; sub=S.phase==="zoom"?"Shrinking down...":"Pick someone to follow"; }
+  else {
+    const p=clamp(S.pos||0,0,STOPS.length-1), zi=Math.floor(p+1e-6);
+    zone=STOPS[zi].zone; sub=`${Math.max(0,S.depth).toFixed(2)} m in · stop ${zi+1} of ${STOPS.length}`;
+  }
+  const txt=zone+"|"+sub;
+  if(txt===mapText) return; mapText=txt;
+  $("#mapZone").textContent=zone; $("#mapSub").textContent=sub;
 }
 
 /* ---------------------------------------------------------------
