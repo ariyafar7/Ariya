@@ -3,7 +3,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;600;700&display=swap">
 <style>
-/* Layout: a parody 'elgoog' homepage whose pixel Doodle opens the game; the 8-bit game window grows out of the Doodle, with a pixel gut map beside it.
+/* Layout: a parody 'elgoog' homepage whose pixel Doodle opens the game; clicking it dives into Michael's mouth and the 8-bit game fills the screen, with a pixel gut map beside it.
    Top = low-resolution canvas (drawn at ~130px wide, scaled up with hard pixels) with a game HUD.
    Bottom = an RPG-style dialog box holding the question. One deliberate look, so no theme switching. */
 :root{
@@ -329,15 +329,13 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
 .ptype:focus-visible{outline:3px solid var(--acid);outline-offset:-5px}
 
 /* finale */
-.theend{position:absolute;left:0;right:26px;top:13%;text-align:center;font-family:var(--f-pixel);font-size:24px;line-height:1.2;color:var(--acid);
+.theend{position:absolute;left:0;right:0;top:13%;text-align:center;font-family:var(--f-pixel);font-size:24px;line-height:1.2;color:var(--acid);
   text-shadow:3px 3px 0 var(--k);letter-spacing:.06em;pointer-events:none;animation:endIn .7s steps(5) both}
 @keyframes endIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion: reduce){ .theend{animation:none} }
 
 /* gut map beside the game */
-.gutmap{position:absolute;top:20px;right:calc(max(16px, 50% - 520px) + 418px);width:236px;filter:drop-shadow(0 18px 28px rgba(26,11,23,.3))}
-.gutmap-in{background:var(--night);color:var(--ink);padding:14px 14px 16px;display:flex;flex-direction:column;align-items:center;gap:8px;
-  box-shadow:inset 0 0 0 4px var(--edge)}
+.gutmap-in{background:var(--night);color:var(--ink);padding:16px 12px;display:flex;flex-direction:column;align-items:center;gap:8px}
 .gm-title{margin:0;font-family:var(--f-pixel);font-size:10px;color:var(--acid);letter-spacing:.08em}
 #mapcv{width:210px;height:372px;max-width:100%;image-rendering:pixelated;display:block}
 .gm-zone{margin:0;font-family:var(--f-pixel);font-size:10px;line-height:1.5;color:var(--g3);text-align:center}
@@ -348,11 +346,6 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
 .gm-key .k-route{background:var(--g3);height:3px}
 .gm-key .k-lens{box-shadow:inset 0 0 0 2px #d4d8e2;width:10px;height:10px}
 .gm-key .k-bugs{background:radial-gradient(circle,#a77bd8 0 2px,transparent 2.5px) 0 0/6px 6px,radial-gradient(circle,#7ccf4a 0 2px,transparent 2.5px) 3px 3px/6px 6px}
-@media (max-width: 900px){
-  .gutmap{position:relative;top:auto;right:auto;width:100%;max-width:420px}
-  .gutmap-in{display:grid;grid-template-columns:auto 1fr;grid-template-areas:"cv title" "cv zone" "cv sub" "cv key";column-gap:14px;row-gap:4px;align-items:start}
-  .gm-title{grid-area:title} #mapcv{grid-area:cv;width:140px;height:248px} .gm-zone{grid-area:zone;text-align:left} .gm-sub{grid-area:sub;text-align:left;margin:0} .gm-key{grid-area:key}
-}
 
 /* ---------- elgoog homepage ---------- */
 .eg-top{display:flex;justify-content:flex-end;padding:10px 16px 0}
@@ -374,20 +367,8 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
 .eg-btns button:hover{border-color:#dadce0;box-shadow:0 1px 1px rgba(0,0,0,.1)}
 .eg-btns button:focus-visible{outline:2px solid #1a73e8;outline-offset:2px}
 .eg-foot{font:12px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;color:#70757a;text-align:center;max-width:52ch;margin:4px 0 0}
-body:not(.playing) #popup, body:not(.playing) #gutmap{display:none}
-body.playing .home{padding-top:20px}
-body.playing .hero{width:min(430px,100%)}
-.home .popup{position:relative;top:auto;right:auto;height:min(760px,calc(100dvh - 90px));min-height:600px}
-.home .gutmap{position:relative;top:auto;right:auto}
-@media (max-width: 900px){
-  .home{padding-top:28px}
-  body.playing .hero{width:min(320px,100%)}
-  body.playing .eg-search, body.playing .eg-btns, body.playing .eg-foot{display:none}
-  .home .popup{width:100%;max-width:420px;height:min(760px,calc(100dvh - 40px));min-height:560px}
-}
 
 .eg-cap{font-variant-ligatures:none}
-@media (min-width: 901px) and (max-width: 1240px){ body.playing .hero{width:min(320px,100%)} body.playing .eg-foot{display:none} }
 /* v6: speech-bubble "Click here to play" buttons and one-line Did you know */
 .say-btn{position:relative;align-self:flex-start;margin:12px 0 2px 26px;background:#fff4e8;color:#1b0d24;border:0;cursor:pointer;box-shadow:0 4px 0 #b98fa8;
   font-family:var(--f-pixel);font-size:11px;letter-spacing:.03em;padding:14px 18px;--n:6px;--h:3px;animation:sayBob 1.6s steps(2) infinite}
@@ -403,6 +384,30 @@ body.playing .hero{width:min(430px,100%)}
 @media (prefers-reduced-motion:reduce){.say-btn{animation:none}}
 .chars{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
 @media (max-width:480px){.charcard .cta{white-space:normal;font-size:6.5px;line-height:1.5}}
+
+/* v7: the game fills the screen. Gut map | scene | story panel on wide screens; scene above the story on phones. */
+body:not(.playing) #popup{display:none}
+body.playing{overflow:hidden}
+.popup{position:fixed;inset:0;z-index:15;width:auto;height:auto;min-height:0;filter:none;display:flex}
+.popup-in{display:grid;grid-template-columns:minmax(170px,230px) minmax(0,1fr) minmax(340px,440px);grid-template-rows:auto minmax(0,1fr);
+  grid-template-areas:"head head head" "map scene sheet"}
+.pop-head{grid-area:head}
+.gutmap{grid-area:map;overflow-y:auto;background:var(--night)}
+#mapcv{width:100%;max-width:200px;height:auto;aspect-ratio:70/124}
+.gm-sub:empty{display:none}
+.scene{grid-area:scene;flex:none;min-height:0;border-bottom:0;border-inline:4px solid var(--k)}
+.sheet{grid-area:sheet;padding:16px 18px 22px;font-size:17px}
+.theend{font-size:clamp(24px,4vw,44px)}
+#portal{position:fixed;inset:0;z-index:30;width:100%;height:100%;pointer-events:none;image-rendering:pixelated}
+@media (max-width: 900px){
+  .popup-in{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(200px,44%) minmax(0,1fr);grid-template-areas:"head" "scene" "sheet"}
+  .scene{border-inline:0;border-bottom:4px solid var(--k)}
+  .gutmap{grid-area:scene;align-self:start;justify-self:end;z-index:3;margin:8px;overflow:visible;background:rgba(13,7,16,.72)}
+  .gutmap-in{padding:4px;background:transparent}
+  .gm-title,.gm-zone,.gm-sub,.gm-key{display:none}
+  #mapcv{width:58px}
+  .sheet{padding:12px 14px 18px;font-size:16px}
+}
 
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
@@ -434,51 +439,36 @@ body.playing .hero{width:min(430px,100%)}
     <p class="eg-foot" id="egFoot">A concept Doodle for World IBS Day, 19 April. "elgoog" is a parody spelling; this university prototype isn't affiliated with any search engine.</p>
   </section>
 
-  <section class="popup" id="popup" role="dialog" aria-labelledby="gameTitle">
-   <div class="frame px px-lg">
-    <div class="popup-in px px-lg">
+  <section class="popup" id="popup" role="dialog" aria-modal="true" aria-labelledby="gameTitle">
+    <div class="popup-in">
       <header class="pop-head">
         <div>
           <p class="eyebrow">World IBS Day · 19 April</p>
           <h1 id="gameTitle"><span>Michael</span> the Microbe</h1>
         </div>
         <button type="button" class="hbtn" id="sfxBtn" aria-pressed="false" title="Sound effects">SFX OFF</button>
-        <button type="button" class="hbtn" id="closeBtn" aria-label="Minimise the game">X</button>
+        <button type="button" class="hbtn" id="closeBtn" aria-label="Close the game">X</button>
       </header>
+      <aside class="gutmap" id="gutmap" aria-label="Gut map: where Michael is in the body">
+        <div class="gutmap-in">
+          <p class="gm-title">GUT MAP</p>
+          <canvas id="mapcv" aria-hidden="true"></canvas>
+          <p class="gm-zone" id="mapZone">Outside the body</p>
+          <p class="gm-sub" id="mapSub">Waiting to dive in</p>
+          <ul class="gm-key">
+            <li><i class="k-route"></i>Michael's route so far</li>
+            <li><i class="k-lens"></i>Magnifier: where Michael is now</li>
+            <li><i class="k-bugs"></i>Gut microbes: few near the mouth, most in the colon</li>
+          </ul>
+        </div>
+      </aside>
       <div class="scene" id="sceneWrap">
         <canvas id="scene" aria-hidden="true"></canvas>
         <canvas id="zoomcv" aria-hidden="true"></canvas>
-        <div class="hud" aria-hidden="true">
-          <div class="box">Depth<b id="depthVal">0.00m</b></div>
-          <div class="box zone">Zone<b id="zoneTag">Mouth</b></div>
-          <div class="box">Stop<b id="stopVal">0/8</b></div>
-        </div>
-        <div class="colony" aria-live="polite">Colony <b id="colonyN">1</b></div>
-        <div class="gauge" title="Your position along about 8.9 m of gut">
-          <div class="seg up"></div>
-          <div class="seg si">Small int.</div>
-          <div class="seg li">Colon</div>
-          <div class="marker" id="marker" style="top:0"></div>
-        </div>
       </div>
       <div class="sheet" id="sheet" aria-live="polite"></div>
     </div>
-   </div>
   </section>
-
-  <aside class="gutmap" id="gutmap" aria-label="Gut map: where Michael is in the body">
-   <div class="gutmap-in px px-lg">
-    <p class="gm-title">GUT MAP</p>
-    <canvas id="mapcv" aria-hidden="true"></canvas>
-    <p class="gm-zone" id="mapZone">Outside the body</p>
-    <p class="gm-sub" id="mapSub">Waiting to dive in</p>
-    <ul class="gm-key">
-      <li><i class="k-route"></i>Michael's route so far</li>
-      <li><i class="k-lens"></i>Magnifier: where Michael is now</li>
-      <li><i class="k-bugs"></i>Gut microbes: few near the mouth, most in the colon</li>
-    </ul>
-   </div>
-  </aside>
 
 </main>
 
@@ -491,7 +481,7 @@ body.playing .hero{width:min(430px,100%)}
 
     <section>
       <h3>How people find it</h3>
-      <p>This is a <b>concept</b> Doodle on a parody homepage spelled "elgoog" (Google backwards), so no real logo is used. On World IBS Day (19 April) the Doodle spells "elgoog" in colourful microbe dots, with Michael and Bifi as the two o's and "WORLD IBS DAY" underneath. Clicking the Doodle slides the logo aside and grows the game out of it as a popup next to the logo, with the gut map alongside. "I'm Feeling Gutsy" opens it too. The game's × button shrinks it back into the Doodle, and progress is kept.</p>
+      <p>This is a <b>concept</b> Doodle on a parody homepage spelled "elgoog" (Google backwards), so no real logo is used. On World IBS Day (19 April) the Doodle spells "elgoog" in colourful microbe dots, with Michael and Bifi as the two o's and "WORLD IBS DAY" underneath. Clicking the Doodle zooms into Michael's open mouth until the screen goes dark, then the game fills the screen, with the gut map alongside. "I'm Feeling Gutsy" opens it too. The game's × button (or Esc) zooms back out of Michael's mouth to the Doodle, and progress is kept. There are no scores or counters on screen, so the focus stays on the story.</p>
     </section>
 
     <section>
@@ -1073,7 +1063,7 @@ function mountSay(text,mood){
 function setMood(m,ms){ S.mood=m; S.moodUntil=performance.now()+ms; }
 function addFriend(type,col){
   const f=makeFriend(S.friends.length); if(type){ f.type=type; } if(col){ f.col=col; }
-  S.friends.push(f); $("#colonyN").textContent=1+S.friends.length;
+  S.friends.push(f);
 }
 
 /* Poo: a cute pixel poo for the exit, plus the 7 Bristol chart icons */
@@ -1236,7 +1226,7 @@ function playMcq(st,el){
       const j=+x.dataset.i; x.disabled=true;
       x.classList.add(j===st.answer?"right":j===i?"wrongpick":"dim");
     });
-    finish(ok?"ok":"no", ok?"Correct! +1 microbe":"Not quite", ok?st.right:st.wrong);
+    finish(ok?"ok":"no", ok?"Correct!":"Not quite", ok?st.right:st.wrong);
   }));
 }
 
@@ -1249,14 +1239,14 @@ function playTf(st,el){
   let k=0, c=0; const log=[];
   const draw=()=>{
     const it=st.items[k];
-    el.innerHTML=(log.length?`<ul class="log">${log.join("")}</ul>`:"")+(it?tfItemHtml(it,`${k+1} of ${st.items.length}`):"");
+    el.innerHTML=(log.length?`<ul class="log">${log.join("")}</ul>`:"")+(it?tfItemHtml(it,"True or false?"):"");
     if(!it) return;
     el.querySelectorAll("[data-v]").forEach(b=>b.addEventListener("click",()=>{
       const ok=(b.dataset.v==="1")===it.a; if(ok) c++;
       beep(ok?[[784,.06]]:[[220,.08]]);
       log.push(`<li><span class="r ${ok?"ok":"no"}">${ok?"✔ Right":"✘ Not quite"} · it's ${it.a?"true":"false"}</span>${esc(it.s)} ${esc(it.fb)}</li>`);
       k++; draw();
-      if(k===st.items.length) finish(c>=2?"ok":"no", c>=2?`${c}/3 right! +1 microbe`:`${c}/3 right`, c>=2?st.right:st.wrong);
+      if(k===st.items.length) finish(c>=2?"ok":"no", c>=2?"Nice work!":"Good try", c>=2?st.right:st.wrong);
       else el.querySelector("[data-v]").focus();
     }));
   };
@@ -1274,7 +1264,7 @@ function playOrder(st,el){
   const done=shown=>{
     $("#showOrder").remove();
     const ok=!shown && mistakes<=1;
-    finish(ok?"ok":"no", ok?"Chain complete! +1 microbe":shown?"Here's the order":"Got there!", ok?st.right:st.wrong,
+    finish(ok?"ok":"no", ok?"Chain complete!":shown?"Here's the order":"Got there!", ok?st.right:st.wrong,
       shown?"":`<p class="mist">${mistakes===0?"No wrong taps.":mistakes===1?"Just one wrong tap.":mistakes+" wrong taps along the way."}</p>`);
   };
   const place=i=>{
@@ -1327,7 +1317,7 @@ function playTap(st,el){
     const ok=CELLS[+b.dataset.i].target;
     zone.querySelectorAll(".cellbtn").forEach(x=>{ x.disabled=true; x.classList.add(CELLS[+x.dataset.i].target?"reveal":"miss"); });
     $("#fbk")?.remove();
-    finish(ok?"ok":"no", ok?"Found it! +1 microbe":"Not that one", ok?st.right:st.wrong);
+    finish(ok?"ok":"no", ok?"Found it!":"Not that one", ok?st.right:st.wrong);
   }));
   $("#fbk").addEventListener("click",()=>{
     clearOverlay();
@@ -1337,7 +1327,7 @@ function playTap(st,el){
       if(S.answered) return;
       const ok=(b.dataset.v==="1")===f.a;
       el.querySelectorAll("[data-v]").forEach(x=>x.disabled=true);
-      finish(ok?"ok":"no", ok?"Correct! +1 microbe":"Not quite", ok?f.right:f.wrong);
+      finish(ok?"ok":"no", ok?"Correct!":"Not quite", ok?f.right:f.wrong);
     }));
     el.querySelector("[data-v]").focus();
   });
@@ -1359,7 +1349,7 @@ function playPath(st,el){
     const d=decisions[k];
     const opts = d ? (k%2 ? [["bad",d.bad],["good",d.good]] : [["good",d.good],["bad",d.bad]]) : [];
     el.innerHTML=meterHtml()+(log.length?`<ul class="log">${log.join("")}</ul>`:"")+(d?`
-      <p class="moment">${k+1}/${decisions.length} · ${esc(d.moment)}</p>
+      <p class="moment">${esc(d.moment)}</p>
       <div class="opts">${opts.map(([key,o],i)=>`<button type="button" class="opt px" data-k="${key}"><span class="L">${"AB"[i]}</span><span>${esc(o.t)}</span></button>`).join("")}</div>`:"");
     if(!d) return;
     el.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
@@ -1371,7 +1361,7 @@ function playPath(st,el){
       k++; draw();
       if(k===decisions.length){
         const ok=goods>=2;
-        finish(ok?"ok":"no", ok?`${goods}/3 good calls! +1 microbe`:`${goods}/3 good calls`,
+        finish(ok?"ok":"no", ok?"Great choices!":"Some tricky choices",
           `${ok?st.right:st.wrong} ${who().name}'s stress ended at ${S.meters.stress}/10 and gut at ${S.meters.gut}/10.`);
       } else el.querySelector(".opt").focus();
     }));
@@ -1426,7 +1416,6 @@ function playBubbles(){
   sheet.innerHTML=`
     <div class="meta"><span class="chip k px">Mini-game</span></div>
     ${sayBox(line)}
-    <p class="q" id="popCount">Popped 0/${labels.length}</p>
     <ul class="log" id="popLog"></ul>
     <div id="popEnd"></div>`;
   sheet.scrollTop=0;
@@ -1440,14 +1429,13 @@ function playBubbles(){
     b.disabled=true; b.classList.add("pop");
     beep([[880,.04],[1320,.06]]);
     const fact=fmt(POP_FACTS[popped]); popped++;
-    $("#popCount").textContent=`Popped ${popped}/${labels.length}`;
     $("#popLog").insertAdjacentHTML("beforeend",`<li><span class="r ok">POP! ${esc(labels[+b.dataset.i])}</span>${esc(fact)}</li>`);
     const nb=zone.querySelector(".bubble:not(:disabled)"); if(nb) nb.focus();
     if(popped===labels.length){
       setTimeout(clearOverlay,400);
       S.moodUntil=0; setMood("wow",1800); addFriend(); beep(SFX.right);
       $("#popEnd").innerHTML=`
-        <div class="fb ok px"><span class="v">Bubble buster! +1 microbe</span>
+        <div class="fb ok px"><span class="v">Bubble buster!</span>
           <p class="dyk"><b>Did you know?</b> You can't pop every stressor, but you can calm how strongly your body reacts.</p>
           ${moreHtml({text:"That's the stress chain, all the way from the brain to the gut bacteria. "+"Stress signals from the brain (CRF and cortisol) and the nervous system reach the gut. They change how fast it moves, how much the lining lets through, how sensitive gut nerves are, and the world gut bacteria live in.",papers:[P.tache,P.qin]})}
         </div>
@@ -1478,7 +1466,7 @@ function renderBreathe(){
     if(step>=cycles*2){ txt.textContent="Nice. Let's keep going."; S.breathTimer=setTimeout(endBreathe,1200); return; }
     const inhale=step%2===0;
     cv.classList.toggle("in",inhale);
-    txt.textContent=(inhale?"Breathe in":"Breathe out")+` ${Math.floor(step/2)+1}/${cycles}`;
+    txt.textContent=inhale?"Breathe in...":"Breathe out...";
     beep(inhale?[[392,.12]]:[[294,.12]]);
     step++;
     S.breathTimer=setTimeout(tick,4000);
@@ -1520,7 +1508,7 @@ function playMeet(){
       $("#wrapUp")?.addEventListener("click",()=>{ ended=true; lines.push(...MEET.close); draw(); });
     } else {
       S.guest=false; addFriend("bifi"); setMood("wow",1800); beep(SFX.right);
-      ch.innerHTML=`<div class="fb ok px"><span class="v">Bifi joined the colony! +1 microbe</span>
+      ch.innerHTML=`<div class="fb ok px"><span class="v">Bifi joined the colony!</span>
           <p>${esc(fmt("Stress changes the world gut microbes live in, and they talk back to the brain. Looking after {name}'s stress, sleep and food looks after them too."))}</p>
           ${moreHtml(MEET.more)}
         </div>
@@ -1543,7 +1531,6 @@ function renderSort(){
     const c=SORT_CARDS[k];
     if(!c){ renderPledge(); return; }
     sheet.innerHTML=`
-      <div class="meta"><span class="chip k px">Card ${k+1}/${SORT_CARDS.length}</span></div>
       <p class="q" id="sortQ">Does this help calm the stress–gut loop?</p>
       <div class="sortwrap">
         <div class="card px" id="card" tabindex="0" role="group" aria-labelledby="sortQ cardTxt"><small>SWIPE OR TAP A BUTTON</small><span id="cardTxt">${esc(c.t)}</span></div>
@@ -1635,20 +1622,10 @@ const TAKEAWAYS=[
 function renderEnd(){
   S.phase="end"; S.outside=false; S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M;
   S.scene="toilet"; S.morph=1; S.drop=1; S.flush=1; S.fade=0; showTheEnd(true); updateHud();
-  const total=STOPS.length;
-  const msg = S.score>=8 ? "Gut genius! Michael's colony is thriving."
-            : S.score>=5 ? "Solid dive! Michael's colony is growing."
-            : "Dive complete! You now know more than most.";
   const allPapers=[P.oka,P.koloski,P.tache,P.vanuytsel,P.barbara,P.pitta,P.cryan,P.zhang,P.kadosh,P.fibre,P.black,P.johann,P.bsg,P.bristol,P.romecard];
   sheet.innerHTML=`
     <h2>Thanks for diving with Michael!</h2>
     <button type="button" class="btn big px" id="againBtn">&#9654; Dive again</button>
-    <p class="q" style="font-size:16px">${msg}</p>
-    <div class="stats">
-      <div class="stat px"><b>${S.score}/${total}</b><span>stops cleared</span></div>
-      <div class="stat px"><b>${1+S.friends.length}</b><span>microbes in the colony</span></div>
-      <div class="stat px"><b>${S.sortRight}/${SORT_CARDS.length}</b><span>gut kit cards sorted</span></div>
-    </div>
     ${S.pledge?`<div class="pledge px"><b>YOUR ONE THING THIS WEEK</b>${esc(S.pledge)}</div>`:""}
     <div class="warn px"><b>See a doctor if you notice:</b> blood in your poo, weight loss you can't explain, symptoms that wake you at night, fever, or a family history of bowel cancer, coeliac disease or IBD.</div>
     <div class="row">
@@ -1661,7 +1638,7 @@ function renderEnd(){
   setMood("wow",2500); beep(SFX.end);
   $("#againBtn").addEventListener("click",restart);
   $("#shareBtn").addEventListener("click",()=>{
-    const text=`It's World IBS Day (19 April). I dived through the gut with Michael the Microbe and learned how stress changes your gut. ${S.score}/${total} stops cleared. Can you beat me?`;
+    const text=`It's World IBS Day (19 April). I dived through the gut with Michael the Microbe and learned how stress changes your gut. Give it a go!`;
     const out=$("#shareMsg");
     const fallback=()=>{ out.textContent=text; const r=document.createRange(); r.selectNodeContents(out); const sel=getSelection(); sel.removeAllRanges(); sel.addRange(r); };
     try{ navigator.clipboard.writeText(text).then(()=>{out.textContent="Copied. Paste it in a group chat.";},fallback); }
@@ -1671,7 +1648,7 @@ function renderEnd(){
 
 function restart(){
   stopAll();
-  S.score=0; S.friends=[]; S.pledge=null; S.sortRight=0; S.char=null; $("#colonyN").textContent="1";
+  S.score=0; S.friends=[]; S.pledge=null; S.sortRight=0; S.char=null;
   S.idx=0; S.pos=0; S.depth=0;
   renderIntro();
 }
@@ -1716,22 +1693,8 @@ function jumpTo(i){
   updateHud(); renderStop();
 }
 
-function updateHud(){
-  if(S.scene==="toilet"){
-    $("#depthVal").textContent=TOTAL_M.toFixed(2)+"m"; $("#zoneTag").textContent="Toilet"; $("#stopVal").textContent=STOPS.length+"/"+STOPS.length;
-    $("#marker").style.top="calc(100% - 2px)"; return;
-  }
-  if(S.outside){
-    $("#depthVal").textContent="0.00m"; $("#zoneTag").textContent="Outside"; $("#stopVal").textContent="0/"+STOPS.length;
-    $("#marker").style.top="-2px"; return;
-  }
-  $("#depthVal").textContent=S.depth.toFixed(2)+"m";
-  $("#marker").style.top=`calc(${(S.depth/TOTAL_M*100).toFixed(2)}% - 2px)`;
-  const zi=Math.min(STOPS.length-1,Math.round(S.pos));
-  $("#zoneTag").textContent=STOPS[zi].zone==="Sigmoid colon"?"Sigmoid":STOPS[zi].zone==="Small intestine"?"Small int.":STOPS[zi].zone;
-  const done=["sort","pledge","end"].includes(S.phase);
-  $("#stopVal").textContent=(done?STOPS.length:Math.min(STOPS.length,Math.floor(S.pos)+1))+"/"+STOPS.length;
-}
+/* The in-scene counters were removed to keep the focus on the story; the gut map shows where Michael is. */
+function updateHud(){}
 
 /* ---------------------------------------------------------------
    Scene: drawn at low resolution, scaled up with hard pixels
@@ -2246,7 +2209,7 @@ function updateMapLabel(){
   else if(S.outside){ zone=S.phase==="zoom"?"Into the mouth":"Outside the body"; sub=S.phase==="zoom"?"Shrinking down...":"Waiting to dive in"; }
   else {
     const p=clamp(S.pos||0,0,STOPS.length-1), zi=Math.floor(p+1e-6);
-    zone=STOPS[zi].zone; sub=`${Math.max(0,S.depth).toFixed(2)} m in · stop ${zi+1} of ${STOPS.length}`;
+    zone=STOPS[zi].zone; sub="";
   }
   const txt=zone+"|"+sub;
   if(txt===mapText) return; mapText=txt;
@@ -2264,7 +2227,7 @@ dcv.width=DW; dcv.height=DH; dctx.imageSmoothingEnabled=false;
 const D_BASE=document.createElement("canvas"); D_BASE.width=DW; D_BASE.height=DH;
 const DSPR=document.createElement("canvas"); DSPR.width=15; DSPR.height=24;
 const dsc=DSPR.getContext("2d");
-let dHover=false;
+let dHover=false, dPortal=false;   // dPortal: Michael opens wide while the player dives into his mouth
 
 const GLYPH={
   e:[".....",".....",".###.","#...#","#####","#....",".####",".....","....."],
@@ -2357,11 +2320,14 @@ function drawDoodle(t){
     if(s.ch!=="M" && s.ch!=="B") continue;
     const ph=s.ch==="M"?0:1.6;
     dsc.clearRect(0,0,15,24);
-    drawMichael(dsc,1,7,dHover?"wow":"happy",t+ph,true,s.ch==="M"?MICHAEL_PAL:BIFI_PAL);
-    const bob=reduce?0:Math.round(Math.sin(t*(dHover?6:2.2)+ph)*(dHover?2:1));
+    drawMichael(dsc,1,7,(dHover||dPortal)?"wow":"happy",t+ph,true,s.ch==="M"?MICHAEL_PAL:BIFI_PAL);
+    const bob=(reduce||dPortal)?0:Math.round(Math.sin(t*(dHover?6:2.2)+ph)*(dHover?2:1));
     c.drawImage(DSPR,s.x,baseline-46+bob,30,48);
   }
 }
+
+/* Michael's open mouth in Doodle pixels: the dark row of his "wow" face, sprite (4-7, 7), drawn at 2x. */
+const MOUTH=(()=>{ const s=D_SLOTS.find(d=>d.ch==="M"); return {u:s.x+14, v:LOGO.y+28-46+(7+7)*2+1}; })();
 
 const dBtn=$("#doodle");
 ["mouseenter","focus"].forEach(ev=>dBtn.addEventListener(ev,()=>{ dHover=true; }));
@@ -2370,42 +2336,57 @@ const dBtn=$("#doodle");
 /* ---------------------------------------------------------------
    Doodle tile, pop-up chrome, run-through drawer
 ---------------------------------------------------------------- */
-const EASE="cubic-bezier(.2,.8,.2,1)";
-const centreShift=(from,to)=>`translate(${from.left+from.width/2-(to.left+to.width/2)}px,${from.top+from.height/2-(to.top+to.height/2)}px) scale(${from.width/to.width})`;
-/* Click the Doodle: the logo slides aside and the game grows out of it, next to the logo. */
-function openGame(animate=true){
-  const body=document.body;
-  if(!body.classList.contains("playing")){
-    const hero=$("#hero"), first=hero.getBoundingClientRect(), doodleRect=$("#doodle").getBoundingClientRect();
-    body.classList.add("playing");
-    resize();
-    if(animate && !reduce){
-      const last=hero.getBoundingClientRect();
-      hero.animate([{transform:`translate(${first.left-last.left}px,${first.top-last.top}px) scale(${first.width/last.width})`},{transform:"none"}],{duration:560,easing:EASE});
-      const pop=$("#popup"), pr=pop.getBoundingClientRect();
-      pop.animate([{transform:centreShift(doodleRect,pr),opacity:0},{opacity:1,offset:.3},{transform:"none",opacity:1}],{duration:680,easing:EASE});
-      $("#gutmap").animate([{opacity:0,transform:"translateY(18px)"},{opacity:1,transform:"none"}],{duration:520,delay:300,fill:"backwards",easing:"ease-out"});
-    }
-    $("#doodleCap").innerHTML="&#9654; Tap on the microbes to keep playing";
-  }
-  if(window.innerWidth<=900) $("#popup").scrollIntoView({behavior:reduce?"auto":"smooth",block:"start"});
+/* Portal: the Doodle zooms into Michael's open mouth until the screen goes dark,
+   then the full-screen game fades in. Closing runs it backwards. */
+const portal=document.createElement("canvas"); portal.id="portal"; portal.hidden=true; portal.setAttribute("aria-hidden","true");
+document.body.appendChild(portal);
+const pctx=portal.getContext("2d");
+let portalBusy=false;
+function portalZoom(inward,dur,done){
+  const W=innerWidth, H=innerHeight; portal.width=W; portal.height=H; portal.hidden=false; portal.style.opacity=1;
+  const r=dcv.getBoundingClientRect(), s0=r.width/DW;
+  const mx0=r.left+MOUTH.u*s0, my0=r.top+MOUTH.v*s0;
+  const Zmax=Math.max(W,H)*1.4/(2*s0);          // the dark mouth (2 Doodle pixels tall) ends up bigger than the screen
+  dPortal=true;
+  const t0=performance.now();
+  const step=n=>{
+    const p=clamp((n-t0)/dur,0,1), e=inward?p:1-p, ez=e*e*(3-2*e);
+    const s=s0*Math.exp(Math.log(Zmax)*ez), cx=lerp(mx0,W/2,ez), cy=lerp(my0,H/2,ez);
+    const x0=cx-MOUTH.u*s, y0=cy-MOUTH.v*s;
+    pctx.clearRect(0,0,W,H); pctx.imageSmoothingEnabled=false;
+    const u0=Math.max(0,Math.floor(-x0/s)), v0=Math.max(0,Math.floor(-y0/s));
+    const u1=Math.min(DW,Math.ceil((W-x0)/s)), v1=Math.min(DH,Math.ceil((H-y0)/s));
+    if(u1>u0 && v1>v0) pctx.drawImage(dcv,u0,v0,u1-u0,v1-v0,x0+u0*s,y0+v0*s,(u1-u0)*s,(v1-v0)*s);
+    const k=clamp((ez-.7)/.3,0,1);              // the inside of the mouth closes in
+    if(k>0){ pctx.fillStyle=`rgba(13,7,16,${k})`; pctx.fillRect(0,0,W,H); }
+    if(p<1){ requestAnimationFrame(step); return; }
+    dPortal=false; done();
+  };
+  requestAnimationFrame(step);
+}
+function showGame(){
+  document.body.classList.add("playing");
+  resize();
+  $("#doodleCap").innerHTML="&#9654; Tap on the microbes to keep playing";
   ($("#startBtn")||$("#closeBtn")).focus({preventScroll:true});
 }
-/* The game's × shrinks it back into the Doodle; progress is kept. */
+/* Click the Doodle: dive into Michael's mouth, and the game fills the screen. */
+function openGame(animate=true){
+  if(document.body.classList.contains("playing") || portalBusy) return;
+  if(!animate || reduce){ showGame(); return; }
+  portalBusy=true;
+  portalZoom(true,1500,()=>{
+    showGame();
+    portal.animate([{opacity:1},{opacity:0}],{duration:450,easing:"ease-out"}).onfinish=()=>{ portal.hidden=true; portalBusy=false; };
+  });
+}
+/* The game's X zooms back out of Michael's mouth to the Doodle; progress is kept. */
 function closeGame(){
-  const body=document.body, hero=$("#hero"), pop=$("#popup");
-  if(!body.classList.contains("playing")) return;
-  const finish=()=>{
-    const first=hero.getBoundingClientRect();
-    body.classList.remove("playing");
-    if(!reduce){ const last=hero.getBoundingClientRect(); hero.animate([{transform:`translate(${first.left-last.left}px,${first.top-last.top}px) scale(${first.width/last.width})`},{transform:"none"}],{duration:500,easing:EASE}); }
-    $("#doodle").focus({preventScroll:true});
-  };
-  if(reduce){ finish(); return; }
-  const d=$("#doodle").getBoundingClientRect(), pr=pop.getBoundingClientRect();
-  const a=pop.animate([{transform:"none",opacity:1},{transform:centreShift(d,pr),opacity:0}],{duration:380,easing:"ease-in"});
-  $("#gutmap").animate([{opacity:1},{opacity:0}],{duration:300,easing:"ease-in"});
-  a.onfinish=finish;
+  if(!document.body.classList.contains("playing") || portalBusy) return;
+  document.body.classList.remove("playing");
+  if(reduce){ $("#doodle").focus({preventScroll:true}); return; }
+  portalBusy=true;
+  portalZoom(false,900,()=>{ portal.hidden=true; portalBusy=false; $("#doodle").focus({preventScroll:true}); });
 }
 $("#doodle").addEventListener("click",()=>openGame(true));
 $("#egLucky").addEventListener("click",()=>openGame(true));
@@ -2418,7 +2399,10 @@ const notes=$("#notes");
 $("#notesBtn").addEventListener("click",()=>{ notes.hidden=false; $("#notesClose").focus(); });
 $("#notesClose").addEventListener("click",()=>{ notes.hidden=true; });
 notes.addEventListener("click",e=>{ if(e.target===notes) notes.hidden=true; });
-document.addEventListener("keydown",e=>{ if(e.key==="Escape" && !notes.hidden) notes.hidden=true; });
+document.addEventListener("keydown",e=>{
+  if(e.key!=="Escape") return;
+  if(!notes.hidden) notes.hidden=true; else closeGame();
+});
 
 const atEnd=()=>{ stopAll(); if(!S.char) S.char="sam"; S.outside=false; S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M; };
 const flowItems=[
@@ -2449,7 +2433,6 @@ function start(data){
   if(data && typeof data.idx==="number" && data.phase && !["intro","choose","zoom"].includes(data.phase)){
     S.score=data.score||0; S.char=data.char||"sam";
     for(let i=0;i<(data.friends||0);i++) S.friends.push(makeFriend(i));
-    $("#colonyN").textContent=1+S.friends.length;
     openGame(false);
     if(["sort","pledge","end","finale"].includes(data.phase)){ atEnd(); renderEnd(); }
     else jumpTo(Math.min(STOPS.length-1,data.idx));

@@ -1,4 +1,4 @@
-# Michael the Microbe: prototype run-through (v6)
+# Michael the Microbe: prototype run-through (v7)
 
 A concept 8-bit Doodle game for **World IBS Day (19 April)**. It opens outside the body: Michael, a green gut microbe, stands beside a person's silhouette with a faint outline of their gut showing. The player taps a "Click here to play" bubble to play as **Sam** (a uni student) or **Alex** (a new graduate starting work). The scene then zooms smoothly into the person's mouth, and Michael dives about 8.9 m through the gut. Each stop shows a moment from the chosen person's stressful fortnight and one thing stress is doing inside them.
 
@@ -13,9 +13,9 @@ The page is a clean parody homepage spelled **"elgoog"** (Google backwards), so 
 
 1. **The Doodle:** a pixel artwork with a pink pixel frame around a starry navy sky. It spells "elgoog" in colourful microbe dots, with **Michael (green) and Bifi (purple) as the two o's**, and **WORLD IBS DAY** underneath in large pixel capitals ("IBS" in pink). The stars twinkle, and Michael and Bifi bob and grin when hovered.
 2. **Under the Doodle:** a search bar (a mock: searching just points back to the Doodle) and two buttons, "elgoog Search" and "I'm Feeling Gutsy".
-3. **Opening the game:** the caption under the Doodle says "▶ Tap on the microbes to play". Clicking the Doodle, or "I'm Feeling Gutsy", slides the logo aside and grows the game window out of the Doodle as a popup next to the logo. The gut map fades in beside it.
-4. **Closing the game:** the game's × button shrinks the game back into the Doodle. Progress is kept, and the caption changes to "Tap on the microbes to keep playing".
-5. **Layout:** on phones the game opens below the Doodle and the search bar is hidden while playing. A footer line says it's a concept Doodle for a university project and not affiliated with any search engine. "Prototype notes" (top right) opens the run-through drawer.
+3. **Opening the game:** the caption under the Doodle says "▶ Tap on the microbes to play". Clicking the Doodle, or "I'm Feeling Gutsy", zooms into **Michael's open mouth**: he opens wide, the pixels grow until his mouth fills the screen and goes dark, and the game fades in **full screen**.
+4. **Closing the game:** the game's × button (or Esc) zooms back out of Michael's mouth to the Doodle. Progress is kept, and the caption changes to "Tap on the microbes to keep playing".
+5. **Full-screen layout:** on desktop, the gut map is on the left, the big pixel scene in the middle and the story panel on the right. On phones, the scene sits above the story panel, and a small gut map sits in the scene's top corner. There are **no scores or counters** (no colony count, depth, stop number or progress gauge), so the focus stays on the story. A footer line says it's a concept Doodle for a university project and not affiliated with any search engine. "Prototype notes" (top right) opens the run-through drawer.
 
 ## 2. Flow
 
@@ -38,7 +38,7 @@ The page is a clean parody homepage spelled **"elgoog"** (Google backwards), so 
 | ★ | Gut kit | 8.90 m | Swipe to sort 8 cards (buttons and arrow keys work too) | What actually helps IBS |
 | ★ | Pick one | 8.90 m | Choose one thing to try this week | Small changes stick |
 | ★ | Finale | toilet | Michael fades and glides into the poo (which sprouts his green tails), the scene fades to a pixel bathroom, and the poo drops into a toilet, splashes and is flushed. | |
-| ★ | THE END | toilet | "THE END" over the toilet, a big Dive again button, then score, pledge, 4 takeaways, when to see a doctor, share, Read more | |
+| ★ | THE END | toilet | "THE END" over the toilet, a big Dive again button, then pledge, when to see a doctor, share, Read more (4 takeaways and all papers) | |
 
 **Every stop has the same parts, kept short so there's little scrolling:**
 1. Michael's line, typed out RPG-style
@@ -49,7 +49,7 @@ The page is a clean parody homepage spelled **"elgoog"** (Google backwards), so 
 
 The Rome IV criteria and how common IBS is (about 4 in 100 worldwide) now sit in the exit stop's Read more, beside the poo chart, instead of on the title screen. The end screen keeps the results, the pledge and the "see a doctor" box visible; the four takeaways and all the papers are in its Read more.
 
-Each stop cleared and each mini-game completed adds a microbe to the colony that follows Michael. Wrong answers still move Michael on.
+Wrong answers still move Michael on. Verdicts are words, not scores ("Correct!", "Nice work!", "Not quite").
 
 **What changes between Sam and Alex:** every scenario line, the stress bubble labels, Bifi's opening line, the three end decisions, and the results heading. The science, questions and answers stay the same.
 
@@ -60,13 +60,13 @@ A pixel person stands beside the game window with their whole digestive tract dr
 - **Magnifier:** a square magnifying glass follows Michael along the tract in real time, showing a zoomed-in view with Michael inside.
 - **Route:** a green trail shows the route he has travelled so far. Yellow dots mark the stops.
 - **Gut microbes:** tiny coloured dots along the tract, one more per section going down (few near the mouth, most in the colon), matching the background microbes in the game.
-- **Label:** under the figure, the current place (for example "Stomach") and "0.45 m in · stop 3 of 9". Before the dive it says "Waiting to dive in" and Michael waits beside the person's feet. After the flush the map shows the poo outside the body and "Flushed away!".
-- **Layout:** on desktop it sits to the left of the game window. On phones it sits below the game as a compact card.
+- **Label:** under the figure, the current place (for example "Stomach"), with no distances or stop numbers. Before the dive it says "Waiting to dive in" and Michael waits beside the person's feet. After the flush the map shows the poo outside the body and "Flushed away!".
+- **Layout:** on desktop it's the left column of the full-screen game. On phones it's a small inset in the scene's top-right corner.
 
 ## 3. The pixel scene
 The tunnel is kept calm so players can focus on the question.
 - **Background:** small, faded Michael-style and Bifi-style microbes, far behind the action, scrolling slower than the walls so they read as distant. One more appears each section going down: 1 in the mouth, 2 in the oesophagus, 3 in the stomach, 4 in the small intestine, 5 in the ileum, and 6 in the colon, sigmoid colon, rectum and exit. There are no food crumbs or mixed microbe shapes.
-- **No pets:** nothing follows Michael around. The "Colony" counter in the corner still counts up as a score.
+- **No pets and no counters:** nothing follows Michael around, and nothing overlays the scene.
 - **Mouth:** rows of teeth
 - **Oesophagus:** muscle rings
 - **Stomach:** folded walls and a stomach-acid pool with a few bubbles
