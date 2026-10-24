@@ -281,7 +281,7 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
 .pledge{background:#21321b;padding:10px 12px;font-size:16px}
 .pledge b{font-family:var(--f-pixel);font-size:7.5px;color:var(--g3);display:block;margin-bottom:5px}
 
-/* ---------- v4: character choice, mini-games, read more ---------- */
+/* ---------- v4: character choice, mini-games, digest the evidence ---------- */
 .chars{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .charcard{background:var(--plum-2);border:0;color:var(--ink);text-align:left;padding:12px;display:flex;flex-direction:column;gap:7px;cursor:pointer;
   box-shadow:inset -3px -3px 0 rgba(0,0,0,.35),inset 3px 3px 0 rgba(255,255,255,.08)}
@@ -580,8 +580,8 @@ body.playing{overflow:hidden}
     <section>
       <h3>Design decisions</h3>
       <ul>
-        <li><b>Practical first.</b> Each stop starts with something the player recognises and ends with one tip. Scientific terms are kept for "Read the research".</li>
-        <li><b>Read more, not ratings.</b> Each stop has an optional "Read more" section: a short plain-language summary plus the papers behind it as further reading. It stays closed unless the player opens it.</li>
+        <li><b>Practical first.</b> Each stop starts with something the player recognises and ends with one tip. Scientific terms are kept for "Digest the evidence".</li>
+        <li><b>Digest the evidence, not ratings.</b> Each stop has an optional "Digest the evidence" section: a short plain-language summary plus the papers behind it as further reading. It stays closed unless the player opens it.</li>
         <li><b>Story first.</b> The mini-games and Bifi's conversation carry the science through characters instead of extra quiz questions.</li>
         <li><b>IBS-specific advice.</b> Diet tips follow the IBS guideline (soluble fibre added slowly, a dietitian before strict diets), not general "gut health" advice.</li>
         <li><b>No timer, and never punishing.</b> Wrong answers still move Michael down, and every answer explains itself.</li>
@@ -606,7 +606,7 @@ body.playing{overflow:hidden}
         <li>Qin H-Y, et al. Impact of psychological stress on irritable bowel syndrome. <em>World J Gastroenterol</em> 2014;20(39):14126–31.</li>
         <li>Vicario M, et al. Chronic psychosocial stress … in the rat intestine and IBS-like gut dysfunction. <em>Psychoneuroendocrinology</em> 2012;37:65–77.</li>
       </ul>
-      <p>Newer sources are linked inside each stop's "Read the research" panel and listed in EVIDENCE.md.</p>
+      <p>Newer sources are linked inside each stop's "Digest the evidence" section and listed in EVIDENCE.md.</p>
     </section>
   </div>
 </div>
@@ -618,7 +618,7 @@ const TOTAL_M = 8.9;
 /* ---------------------------------------------------------------
    Content. Edit text here. {name} becomes Sam or Alex.
    scene/decisions have a version for each character.
-   Read more = a short plain summary + optional papers. Sources: EVIDENCE.md.
+   Digest the evidence = a short plain summary + optional papers. Sources: EVIDENCE.md.
    A paper with no url shows "link coming soon" until fact-checked.
 ---------------------------------------------------------------- */
 const CHARS = {
@@ -1085,7 +1085,7 @@ function linksHtml(papers){
        :`<span class="pending">${esc(p.t)} (link coming soon)</span>`}</li>`).join("")}</ul>`;
 }
 function moreHtml(m,lead=[]){
-  return `<details class="more"><summary>Read more</summary><div class="more-body">
+  return `<details class="more"><summary>Digest the evidence</summary><div class="more-body">
     ${lead.map(t=>`<p>${esc(fmt(t))}</p>`).join("")}
     <p>${esc(fmt(m.text))}</p>
     ${m.papers&&m.papers.length?`<p class="rm-h">Further reading</p>${linksHtml(m.papers)}`:""}
@@ -2553,7 +2553,7 @@ const flowItems=[
   {n:"Bonus",d:"Swipe to sort: build the gut kit",s:"8 cards, helps or doesn't help",go:()=>{ atEnd(); renderSort(); }},
   {n:"Pledge",d:"Pick one thing to try this week",s:"Chosen from the gut kit",go:()=>{ atEnd(); S.kit=SORT_CARDS.filter(c=>c.helps).map(c=>c.t); renderPledge(); }},
   {n:"Finale",d:"Michael turns into the poo and is flushed",s:"Toilet scene, then THE END",go:()=>{ atEnd(); startFinale(); }},
-  {n:"End",d:"THE END: Dive again, results, takeaways, see a doctor",s:"Score, pledge, share message, Read more",go:()=>{ atEnd(); renderEnd(); }}
+  {n:"End",d:"THE END: Dive again, pledge, see a doctor",s:"Pledge, share message, Digest the evidence",go:()=>{ atEnd(); renderEnd(); }}
 ];
 flowItems.splice(5,0,{n:"Mini 1",d:"Pop the stress bubbles, then breathe",s:"After stop 3",go:()=>{ stopAll(); if(!S.char) S.char="sam"; S.outside=false; S.idx=2; S.pos=2.5; S.depth=0.6; playBubbles(); }});
 flowItems.splice(9,0,{n:"Mini 2",d:"Meet Bifi, Michael's purple twin",s:"After stop 6",go:()=>{ stopAll(); if(!S.char) S.char="sam"; S.outside=false; S.idx=5; S.pos=5.5; S.depth=7.8; playMeet(); }});

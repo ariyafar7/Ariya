@@ -38,16 +38,16 @@ The page is a clean parody homepage spelled **"elgoog"** (Google backwards), so 
 | ★ | Gut kit | 8.90 m | Swipe to sort 8 cards (buttons and arrow keys work too) | What actually helps IBS |
 | ★ | Pick one | 8.90 m | Choose one thing to try this week | Small changes stick |
 | ★ | Finale | toilet | Michael fades and glides into the poo (which sprouts his green tails), the scene fades to a pixel bathroom, and the poo drops into a toilet, splashes and is flushed. | |
-| ★ | THE END | toilet | "THE END" over the toilet, a big Dive again button, then pledge, when to see a doctor, share, Read more (4 takeaways and all papers) | |
+| ★ | THE END | toilet | "THE END" over the toilet, a big Dive again button, then pledge, when to see a doctor, share, Digest the evidence (4 takeaways and all papers) | |
 
 **Every stop has the same parts, kept short so there's little scrolling:**
 1. Michael's line, typed out RPG-style
 2. The person's scenario (one sentence)
 3. The question and interaction
 4. A verdict ("Correct! +1 microbe" or "Not quite") and **one "Did you know?" sentence** about that stop
-5. An optional **Read more** section, closed by default, holding everything else: the full explanation of the answer, a **Try this** tip, a plain-language summary, then the papers as further reading. No ratings or badges.
+5. An optional **Digest the evidence** section, closed by default, holding everything else: the full explanation of the answer, a **Try this** tip, a plain-language summary, then the papers as further reading. No ratings or badges.
 
-The Rome IV criteria and how common IBS is (about 4 in 100 worldwide) now sit in the exit stop's Read more, beside the poo chart, instead of on the title screen. The end screen keeps the results, the pledge and the "see a doctor" box visible; the four takeaways and all the papers are in its Read more.
+The Rome IV criteria and how common IBS is (about 4 in 100 worldwide) now sit in the exit stop's Digest the evidence, beside the poo chart, instead of on the title screen. The end screen keeps the results, the pledge and the "see a doctor" box visible; the four takeaways and all the papers are in its Digest the evidence.
 
 Wrong answers still move Michael on. Verdicts are words, not scores ("Correct!", "Nice work!", "Not quite").
 
@@ -84,8 +84,8 @@ The tunnel is kept calm so players can focus on the question.
 - **Mini-games:** pixel stress bubbles float over the scene; Bifi, Michael's purple twin, swims beside him during the chat
 
 ## 4. Design decisions (for the reflective report)
-- **Practical first.** Each stop starts with something the player recognises and ends with one thing to do. Scientific terms are kept for "Read the research".
-- **Read more, not ratings.** Papers are offered as optional further reading after a plain summary, so the main game stays free of scientific clutter.
+- **Practical first.** Each stop starts with something the player recognises and ends with one thing to do. Scientific terms are kept for "Digest the evidence".
+- **Digest the evidence, not ratings.** Papers are offered as optional further reading after a plain summary, so the main game stays free of scientific clutter.
 - **Personal stories.** Choosing Sam or Alex ties each mechanism to a realistic study or work moment.
 - **Science through characters.** The mini-games and Bifi's conversation explain biology through story, not extra quiz questions.
 - **IBS-specific advice.** Diet tips follow the 2021 UK IBS guideline (soluble fibre added slowly, a dietitian before strict diets), not general "gut health" advice, which can trigger IBS symptoms.
