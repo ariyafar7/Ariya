@@ -447,6 +447,24 @@ body.playing{overflow:hidden}
   .gutmap-in{padding:4px}
 }
 
+/* v9: skip menu, bottom right of the game */
+.popup-in{position:relative}
+.skipnav{position:absolute;right:14px;bottom:14px;z-index:6;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.skipbtn{background:var(--acid);color:var(--k);border:0;cursor:pointer;font-family:var(--f-pixel);font-size:9px;letter-spacing:.04em;padding:11px 13px;
+  box-shadow:inset -3px -3px 0 #b8962a,inset 3px 3px 0 #fff2a8,0 3px 0 var(--k)}
+.skipbtn:hover{background:#ffe27a}
+.skipbtn:focus-visible,.skipmenu button:focus-visible{outline:3px solid var(--g3);outline-offset:2px}
+.skipmenu{list-style:none;margin:0;padding:6px;background:var(--night);box-shadow:0 0 0 4px var(--k),0 10px 24px rgba(0,0,0,.45);
+  display:flex;flex-direction:column;gap:3px;max-height:calc(100dvh - 150px);overflow-y:auto;min-width:190px}
+.skipmenu button{width:100%;text-align:left;background:var(--plum-2);color:var(--ink);border:0;cursor:pointer;font-family:var(--f-pixel);font-size:8.5px;line-height:1.3;padding:9px 10px}
+.skipmenu button:hover{background:#4c2142}
+.skipmenu button[aria-current]{background:var(--g3);color:var(--k)}
+.sheet{padding-bottom:76px}
+@media (min-width: 901px){ .sheet{padding-bottom:80px} .skipbtn{font-size:10px} }
+.skipmenu button{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.skipmenu .tg{font-size:6.5px;color:var(--acid);background:var(--k);padding:3px 4px}
+.skipmenu button[aria-current] .tg{color:var(--g3)}
+
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
 .btn:disabled{opacity:.45;cursor:default}
@@ -500,6 +518,10 @@ body.playing{overflow:hidden}
         <canvas id="zoomcv" aria-hidden="true"></canvas>
       </div>
       <div class="sheet" id="sheet" aria-live="polite"></div>
+      <nav class="skipnav" aria-label="Skip to a section">
+        <ul class="skipmenu" id="skipMenu" hidden></ul>
+        <button type="button" class="skipbtn" id="skipBtn" aria-expanded="false" aria-controls="skipMenu">Skip to &#9650;</button>
+      </nav>
     </div>
   </section>
 
@@ -875,7 +897,7 @@ const S = {
   mood:"happy", moodUntil:0, breathTimer:null, typeT:null,
   meters:{stress:7,gut:4}, kit:[], sortRight:0, pledge:null,
   char:null, outside:true, zoom:0, zoomOp:1, fade:0, guest:false,
-  scene:"tunnel", morph:0, drop:0, flush:0
+  scene:"tunnel", morph:0, hop:0, drop:0, splash:0, flush:0
 };
 const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const $ = s => document.querySelector(s);
@@ -1620,24 +1642,27 @@ function showTheEnd(on){
   if(!on && el) el.remove();
 }
 function startFinale(){
-  S.phase="finale"; S.outside=false; S.scene="tunnel"; S.morph=0; S.drop=0; S.flush=0; S.fade=0;
+  S.phase="finale"; S.outside=false; S.scene="tunnel"; S.morph=0; S.hop=0; S.drop=0; S.splash=0; S.flush=0; S.fade=0;
   S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M; updateHud();
   clearInterval(S.typeT); clearOverlay(); showTheEnd(false);
   const line=fmt("That's the end of the line. Time for me to go! Bye, {name}. Look after that gut.");
   sheet.innerHTML=sayBox(line); mountSay(line,"wow");
   beep([[784,.08],[659,.08],[523,.08],[392,.16]]);
   if(reduce){ renderEnd(); return; }
-  const T={morph:[0,1700],fadeOut:[1700,2200],toilet:2200,fadeIn:[2200,2650],drop:[2450,3300],flush:[3300,4500],end:4100,done:4700};
+  // Michael dissolves into the poo, the poo hops for joy, then the bathroom: drop, splash, swirl and flush
+  const T={morph:[0,1800],hop:[1800,2600],fadeOut:[2500,3000],toilet:3000,fadeIn:[3000,3400],drop:[3300,4100],splash:[4100,4800],flush:[4800,6600],end:6300,done:7100};
   const k=(now,[a,b])=>clamp((now-a)/(b-a),0,1);
-  let splashed=false;
+  let splashed=false, poofed=false, flushed=false;
   const t0=performance.now();
   if(anim) cancelAnimationFrame(anim);
   const step=n=>{
     const now=n-t0;
-    S.morph=k(now,T.morph);
+    S.morph=k(now,T.morph); S.hop=k(now,T.hop);
+    if(S.morph>=1 && !poofed){ poofed=true; beep([[988,.05],[1319,.08]]); }
     if(now<T.toilet) S.fade=k(now,T.fadeOut);
     else { S.scene="toilet"; S.fade=1-k(now,T.fadeIn); updateHud(); }
-    S.drop=k(now,T.drop); S.flush=k(now,T.flush);
+    S.drop=k(now,T.drop); S.splash=k(now,T.splash); S.flush=k(now,T.flush);
+    if(S.flush>0 && !flushed){ flushed=true; beep([[523,.08],[440,.08],[349,.08],[262,.2]]); }
     if(S.drop>=1 && !splashed){ splashed=true; beep([[220,.06],[330,.06],[180,.2]]); }
     if(now>=T.end) showTheEnd(true);
     if(now<T.done){ anim=requestAnimationFrame(step); return; }
@@ -1654,7 +1679,7 @@ const TAKEAWAYS=[
 ];
 function renderEnd(){
   S.phase="end"; S.outside=false; S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M;
-  S.scene="toilet"; S.morph=1; S.drop=1; S.flush=1; S.fade=0; showTheEnd(true); updateHud();
+  S.scene="toilet"; S.morph=1; S.hop=1; S.drop=1; S.splash=1; S.flush=1; S.fade=0; showTheEnd(true); updateHud();
   const allPapers=[P.oka,P.koloski,P.tache,P.vanuytsel,P.barbara,P.pitta,P.cryan,P.zhang,P.kadosh,P.fibre,P.black,P.johann,P.bsg,P.bristol,P.romecard];
   sheet.innerHTML=`
     <h2>Thanks for diving with Michael!</h2>
@@ -1690,13 +1715,13 @@ function restart(){
    Travel between places in the gut
 ---------------------------------------------------------------- */
 let anim=null;
-function travel(toPos,toDepth,line,onArrive){
+function travel(toPos,toDepth,line,onArrive,fast=false){
   S.phase="descend";
   clearInterval(S.typeT); clearOverlay();
   sheet.innerHTML=sayBox(fmt(line));
   mountSay(fmt(line));
   const from=S.pos, d0=S.depth;
-  const dur = reduce ? 0 : 1400 + Math.min(1200, Math.abs(toDepth-d0)*260);
+  const dur = reduce ? 0 : fast ? 600 + Math.min(900, Math.abs(toPos-from)*130) : 1400 + Math.min(1200, Math.abs(toDepth-d0)*260);
   const t0=performance.now();
   if(anim) cancelAnimationFrame(anim);
   const step=now=>{
@@ -1718,7 +1743,7 @@ function stopAll(){
   if(anim) cancelAnimationFrame(anim); anim=null;
   clearTimeout(S.breathTimer); clearInterval(S.typeT); clearOverlay();
   S.fade=0; S.zoom=0; S.zoomOp=1; S.guest=false; S.moodUntil=0;
-  S.scene="tunnel"; S.morph=0; S.drop=0; S.flush=0; showTheEnd(false);
+  S.scene="tunnel"; S.morph=0; S.hop=0; S.drop=0; S.splash=0; S.flush=0; showTheEnd(false);
 }
 function jumpTo(i){
   stopAll(); if(!S.char) S.char="sam";
@@ -1895,11 +1920,24 @@ function frame(now){
     const mid=rows[clamp(Math.round(h*.5),0,h-1)];
     const bx=Math.round((mid.l+mid.r)/2)-6;
     const mood = performance.now()<S.moodUntil ? S.mood : "happy";
-    const mo=S.morph||0;
-    if(mo<1){ ctx.globalAlpha=1-mo; drawMichael(ctx,bx+Math.round(mo*13),by+Math.round(mo*2),mood,t,true); ctx.globalAlpha=1; }
-    if(mo>0 && mo<1) for(let s2=0;s2<6;s2++){ const a=t*4+s2*1.05, d=10+4*Math.sin(t*6+s2); px(ctx,Math.round(bx+23+Math.cos(a)*d),Math.round(by+8+Math.sin(a)*d*.7),s2%2?"#f2d14a":"#b9f27c"); }
+    const mo=S.morph||0, pooX=bx+15;
+    // Finale: Michael slides into the poo and dissolves in an 8-bit dither, with sparkles circling
+    if(mo<1){
+      const e=mo*mo*(3-2*mo), mx=bx+Math.round(e*12), my=by+Math.round(e*3);
+      if(mo>0) dissolveMichael(mx,my,"wow",t,mo); else drawMichael(ctx,mx,my,mood,t,true);
+    }
+    if(mo>0 && mo<1) for(let s2=0;s2<8;s2++){
+      const a=t*5+s2*.785, d=(1-mo)*12+5;
+      px(ctx,Math.round(pooX+8+Math.cos(a)*d),Math.round(by+8+Math.sin(a)*d*.7),s2%2?"#f2d14a":"#b9f27c");
+    }
     if(S.guest) drawBifi(ctx,bx+18,by+2+(reduce?0:Math.round(Math.sin(t*2+1))),t);
-    if(S.idx===STOPS.length-1 && Math.abs(S.pos-S.idx)<.01 && ["question","sort","pledge","end","finale"].includes(S.phase)) drawPoo(ctx,bx+15,by,t,(S.morph||0)>.6);
+    if(S.idx===STOPS.length-1 && Math.abs(S.pos-S.idx)<.01 && ["question","sort","pledge","end","finale"].includes(S.phase)){
+      const hop=S.hop||0, hy=Math.round(Math.abs(Math.sin(hop*Math.PI*2))*7);   // two happy hops
+      drawPoo(ctx,pooX,by-hy,t,mo>.6);
+      // a burst of sparkles as the change finishes
+      if(mo>.9 && hop<.6){ const r=4+((mo-.9)*10+hop)*14;
+        for(let s2=0;s2<10;s2++){ const a=s2*.628; px(ctx,Math.round(pooX+8+Math.cos(a)*r),Math.round(by+7-hy+Math.sin(a)*r*.8),s2%2?"#ffffff":"#f2d14a"); } }
+    }
     S.mx=bx; S.my=by;
 
     // acid bubbles in front
@@ -1922,8 +1960,31 @@ function frame(now){
 }
 
 
+/* Michael breaking up in a dither pattern (0 = whole, 1 = gone) as he becomes the poo. */
+const MD=document.createElement("canvas"); MD.width=16; MD.height=24;
+const mdc=MD.getContext("2d",{willReadFrequently:true});
+function dissolveMichael(x,y,mood,t,k){
+  mdc.clearRect(0,0,16,24); drawMichael(mdc,1,7,mood,t,true);
+  const d=mdc.getImageData(0,0,16,24).data;
+  for(let j=0;j<24;j++) for(let i=0;i<16;i++){
+    const o=(j*16+i)*4;
+    if(d[o+3]<128 || bay(x+i,y+j)<k) continue;
+    const flash=k>.55 && bay(i+3,j)<k-.25;              // pixels about to go flash white
+    ctx.fillStyle=flash?"#ffffff":`rgb(${d[o]},${d[o+1]},${d[o+2]})`; ctx.fillRect(x+i-1,y+j-7,1,1);
+  }
+}
+
+/* The poo drawn at any size (for the swirl down the toilet). */
+const PT=document.createElement("canvas"); PT.width=20; PT.height=22;
+const ptc=PT.getContext("2d");
+function drawPooAt(c,cx,bottom,t,scale){
+  ptc.clearRect(0,0,20,22); drawPoo(ptc,2,5,t,true);
+  const s=Math.max(.15,scale), W=Math.round(20*s), H=Math.round(22*s);
+  c.drawImage(PT,0,0,20,22,Math.round(cx-W/2),Math.round(bottom-H*(20/22)),W,H);
+}
+
 /* The finale bathroom: tiled wall, checked floor and a pixel toilet.
-   The poo (now wearing Michael's tails) drops in, splashes and is flushed. */
+   The poo (wearing Michael's tails) falls in, splashes, swirls round and is flushed away. */
 function drawToilet(t){
   const c=ctx, base=h-10, cx=Math.round((w-8)/2);
   c.fillStyle="#1f2d44"; c.fillRect(0,0,w,base);
@@ -1932,12 +1993,14 @@ function drawToilet(t){
   for(let y=base;y<h;y+=3) for(let x=0;x<w;x+=3){ c.fillStyle=((x/3+y/3)|0)%2?"#3d1a35":"#2b1226"; c.fillRect(x,y,3,3); }
   c.fillStyle="#6b2d55"; c.fillRect(0,base,w,1);
   const W="#f4f0e6", Sh="#c9bfb2";
-  // tank
+  const dr=S.drop||0, sp=S.splash||0, fl=S.flush||0;
+  // tank, with a handle that dips when flushed
   const tw=26, th=15, tx=cx-tw/2, ty=base-53;
   c.fillStyle=K; c.fillRect(tx-1,ty-1,tw+2,th+2);
   c.fillStyle=W; c.fillRect(tx,ty,tw,th);
   c.fillStyle=Sh; c.fillRect(tx+tw-4,ty,4,th); c.fillRect(tx,ty+th-2,tw,2);
-  c.fillStyle="#a0a8b8"; c.fillRect(tx+3,ty+3,5,2);
+  const hd=fl>0&&fl<.25?2:0;
+  c.fillStyle="#a0a8b8"; c.fillRect(tx+3,ty+3+hd,6,2);
   // bowl
   for(let y=base-31;y<base;y++){
     const k=(y-(base-31))/31, half=Math.round(15-k*7);
@@ -1948,25 +2011,36 @@ function drawToilet(t){
   const wy=base-34;
   ell(c,cx,wy,17,5,(dx,dy)=>dy<0?W:Sh,K);           // seat
   ell(c,cx,wy,13,3.2,"#3f8fc4",null);               // water
-  px(c,cx-7,wy-1,"#8fd3ff"); px(c,cx-6,wy-1,"#8fd3ff"); px(c,cx+4,wy+1,"#8fd3ff");
-  // flush swirl
-  const fl=S.flush||0;
-  if(fl>0 && fl<1) for(let k=0;k<10;k++){ const a=t*9+k*.63, r=(1-fl)*11+1; px(c,Math.round(cx+Math.cos(a)*r),Math.round(wy+Math.sin(a)*r*.28),k%2?"#d4efff":"#8fd3ff"); }
-  // the poo falls in, then sinks below the water line
-  const dr=S.drop||0;
+  if(fl>0 && fl<1){                                   // the whirlpool
+    ell(c,cx,wy,Math.max(1,(1-Math.abs(fl*2-1))*8),Math.max(.6,(1-Math.abs(fl*2-1))*2),"#2a6a9c",null);
+    for(let k=0;k<16;k++){ const a=t*10+k*.39, r=(1-fl*.55)*12-(k%3); px(c,Math.round(cx+Math.cos(a)*r),Math.round(wy+Math.sin(a)*r*.27),k%2?"#d4efff":"#8fd3ff"); }
+  } else { px(c,cx-7,wy-1,"#8fd3ff"); px(c,cx-6,wy-1,"#8fd3ff"); px(c,cx+4,wy+1,"#8fd3ff"); }
+  // the poo: falls from the top, lands sitting in the water, then swirls round and shrinks away
   if(fl<1){
-    const e=dr*dr, py=Math.round(-20+(wy-12+20)*e+fl*16);
-    c.save(); c.beginPath(); c.rect(0,0,w,wy+(dr<1?h:0)); c.clip();
-    drawPoo(c,cx-8,py,t,true);
+    const rest=wy;                                     // poo's bottom edge when floating
+    let pcx=cx, bottom, scale=1;
+    if(dr<1) bottom=Math.round(-4+(rest+4)*dr*dr);
+    else {
+      bottom=rest+Math.round(Math.sin(Math.min(1,sp*1.4)*Math.PI*3)*(1-sp)*2);   // bobs as it settles
+      if(fl>0){ const a=fl*fl*14, r=(1-fl)*6; pcx=cx+Math.cos(a)*r; bottom+=Math.round(Math.sin(a)*r*.3+fl*4); scale=1-fl*.85; }
+    }
+    c.save(); c.beginPath(); c.rect(0,0,w,dr<1?h:wy+2); c.clip();
+    drawPooAt(c,pcx,bottom,t,scale);
     c.restore();
+    if(dr>=1){ c.fillStyle="#8fd3ff"; c.fillRect(Math.round(pcx-6*scale),wy+1,Math.max(1,Math.round(12*scale)),1); }   // waterline across the poo
   }
   // front rim over the bowl so the poo looks inside it
   for(let dy=0;dy<=6;dy++) for(let dx=-18;dx<=18;dx++){
     const e=(dx*dx)/(17*17)+(dy*dy)/(5*5), e2=(dx*dx)/(18*18)+(dy*dy)/(6*6), ein=(dx*dx)/(13*13)+(dy*dy)/(3.2*3.2);
     if(e<=1 && ein>1) px(c,cx+dx,wy+dy,Sh); else if(e>1 && e2<=1) px(c,cx+dx,wy+dy,K);
   }
-  // splash
-  if(dr>=1 && fl<.45){ const s=fl/.45; for(let k=0;k<8;k++){ const dir=k<4?-1:1, sp=3+(k%4)*3; px(c,Math.round(cx+dir*sp*s*1.6),Math.round(wy-2-Math.sin(s*Math.PI)*(6+(k%4)*3)),"#8fd3ff"); } }
+  // splash: droplets arc out of the bowl as the poo lands
+  if(dr>=1 && sp>0 && sp<1){
+    for(let k=0;k<12;k++){ const dir=k%2?-1:1, reach=(4+(k>>1)*2)*sp, lift=Math.sin(sp*Math.PI)*(5+(k%4)*3);
+      px(c,Math.round(cx+dir*reach*1.4),Math.round(wy-2-lift),k%3?"#8fd3ff":"#d4efff"); }
+  }
+  // a little sparkle once it's all gone
+  if(fl>=1){ const b=Math.sin(t*4); if(b>0){ px(c,cx+9,wy-8,"#ffffff"); px(c,cx+8,wy-8,"#d4efff"); px(c,cx+10,wy-8,"#d4efff"); px(c,cx+9,wy-9,"#d4efff"); px(c,cx+9,wy-7,"#d4efff"); } }
   S.mx=cx-6; S.my=wy-16;
 }
 
@@ -2434,7 +2508,9 @@ $("#notesClose").addEventListener("click",()=>{ notes.hidden=true; });
 notes.addEventListener("click",e=>{ if(e.target===notes) notes.hidden=true; });
 document.addEventListener("keydown",e=>{
   if(e.key!=="Escape") return;
-  if(!notes.hidden) notes.hidden=true; else closeGame();
+  if(!notes.hidden) notes.hidden=true;
+  else if(!skipMenu.hidden){ closeSkip(); $("#skipBtn").focus(); }
+  else closeGame();
 });
 
 const atEnd=()=>{ stopAll(); if(!S.char) S.char="sam"; S.outside=false; S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M; };
@@ -2456,6 +2532,43 @@ flowItems.forEach((it,k)=>{
   li.querySelector("button").addEventListener("click",()=>{ notes.hidden=true; openGame(false); it.go(); });
   fl.appendChild(li);
 });
+
+/* Skip menu (bottom right): zoom straight to any section of the dive. */
+const SECTIONS=[
+  {label:"Start", key:"start", go:()=>restart()},
+  ...STOPS.map((st,i)=>({label:st.zone, key:"s"+i, idx:i, pos:i, depth:st.depth, go:()=>{ S.phase="question"; renderStop(); }}))
+];
+SECTIONS.splice(4,0,{label:"Stress bubbles", mini:true, key:"mini1", idx:2, pos:2.5, depth:0.6, go:playBubbles});
+SECTIONS.splice(8,0,{label:"Meet Bifi", to:"meet Bifi", mini:true, key:"mini2", idx:5, pos:5.5, depth:7.8, go:playMeet});
+SECTIONS.push({label:"Gut kit", key:"kit", idx:STOPS.length-1, pos:STOPS.length-1, depth:TOTAL_M, go:renderSort});
+SECTIONS.push({label:"The end", key:"end", idx:STOPS.length-1, pos:STOPS.length-1, depth:TOTAL_M, go:startFinale});
+const skipMenu=$("#skipMenu"), skipBtn=$("#skipBtn");
+function currentKey(){
+  if(S.outside) return "start";
+  if(["mini1","breathe"].includes(S.phase)) return "mini1";
+  if(S.phase==="mini2") return "mini2";
+  if(["sort","pledge"].includes(S.phase)) return "kit";
+  if(["finale","end"].includes(S.phase)) return "end";
+  return "s"+Math.min(STOPS.length-1,Math.round(S.pos));
+}
+function openSkip(){
+  const cur=currentKey();
+  skipMenu.innerHTML=SECTIONS.map((sec,i)=>`<li><button type="button" data-i="${i}"${sec.key===cur?' aria-current="step"':""}>${esc(sec.label)}${sec.mini?'<span class="tg">GAME</span>':""}</button></li>`).join("");
+  skipMenu.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>skipTo(SECTIONS[+b.dataset.i])));
+  skipMenu.hidden=false; skipBtn.setAttribute("aria-expanded","true");
+  (skipMenu.querySelector("[aria-current]")||skipMenu.querySelector("button")).focus();
+}
+function closeSkip(){ skipMenu.hidden=true; skipBtn.setAttribute("aria-expanded","false"); }
+function skipTo(sec){
+  closeSkip();
+  if(sec.key==="start"){ restart(); return; }
+  stopAll(); if(!S.char) S.char="sam";
+  if(S.outside){ S.outside=false; S.pos=0; S.depth=0; }
+  S.idx=sec.idx; beep(SFX.dive);
+  travel(sec.pos,sec.depth,`Zooming to ${sec.to||"the "+sec.label.toLowerCase()}...`,()=>{ S.idx=sec.idx; sec.go(); },true);
+}
+skipBtn.addEventListener("click",()=>skipMenu.hidden?openSkip():closeSkip());
+document.addEventListener("pointerdown",e=>{ if(!skipMenu.hidden && !e.target.closest(".skipnav")) closeSkip(); });
 
 /* ---------------------------------------------------------------
    Boot (keeps progress across live updates of the page)

@@ -1,4 +1,4 @@
-# Michael the Microbe: prototype run-through (v7)
+# Michael the Microbe: prototype run-through (v9)
 
 A concept 8-bit Doodle game for **World IBS Day (19 April)**. It opens outside the body: Michael, a green gut microbe, stands beside a person's silhouette with a faint outline of their gut showing. The player taps a "Click here to play" bubble to play as **Sam** (a uni student) or **Alex** (a new graduate starting work). The scene then zooms smoothly into the person's mouth, and Michael dives about 8.9 m through the gut. Each stop shows a moment from the chosen person's stressful fortnight and one thing stress is doing inside them.
 
@@ -53,6 +53,9 @@ Wrong answers still move Michael on. Verdicts are words, not scores ("Correct!",
 
 **What changes between Sam and Alex:** every scenario line, the stress bubble labels, Bifi's opening line, the three end decisions, and the results heading. The science, questions and answers stay the same.
 
+## 2b. Skip menu
+A yellow **Skip to ▲** button sits in the bottom-right corner of the game. It opens a list of every section: Start, the 9 stops, the two mini-games (tagged GAME), Gut kit and The end. The current section is highlighted. Picking one makes Michael zoom quickly through the gut to that section, so a viewer (or a marker) can jump straight to the part they want to see. It closes with Esc or a click outside.
+
 ## 2c. Gut map (beside the game)
 
 A pixel person stands beside the game window with their whole digestive tract drawn in: mouth, oesophagus, stomach, small intestine coils, colon frame, sigmoid, rectum and exit.
@@ -76,7 +79,7 @@ The tunnel is kept calm so players can focus on the question.
 - **Sigmoid colon:** red alarm cells (mast cells) and a nerve appear for the tap activity
 - **Rectum:** pouched walls
 - **Exit:** ringed walls (the sphincter muscles) and a cute pixel poo with a face, which stays for the gut kit and pledge screens
-- **Finale:** Michael fades into the poo with sparkles. The poo gains Michael's three green tails, then the scene fades to a tiled pixel bathroom where the poo drops into a toilet, splashes and swirls away. "THE END" drops in above the toilet.
+- **Finale:** Michael slides into the poo and breaks up in an 8-bit dither while sparkles circle it. With a sparkle burst, the poo sprouts his three green tails and does two happy hops. The scene fades to a tiled pixel bathroom: the poo falls into the toilet and lands floating in the water (face still showing) with a splash. The handle dips, the water turns into a whirlpool, and the poo spins round, shrinks and is flushed away. "THE END" drops in above the toilet, and a little sparkle twinkles over the clean bowl.
 - **Opening:** a night-sky scene with a person's silhouette, a faint pink outline of the GI tract inside them, and Michael at double size beside them. Sam holds a book; Alex holds a briefcase. The dive starts with a smooth zoom: the mouth opens, Michael glides in and shrinks, and the open mouth crossfades into the teeth tunnel.
 - **Mini-games:** pixel stress bubbles float over the scene; Bifi, Michael's purple twin, swims beside him during the chat
 
