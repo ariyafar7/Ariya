@@ -195,7 +195,6 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
   .mock{padding-right:0}
   .mock-res{display:none}
   .stage{flex-direction:column;align-items:center;gap:14px}
-  .popup{position:relative;top:auto;right:auto;width:100%;max-width:420px;height:min(760px,calc(100dvh - 130px));min-height:580px}
   .pill{position:static}
 }
 @media (prefers-reduced-motion: reduce){
@@ -388,7 +387,7 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
 /* v7: the game fills the screen. Gut map | scene | story panel on wide screens; scene above the story on phones. */
 body:not(.playing) #popup{display:none}
 body.playing{overflow:hidden}
-.popup{position:fixed;inset:0;z-index:15;width:auto;height:auto;min-height:0;filter:none;display:flex}
+.popup{position:fixed;inset:0;z-index:15;width:auto;max-width:none;height:auto;min-height:0;filter:none;display:flex}
 .popup-in{display:grid;grid-template-columns:minmax(170px,230px) minmax(0,1fr) minmax(340px,440px);grid-template-rows:auto minmax(0,1fr);
   grid-template-areas:"head head head" "map scene sheet"}
 .pop-head{grid-area:head}
@@ -464,6 +463,11 @@ body.playing{overflow:hidden}
 .skipmenu button{display:flex;align-items:center;justify-content:space-between;gap:8px}
 .skipmenu .tg{font-size:6.5px;color:var(--acid);background:var(--k);padding:3px 4px}
 .skipmenu button[aria-current] .tg{color:var(--g3)}
+
+/* v10: compact layout (half-screen windows, tablets, phones): the game still fills the window; the gut map is dropped */
+@media (max-width: 900px){
+  .gutmap{display:none}
+}
 
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
@@ -1764,7 +1768,7 @@ const SP=170;                 // world pixels between stops
 function resize(){
   const r=$("#sceneWrap").getBoundingClientRect();
   if(!r.width) return;
-  PX=Math.max(2,Math.round(r.width/100));   // about 100 world pixels across, so sprites read large
+  PX=Math.max(2,Math.round(Math.min(r.width/100,r.height/90)));   // at least ~100 world pixels across and ~90 down, so sprites read large but wide, short windows still fit the scene
   w=Math.ceil(r.width/PX); h=Math.ceil(r.height/PX);
   cv.width=w; cv.height=h;
   cv.style.width=(w*PX)+"px"; cv.style.height=(h*PX)+"px";
