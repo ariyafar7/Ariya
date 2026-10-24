@@ -409,6 +409,44 @@ body.playing{overflow:hidden}
   .sheet{padding:12px 14px 18px;font-size:16px}
 }
 
+/* v8: no legend; the gut map figure, sprites and story panel fill the space */
+.gutmap{display:flex;min-height:0}
+.gutmap-in{flex:1;min-height:0;box-sizing:border-box;padding:18px 14px 22px;gap:12px}
+#mapcv{flex:1 1 0;min-height:0;width:100%;max-width:none;height:auto;aspect-ratio:auto;object-fit:contain}
+.gm-title{font-size:12px}
+.gm-zone{font-size:14px}
+.gm-sub{font-size:15px}
+@media (min-width: 901px){
+  .popup-in{grid-template-columns:clamp(210px,24vw,340px) minmax(0,1fr) clamp(340px,32vw,480px)}
+  .chars{grid-template-columns:minmax(0,1fr)}
+  .sheet{padding:22px 24px 28px;gap:14px;font-size:18px;line-height:1.45}
+  .say{padding:12px 14px;gap:14px}
+  .say canvas{width:64px;height:73px}
+  .say .who{font-size:8.5px}
+  .say .txt{font-size:17.5px}
+  .title-card .big{font-size:clamp(22px,2.2vw,30px)}
+  .q{font-size:20px}
+  .scenario{font-size:17px}
+  .opt{font-size:17px;padding:12px 14px}
+  .opt .L{font-size:10px}
+  .btn{font-size:11px}
+  .btn.big{padding:17px 18px;font-size:12.5px}
+  .say-btn{font-size:13px;padding:17px 22px}
+  .chip{font-size:8.5px;padding:6px 9px}
+  .charcard{padding:16px}
+  .charcard b{font-size:18px}
+  .charcard span{font-size:16.5px}
+  .charcard .cta{font-size:8.5px;padding:9px 10px}
+  .line{font-size:17px}
+  .line canvas{width:50px;height:56px}
+  .fb .dyk b{font-size:9.5px}
+  .sheet h2{font-size:17px}
+}
+@media (max-width: 900px){
+  #mapcv{flex:none;width:62px;height:auto;aspect-ratio:70/124}
+  .gutmap-in{padding:4px}
+}
+
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
 .btn:disabled{opacity:.45;cursor:default}
@@ -455,11 +493,6 @@ body.playing{overflow:hidden}
           <canvas id="mapcv" aria-hidden="true"></canvas>
           <p class="gm-zone" id="mapZone">Outside the body</p>
           <p class="gm-sub" id="mapSub">Waiting to dive in</p>
-          <ul class="gm-key">
-            <li><i class="k-route"></i>Michael's route so far</li>
-            <li><i class="k-lens"></i>Magnifier: where Michael is now</li>
-            <li><i class="k-bugs"></i>Gut microbes: few near the mouth, most in the colon</li>
-          </ul>
         </div>
       </aside>
       <div class="scene" id="sceneWrap">
@@ -1706,7 +1739,7 @@ const SP=170;                 // world pixels between stops
 function resize(){
   const r=$("#sceneWrap").getBoundingClientRect();
   if(!r.width) return;
-  PX=Math.max(2,Math.round(r.width/132));
+  PX=Math.max(2,Math.round(r.width/100));   // about 100 world pixels across, so sprites read large
   w=Math.ceil(r.width/PX); h=Math.ceil(r.height/PX);
   cv.width=w; cv.height=h;
   cv.style.width=(w*PX)+"px"; cv.style.height=(h*PX)+"px";

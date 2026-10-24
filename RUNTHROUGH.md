@@ -61,7 +61,7 @@ A pixel person stands beside the game window with their whole digestive tract dr
 - **Route:** a green trail shows the route he has travelled so far. Yellow dots mark the stops.
 - **Gut microbes:** tiny coloured dots along the tract, one more per section going down (few near the mouth, most in the colon), matching the background microbes in the game.
 - **Label:** under the figure, the current place (for example "Stomach"), with no distances or stop numbers. Before the dive it says "Waiting to dive in" and Michael waits beside the person's feet. After the flush the map shows the poo outside the body and "Flushed away!".
-- **Layout:** on desktop it's the left column of the full-screen game. On phones it's a small inset in the scene's top-right corner.
+- **Layout:** on desktop it's the left column of the full-screen game, with no legend: the figure is scaled up to fill the column. On phones it's a small inset in the scene's top-right corner.
 
 ## 3. The pixel scene
 The tunnel is kept calm so players can focus on the question.
