@@ -1,12 +1,11 @@
-# Michael the Microbe: prototype run-through (v4)
+# Michael the Microbe: prototype run-through (v6)
 
-A concept 8-bit Doodle game for **World IBS Day (19 April)**. It opens outside the body: Michael, a green gut microbe, stands beside a person's silhouette with a faint outline of their gut showing. The player chooses who to follow, **Sam** (a uni student) or **Alex** (a new graduate starting work). The scene then zooms smoothly into the person's mouth, and Michael dives about 8.9 m through the gut. Each stop shows a moment from the chosen person's stressful fortnight and one thing stress is doing inside them.
+A concept 8-bit Doodle game for **World IBS Day (19 April)**. It opens outside the body: Michael, a green gut microbe, stands beside a person's silhouette with a faint outline of their gut showing. The player taps a "Click here to play" bubble to play as **Sam** (a uni student) or **Alex** (a new graduate starting work). The scene then zooms smoothly into the person's mouth, and Michael dives about 8.9 m through the gut. Each stop shows a moment from the chosen person's stressful fortnight and one thing stress is doing inside them.
 
 - **Playable prototype:** `index.html` (also published as an Artifact)
 - **Question text and follow-up content:** `CONTENT.md` (the live text for both characters is in the `STOPS`, `MEET` and `CHARS` data near the top of the `<script>` in `index.html`)
 - **Sources and fact-check list:** `EVIDENCE.md`
 - **Audience:** mainly people moving into university or work; secondarily the general public
-- **Length:** 9 stops, 2 mini-games, a breathing break, a sorting bonus and a results screen. About 6 minutes, with no timer.
 - **Not affiliated with any search engine.** The Doodle placement is a concept mock-up, and the prototype uses no real logos.
 
 ## 1. How people reach it
@@ -14,16 +13,16 @@ The page is a clean parody homepage spelled **"elgoog"** (Google backwards), so 
 
 1. **The Doodle:** a pixel artwork with a pink pixel frame around a starry navy sky. It spells "elgoog" in colourful microbe dots, with **Michael (green) and Bifi (purple) as the two o's**, and **WORLD IBS DAY** underneath in large pixel capitals ("IBS" in pink). The stars twinkle, and Michael and Bifi bob and grin when hovered.
 2. **Under the Doodle:** a search bar (a mock: searching just points back to the Doodle) and two buttons, "elgoog Search" and "I'm Feeling Gutsy".
-3. **Opening the game:** clicking the Doodle, or "I'm Feeling Gutsy", slides the logo aside and grows the game window out of the Doodle as a popup next to the logo. The gut map fades in beside it.
-4. **Closing the game:** the game's × button shrinks the game back into the Doodle. Progress is kept, and the caption changes to "Tap Michael & Bifi to keep playing".
+3. **Opening the game:** the caption under the Doodle says "▶ Tap on the microbes to play". Clicking the Doodle, or "I'm Feeling Gutsy", slides the logo aside and grows the game window out of the Doodle as a popup next to the logo. The gut map fades in beside it.
+4. **Closing the game:** the game's × button shrinks the game back into the Doodle. Progress is kept, and the caption changes to "Tap on the microbes to keep playing".
 5. **Layout:** on phones the game opens below the Doodle and the search bar is hidden while playing. A footer line says it's a concept Doodle for a university project and not affiliated with any search engine. "Prototype notes" (top right) opens the run-through drawer.
 
 ## 2. Flow
 
 | # | Screen | Depth | Interaction | Takeaway |
 |---|---|---|---|---|
-| 0 | Title: Michael beside the silhouette | outside | Michael introduces himself; "Did you know?" fact card | IBS affects about 1 in 25 people, and it's real |
-| 0b | Choose who to follow | outside | Sam (uni student) or Alex (new graduate at work), then a pixel zoom into the mouth | Stress looks different for everyone |
+| 0 | Title: Michael beside the silhouette | outside | Michael introduces himself; a speech bubble says "Click here to play" | Stress travels from your head to your gut |
+| 0b | Play as Sam or Alex | outside | Two short cards, each with a "Click here to play" bubble, then a "Click here to dive in" bubble and a pixel zoom into the mouth | Stress looks different for everyone |
 | 1 | Mouth | 0.00 m | Scenario multiple choice | A dry mouth and clenched jaw are stress signs |
 | 2 | Oesophagus | 0.25 m | True/false quick-fire (3 statements) | The brain and gut talk both ways |
 | 3 | Stomach | 0.45 m | Put the stress chain in order | Stress hormones slow the stomach, so eat small rather than skip |
@@ -41,13 +40,14 @@ The page is a clean parody homepage spelled **"elgoog"** (Google backwards), so 
 | ★ | Finale | toilet | Michael fades and glides into the poo (which sprouts his green tails), the scene fades to a pixel bathroom, and the poo drops into a toilet, splashes and is flushed. | |
 | ★ | THE END | toilet | "THE END" over the toilet, a big Dive again button, then score, pledge, 4 takeaways, when to see a doctor, share, Read more | |
 
-**Every stop has the same parts:**
+**Every stop has the same parts, kept short so there's little scrolling:**
 1. Michael's line, typed out RPG-style
-2. The person's scenario
-3. The interaction
-4. Feedback for right and wrong answers
-5. A **Try this** tip
-6. An optional **Read more** section: a short plain-language summary, then the papers behind it as further reading. There are no ratings or badges, and it stays closed unless opened.
+2. The person's scenario (one sentence)
+3. The question and interaction
+4. A verdict ("Correct! +1 microbe" or "Not quite") and **one "Did you know?" sentence** about that stop
+5. An optional **Read more** section, closed by default, holding everything else: the full explanation of the answer, a **Try this** tip, a plain-language summary, then the papers as further reading. No ratings or badges.
+
+The Rome IV criteria and how common IBS is (about 4 in 100 worldwide) now sit in the exit stop's Read more, beside the poo chart, instead of on the title screen. The end screen keeps the results, the pledge and the "see a doctor" box visible; the four takeaways and all the papers are in its Read more.
 
 Each stop cleared and each mini-game completed adds a microbe to the colony that follows Michael. Wrong answers still move Michael on.
 
@@ -60,7 +60,7 @@ A pixel person stands beside the game window with their whole digestive tract dr
 - **Magnifier:** a square magnifying glass follows Michael along the tract in real time, showing a zoomed-in view with Michael inside.
 - **Route:** a green trail shows the route he has travelled so far. Yellow dots mark the stops.
 - **Gut microbes:** tiny coloured dots along the tract, one more per section going down (few near the mouth, most in the colon), matching the background microbes in the game.
-- **Label:** under the figure, the current place (for example "Stomach") and "0.45 m in · stop 3 of 9". Before the dive Michael waits beside the person's feet. After the flush the map shows the poo outside the body and "Flushed away!".
+- **Label:** under the figure, the current place (for example "Stomach") and "0.45 m in · stop 3 of 9". Before the dive it says "Waiting to dive in" and Michael waits beside the person's feet. After the flush the map shows the poo outside the body and "Flushed away!".
 - **Layout:** on desktop it sits to the left of the game window. On phones it sits below the game as a compact card.
 
 ## 3. The pixel scene
