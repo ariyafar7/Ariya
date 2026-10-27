@@ -1186,10 +1186,9 @@ function ell(c,cx,cy,rx,ry,fill,out){
   }
 }
 const shadeOf=col=>(dx,dy)=>dy<0&&dx<0?col.l:(dy>0?col.d:col.b);
-function drawPoo(c,x,y,t,tails){
+function drawPoo(c,x,y,t){
   x=Math.round(x); y=Math.round(y)+(reduce?0:-Math.round(Math.abs(Math.sin(t*3))));
   const cx=x+8, sh=shadeOf(POO_COL);
-  if(tails) [[-2,0],[1,1],[4,2]].forEach(([bx,i])=>{ for(let k=1;k<=4;k++) px(c,cx+bx+Math.round(Math.sin(t*8-k*.9+i*1.7)*1.1),y+1-k,k%2?"#7ccf4a":"#3f8f2f"); });
   px(c,cx+1,y+1,K); px(c,cx+1,y+2,POO_COL.l);
   ell(c,cx,y+4,3.4,1.9,sh,K);          // top swirl
   ell(c,cx,y+7.5,5.5,2.4,sh,K);        // middle
@@ -1988,7 +1987,7 @@ function frame(now){
     if(S.guest) drawBifi(ctx,bx+18,by+2+(reduce?0:Math.round(Math.sin(t*2+1))),t);
     if(S.idx===STOPS.length-1 && Math.abs(S.pos-S.idx)<.01 && ["question","sort","pledge","end","finale"].includes(S.phase)){
       const hop=S.hop||0, hy=Math.round(Math.abs(Math.sin(hop*Math.PI*2))*7);   // two happy hops
-      drawPoo(ctx,pooX,by-hy,t,mo>.6);
+      drawPoo(ctx,pooX,by-hy,t);
       // a burst of sparkles as the change finishes
       if(mo>.9 && hop<.6){ const r=4+((mo-.9)*10+hop)*14;
         for(let s2=0;s2<10;s2++){ const a=s2*.628; px(ctx,Math.round(pooX+8+Math.cos(a)*r),Math.round(by+7-hy+Math.sin(a)*r*.8),s2%2?"#ffffff":"#f2d14a"); } }
@@ -2033,13 +2032,13 @@ function dissolveMichael(x,y,mood,t,k){
 const PT=document.createElement("canvas"); PT.width=20; PT.height=22;
 const ptc=PT.getContext("2d");
 function drawPooAt(c,cx,bottom,t,scale){
-  ptc.clearRect(0,0,20,22); drawPoo(ptc,2,5,t,true);
+  ptc.clearRect(0,0,20,22); drawPoo(ptc,2,5,t);
   const s=Math.max(.15,scale), W=Math.round(20*s), H=Math.round(22*s);
   c.drawImage(PT,0,0,20,22,Math.round(cx-W/2),Math.round(bottom-H*(20/22)),W,H);
 }
 
 /* The finale bathroom: tiled wall, checked floor and a pixel toilet.
-   The poo (wearing Michael's tails) falls in, splashes, swirls round and is flushed away. */
+   The poo falls in, splashes, swirls round and is flushed away. */
 function drawToilet(t){
   const c=ctx, base=h-10, cx=Math.round((w-8)/2);
   c.fillStyle="#1f2d44"; c.fillRect(0,0,w,base);
@@ -2202,10 +2201,6 @@ function drawOutside(t){
     c.fillStyle=sky[Math.min(3,b)]; c.fillRect(0,y,w,1);
     if(b<3 && f-b>.7){ c.fillStyle=sky[b+1]; for(let x=(y&1);x<w;x+=2) c.fillRect(x,y,1,1); }
   }
-  for(let i=0;i<16;i++){
-    const sx=(i*37+11)%(w-10), sy=(i*23+5)%Math.max(1,Math.floor(h*.45));
-    px(c,sx,sy,(Math.floor(t*1.5)+i)%6?"#5a2a4c":"#e2c7d6");
-  }
   const base=h-9;
   c.fillStyle="#3d1a35"; c.fillRect(0,base,w,h-base);
   c.fillStyle="#6b2d55"; c.fillRect(0,base,w,1);
@@ -2343,7 +2338,7 @@ function drawMap(t){
     if(S.phase==="zoom"){ const [x,y]=routePoint(0); lens(x,y,t); }
     return;
   }
-  if(S.scene==="toilet"){ drawPoo(mapCtx,52,100,t,true); return; }
+  if(S.scene==="toilet"){ drawPoo(mapCtx,52,100,t); return; }
   const [x,y]=routePoint(pos);
   lens(x,y,t);
 }

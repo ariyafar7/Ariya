@@ -37,7 +37,7 @@ The page is a clean parody homepage spelled **"elgoog"** (Google backwards), so 
 | 9 | Exit | 8.90 m | Poo chart: tap at least 3 of the 7 Bristol poo types, then a question on which IBS type a pattern of mushy or watery poo points to. A cute pixel poo appears beside Michael. | Poo type can show how IBS is affecting the gut: hard lumps lean IBS-C, mushy or watery lean IBS-D, both is IBS-M |
 | ★ | Gut kit | 8.90 m | Swipe to sort 8 cards (buttons and arrow keys work too) | What actually helps IBS |
 | ★ | Pick one | 8.90 m | Choose one thing to try this week | Small changes stick |
-| ★ | Finale | toilet | Michael fades and glides into the poo (which sprouts his green tails), the scene fades to a pixel bathroom, and the poo drops into a toilet, splashes and is flushed. | |
+| ★ | Finale | toilet | Michael dissolves into the poo, the scene fades to a pixel bathroom, and the poo drops into a toilet, splashes and is flushed. | |
 | ★ | THE END | toilet | "THE END" over the toilet, a big Dive again button, then pledge, when to see a doctor, share, Digest the evidence (4 takeaways and all papers) | |
 
 **Every stop has the same parts, kept short so there's little scrolling:**
@@ -79,8 +79,8 @@ The tunnel is kept calm so players can focus on the question.
 - **Sigmoid colon:** red alarm cells (mast cells) and a nerve appear for the tap activity
 - **Rectum:** pouched walls
 - **Exit:** ringed walls (the sphincter muscles) and a cute pixel poo with a face, which stays for the gut kit and pledge screens
-- **Finale:** Michael slides into the poo and breaks up in an 8-bit dither while sparkles circle it. With a sparkle burst, the poo sprouts his three green tails and does two happy hops. The scene fades to a tiled pixel bathroom: the poo falls into the toilet and lands floating in the water (face still showing) with a splash. The handle dips, the water turns into a whirlpool, and the poo spins round, shrinks and is flushed away. "THE END" drops in above the toilet, and a little sparkle twinkles over the clean bowl.
-- **Opening:** a night-sky scene with a person's silhouette, a faint pink outline of the GI tract inside them, and Michael at double size beside them. Sam holds a book; Alex holds a briefcase. The dive starts with a smooth zoom: the mouth opens, Michael glides in and shrinks, and the open mouth crossfades into the teeth tunnel.
+- **Finale:** Michael slides into the poo and breaks up in an 8-bit dither while sparkles circle it. With a sparkle burst, the poo does two happy hops. The scene fades to a tiled pixel bathroom: the poo falls into the toilet and lands floating in the water (face still showing) with a splash. The handle dips, the water turns into a whirlpool, and the poo spins round, shrinks and is flushed away. "THE END" drops in above the toilet, and a little sparkle twinkles over the clean bowl.
+- **Opening:** a plain dark backdrop (no twinkling lights) with a person's silhouette, a faint pink outline of the GI tract inside them, and Michael at double size beside them. Sam holds a book; Alex holds a briefcase. The dive starts with a smooth zoom: the mouth opens, Michael glides in and shrinks, and the open mouth crossfades into the teeth tunnel.
 - **Mini-games:** pixel stress bubbles float over the scene; Bifi, Michael's purple twin, swims beside him during the chat
 
 ## 4. Design decisions (for the reflective report)
