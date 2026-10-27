@@ -513,6 +513,21 @@ details.more summary{font-size:10px}
 @media (min-width: 901px){ .gpnote{font-size:17px} .gp-why{font-size:15px} }
 @media (prefers-reduced-motion: reduce){ .cellbtn.hot canvas{animation:none} }
 
+/* v14: smooth, responsive stress bubbles */
+.bubble{transform:none;translate:-50% -50%;width:74px;height:74px;font-size:7px;animation:bob 2.4s ease-in-out infinite alternate;
+  transition:scale .14s cubic-bezier(.2,.8,.2,1),background-color .14s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.bubble:hover,.bubble:focus-visible{scale:1.08}
+.bubble:active{scale:.88}
+.bubble.pop{animation:pop .36s cubic-bezier(.2,.8,.2,1) forwards;pointer-events:none}
+@keyframes bob{from{transform:translateY(-6px)}to{transform:translateY(6px)}}
+@keyframes pop{0%{scale:.85;background-color:rgba(255,255,255,.75)}35%{scale:1.3;opacity:1}100%{scale:1.6;opacity:0}}
+.pop-ring,.pop-shard,.pop-word{position:absolute;pointer-events:none}
+.pop-ring{width:70px;height:70px;margin:-35px 0 0 -35px;box-shadow:inset 0 0 0 3px #fff4e8;
+  clip-path:polygon(30% 0,70% 0,70% 6%,85% 6%,85% 15%,94% 15%,94% 30%,100% 30%,100% 70%,94% 70%,94% 85%,85% 85%,85% 94%,70% 94%,70% 100%,30% 100%,30% 94%,15% 94%,15% 85%,6% 85%,6% 70%,0 70%,0 30%,6% 30%,6% 15%,15% 15%,15% 6%,30% 6%)}
+.pop-shard{width:10px;height:10px;margin:-5px 0 0 -5px;box-shadow:inset 0 0 0 2px rgba(13,7,16,.55)}
+.pop-word{font-family:var(--f-pixel);font-size:12px;color:var(--acid);text-shadow:2px 2px 0 var(--k);white-space:nowrap}
+@media (prefers-reduced-motion: reduce){ .bubble{animation:none;transition:none} .bubble.pop{animation:none;opacity:0} }
+
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
 .btn:disabled{opacity:.45;cursor:default}
@@ -1575,15 +1590,18 @@ function playBubbles(){
   const zone=document.createElement("div"); zone.className="bubblezone";
   zone.innerHTML=labels.map((l,i)=>`<button type="button" class="bubble" data-i="${i}" style="left:${BUBBLE_SPOTS[i].x}%;top:${BUBBLE_SPOTS[i].y}%;animation-delay:${(i*0.37).toFixed(2)}s">${esc(l)}</button>`).join("");
   $("#sceneWrap").appendChild(zone);
-  zone.querySelectorAll(".bubble").forEach(b=>b.addEventListener("click",()=>{
+  // pop on press (pointerdown) so it reacts instantly; click still works for the keyboard
+  const pop=(b,x,y)=>{
     if(b.disabled) return;
     b.disabled=true; b.classList.add("pop");
+    const zr=zone.getBoundingClientRect(), br=b.getBoundingClientRect();
+    burstAt(zone, x??br.left+br.width/2-zr.left, y??br.top+br.height/2-zr.top);
     beep([[880,.04],[1320,.06]]);
     const fact=fmt(POP_FACTS[popped]); popped++;
     $("#popLog").insertAdjacentHTML("beforeend",`<li><span class="r ok">POP! ${esc(labels[+b.dataset.i])}</span>${esc(fact)}</li>`);
     const nb=zone.querySelector(".bubble:not(:disabled)"); if(nb) nb.focus();
     if(popped===labels.length){
-      setTimeout(clearOverlay,400);
+      setTimeout(clearOverlay,700);
       S.moodUntil=0; setMood("wow",1800); addFriend(); beep(SFX.right);
       $("#popEnd").innerHTML=`
         <div class="fb ok px"><span class="v">Bubble buster!</span>
@@ -1594,7 +1612,29 @@ function playBubbles(){
       $("#toBreathe").addEventListener("click",renderBreathe);
       $("#popEnd").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"});
     }
-  }));
+  };
+  zone.querySelectorAll(".bubble").forEach(b=>{
+    b.addEventListener("pointerdown",e=>{ const zr=zone.getBoundingClientRect(); pop(b,e.clientX-zr.left,e.clientY-zr.top); });
+    b.addEventListener("click",()=>pop(b));
+  });
+}
+/* A pixel burst where a bubble popped: a ring, flying shards and a "POP!" that floats up. */
+function burstAt(zone,x,y){
+  if(reduce) return;
+  const fx=(cls,css)=>{ const d=document.createElement("div"); d.className=cls; Object.assign(d.style,{left:x+"px",top:y+"px"},css||{}); zone.appendChild(d); return d; };
+  const ring=fx("pop-ring");
+  ring.animate([{scale:.3,opacity:1},{scale:1.25,opacity:.9,offset:.55},{scale:1.6,opacity:0}],{duration:460,easing:"cubic-bezier(.2,.8,.2,1)"}).onfinish=()=>ring.remove();
+  const cols=["#ff9db0","#fff4e8","#f2d14a","#ff5d73"];
+  for(let i=0;i<12;i++){
+    const a=i/12*Math.PI*2+Math.random()*.4, r=34+Math.random()*26;
+    const p=fx("pop-shard",{background:cols[i%cols.length]});
+    const dx=Math.cos(a)*r, dy=Math.sin(a)*r;
+    p.animate([{translate:"0 0",opacity:1,scale:1},{translate:`${dx*.8}px ${dy*.8}px`,opacity:1,scale:1,offset:.45},{translate:`${dx}px ${dy+14}px`,opacity:0,scale:.5}],
+      {duration:560+Math.random()*180,easing:"cubic-bezier(.15,.85,.3,1)"}).onfinish=()=>p.remove();
+  }
+  const t=fx("pop-word"); t.textContent="POP!";
+  t.animate([{translate:"-50% -50%",opacity:0,scale:.6},{translate:"-50% -90%",opacity:1,scale:1.15,offset:.25},{translate:"-50% -190%",opacity:0,scale:1}],
+    {duration:650,easing:"ease-out"}).onfinish=()=>t.remove();
 }
 
 function renderBreathe(){
