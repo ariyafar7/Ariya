@@ -32,7 +32,7 @@ The page is a clean parody homepage spelled **"elgoog"** (Google backwards), so 
 | 5 | Ileum | 4.50 m | Fill the gap | Most serotonin is made in the gut, and it sets gut speed |
 | 6 | Colon | 7.20 m | Myth-buster: "just take a probiotic" | Probiotics are an optional extra, not a fix |
 | 🎮 | **Mini-game 2: meet another microbe** | 7.80 m | Michael meets Bifi, his purple twin, a fibre-loving bacterium (*Bifidobacterium*). The player picks at least 2 of 4 questions, then Bifi joins the colony. | Stress changes the microbes' world; fibre feeds them; microbes talk back to the brain |
-| 7 | Sigmoid colon | 8.40 m | Tap the alarm cell next to the nerve (true/false fallback) | Gut nerves get turned up, and the pain is real |
+| 7 | Sigmoid colon | 8.40 m | Tell the GP: tap everything worth telling the doctor (8 notes, 5 helpful, 3 unhelpful), then check the notes, each with a why | The pain is real, and a GP diagnoses IBS from the symptom pattern, so describe it clearly and never play it down |
 | 8 | Rectum | 8.75 m | Choose the person's path: 3 decisions moving a stress meter and gut meter (different decisions for Sam and Alex) | Sleep, regular meals and a walk with a friend help |
 | 9 | Exit | 8.90 m | Poo chart: tap at least 3 of the 7 Bristol poo types, then a question on which IBS type a pattern of mushy or watery poo points to. A cute pixel poo appears beside Michael. | Poo type can show how IBS is affecting the gut: hard lumps lean IBS-C, mushy or watery lean IBS-D, both is IBS-M |
 | ★ | Gut kit | 8.90 m | Swipe to sort 8 cards (buttons and arrow keys work too) | What actually helps IBS |
@@ -76,7 +76,7 @@ The tunnel is kept calm so players can focus on the question.
 - **Small intestine:** a few bile drips and finger-like villi
 - **Ileum:** more villi
 - **Colon:** pouched walls
-- **Sigmoid colon:** red alarm cells (mast cells) and a nerve appear for the tap activity
+- **Sigmoid colon:** red alarm cells (mast cells) float near a yellow nerve line; the one on the nerve pulses (decoration for the Tell the GP activity)
 - **Rectum:** pouched walls
 - **Exit:** ringed walls (the sphincter muscles) and a cute pixel poo with a face, which stays for the gut kit and pledge screens
 - **Finale:** Michael slides into the poo and breaks up in an 8-bit dither while sparkles circle it. With a sparkle burst, the poo does two happy hops. The scene fades to a tiled pixel bathroom: the poo falls into the toilet and lands floating in the water (face still showing) with a splash. The handle dips, the water turns into a whirlpool, and the poo spins round, shrinks and is flushed away. "THE END" drops in above the toilet, and a little sparkle twinkles over the clean bowl.
@@ -90,7 +90,7 @@ The tunnel is kept calm so players can focus on the question.
 - **Science through characters.** The mini-games and Bifi's conversation explain biology through story, not extra quiz questions.
 - **IBS-specific advice.** Diet tips follow the 2021 UK IBS guideline (soluble fibre added slowly, a dietitian before strict diets), not general "gut health" advice, which can trigger IBS symptoms.
 - **No timer, and never punishing.** The audience is already stressed.
-- **Tap-only interactions.** There's no typing on phones. Swiping also works with buttons and arrow keys, and the tap activity has a true/false fallback.
+- **Tap-only interactions.** There's no typing on phones. Swiping also works with buttons and arrow keys.
 - **The breathing break** models a coping tool instead of only describing it.
 - **Soundtrack:** the team's own track (`soundtrack.mp3`, re-encoded to 128 kbps from the 320 kbps original to fit the publishing limit) starts when the player taps into the game from the Doodle, fades in, and loops. Browsers only allow sound after a tap, which is why it starts there. Closing the game fades it out, and reopening picks up where it left off. A MUSIC ON/OFF button sits in the game header.
 - **Sound effects are off by default** because it's on a search page (SFX button in the header).

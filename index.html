@@ -491,6 +491,28 @@ details.more summary{font-size:10px}
 @media (min-width: 901px){ .say .who{font-size:9.5px} details.more summary{font-size:11px} .fb .dyk b{font-size:10.5px} }
 @media (max-width: 480px){ .hbtn{font-size:6px;padding:7px 4px} .pop-head h1{font-size:11px} }
 
+/* v13: tell the GP (sigmoid colon) */
+.tapzone.deco{pointer-events:none}
+.cellbtn.hot canvas{animation:hot 1s steps(2) infinite}
+@keyframes hot{50%{filter:brightness(1.45) drop-shadow(0 0 4px #ff5d73)}}
+.gpnotes{display:flex;flex-direction:column;gap:6px}
+.gpnote{display:flex;flex-direction:column;gap:6px;width:100%;text-align:left;background:var(--plum-2);color:var(--ink);border:0;padding:11px 13px;
+  font-family:var(--f-body);font-size:16px;line-height:1.35;box-shadow:inset -3px -3px 0 rgba(0,0,0,.35)}
+.gpnote:hover:not(:disabled){background:#4c2142}
+.gpnote[aria-pressed="true"]{background:#21481f;box-shadow:inset 0 0 0 3px var(--g3)}
+.gpnote:focus-visible{outline:3px solid var(--acid);outline-offset:-5px}
+.gpnote:disabled{cursor:default}
+.gpnote.hit{background:#21481f;box-shadow:inset 0 0 0 3px var(--g3)}
+.gpnote.missed{background:var(--plum-2);box-shadow:inset 0 0 0 3px var(--orange)}
+.gpnote.wrongpick{background:#4a1a22;box-shadow:inset 0 0 0 3px var(--red)}
+.gpnote.skipped{opacity:.7}
+.gp-why{display:block;font-size:14px;line-height:1.35;color:var(--ink-soft)}
+.gp-why b{display:block;font-family:var(--f-pixel);font-weight:400;font-size:8.5px;letter-spacing:.04em;margin-bottom:3px;color:var(--g3)}
+.gpnote.wrongpick .gp-why b,.gpnote.skipped .gp-why b{color:var(--red)}
+.gpnote.missed .gp-why b{color:var(--orange)}
+@media (min-width: 901px){ .gpnote{font-size:17px} .gp-why{font-size:15px} }
+@media (prefers-reduced-motion: reduce){ .cellbtn.hot canvas{animation:none} }
+
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
 .btn:disabled{opacity:.45;cursor:default}
@@ -588,7 +610,7 @@ details.more summary{font-size:10px}
         <li><b>Scenario multiple choice</b>: mouth, small intestine, ileum, colon</li>
         <li><b>True/false quick-fire</b>: oesophagus</li>
         <li><b>Put in order</b>: the stress chain in the stomach</li>
-        <li><b>Tap the scene</b>: find the alarm cell next to the nerve (with a true/false fallback)</li>
+        <li><b>Tell the GP</b> (sigmoid colon): tap everything worth telling the doctor at a GP appointment, then check the notes. Red alarm cells pulse by a nerve in the scene.</li>
         <li><b>Choose the path</b> (rectum): 3 decisions that move a stress meter and a gut meter</li>
         <li><b>Poo chart</b> (exit): tap the 7 poo types of the Bristol Stool Form Scale, then a question on how IBS types show up in poo. A cute pixel poo waves goodbye.</li>
         <li><b>Swipe to sort</b>: build the gut kit, then pick one thing to try this week</li>
@@ -778,20 +800,36 @@ const STOPS = [
     papers:[P.zhang,P.kadosh,P.pitta,P.exam]}
 },
 {
-  zone:"Sigmoid colon", depth:8.4, type:"tap", kind:"Tap the scene",
-  say:"Look! Some alarm cells are parked near a nerve.",
+  zone:"Sigmoid colon", depth:8.4, type:"gp", kind:"Tell the GP",
+  say:"See those red alarm cells by the nerve? They turn up the pain. Time for a GP visit.",
   scene:{sam:"Sam's tummy pain keeps coming back, even after exams finish.",
          alex:"Alex's tummy pain keeps coming back, even on weekends."},
-  q:"Tap the alarm cell that's turning up {name}'s pain signals.",
-  fallback:{s:"If stress makes IBS worse, then IBS is \"all in your head\".",a:false,
-    right:"It's false. Stress can turn up the \"volume\" on gut nerves, so normal gas or stretching hurts. The pain is real.",
-    wrong:"It's actually false. Stress causes real changes in the gut, including turning up the \"volume\" on gut nerves, so normal gas or stretching hurts."},
-  right:"That alarm cell is right next to the nerve. Stress can turn up the \"volume\" on gut nerves, so normal gas or stretching hurts. The pain is real.",
-  wrong:"It was the one sitting right on the nerve. Stress can turn up the \"volume\" on gut nerves, so normal gas or stretching hurts. The pain is real.",
+  q:"{name} has a GP appointment. Tap everything worth telling the doctor.",
+  // what {name} could say to the GP: good = worth saying; why shows after checking
+  notes:[
+    {t:"It hurts a few days a week, and it's been going on for about 4 months.",good:true,
+     why:"IBS is diagnosed from a pattern: tummy pain at least once a week for 3 months or more."},
+    {t:"It's probably nothing. Sorry for wasting your time.",good:false,
+     why:"Playing it down can mean the GP misses what's going on. Your symptoms are worth their time."},
+    {t:"The pain eases after I've been to the toilet.",good:true,
+     why:"Pain linked to going to the toilet is one of the main signs doctors look for in IBS."},
+    {t:"It's all in my head. I'm just stressed.",good:false,
+     why:"Stress changes real things in the gut. Mention the stress, but describe the symptoms too."},
+    {t:"My poo keeps switching between hard lumps and mushy.",good:true,
+     why:"Changes in poo type or how often you go are part of the IBS checklist."},
+    {t:{sam:"It gets worse in exam weeks.",alex:"It gets worse in deadline weeks."},good:true,
+     why:"Spotting triggers like stress helps you and the GP plan what to try."},
+    {t:"I read online that it's definitely a food allergy.",good:false,
+     why:"Self-diagnosing can send you the wrong way. Describe what happens and let the GP decide on tests."},
+    {t:"There's no blood in my poo, no weight loss, and it doesn't wake me at night.",good:true,
+     why:"Saying which warning signs you don't have helps the GP rule other conditions out."}
+  ],
+  right:"Great notes. How often it hurts, its link to the toilet, poo changes, triggers and the missing warning signs are what a GP uses to diagnose IBS.",
+  wrong:"A GP needs the pattern: how often it hurts, its link to the toilet, poo changes and triggers. Saying there are no warning signs helps too. Never play it down.",
   dyk:"In IBS, the gut's alarm cells sit close to nerves, which can make normal gas feel painful. The pain is real.",
-  tip:"If gut pain keeps coming back, see a GP. It's real, and there's help.",
-  more:{text:"In people with IBS, active alarm cells (mast cells) sit closer to gut nerves than usual, and this is linked to how much pain they report. Under stress, people with IBS also feel gut stretching more strongly. In rats, gut oversensitivity lasted up to 30 days after the stress ended.",
-    papers:[P.barbara,P.dickhaus,P.vicario]}
+  tip:"Before a GP visit, jot down how often it hurts, your poo changes and what makes it worse. Blood, weight loss or night symptoms need checking soon.",
+  more:{text:"In people with IBS, active alarm cells (mast cells) sit closer to gut nerves than usual, and this is linked to how much pain they report. Under stress, people with IBS also feel gut stretching more strongly. In rats, gut oversensitivity lasted up to 30 days after the stress ended. GPs diagnose IBS from the pattern of symptoms, with a few simple tests (like blood tests and a poo test) to rule out other conditions.",
+    papers:[P.barbara,P.dickhaus,P.vicario,P.bsg]}
 },
 {
   zone:"Rectum", depth:8.75, type:"path", kind:"Choose {name}'s path",
@@ -1291,7 +1329,7 @@ function renderStop(){
     <div id="fbSlot"></div>`;
   sheet.scrollTop=0;
   mountSay(fmt(st.say));
-  ({mcq:playMcq, tf:playTf, order:playOrder, tap:playTap, path:playPath, poo:playPoo})[st.type](st,$("#play"));
+  ({mcq:playMcq, tf:playTf, order:playOrder, gp:playGp, path:playPath, poo:playPoo})[st.type](st,$("#play"));
 }
 
 function reward(ok){
@@ -1399,7 +1437,7 @@ function playOrder(st,el){
   });
 }
 
-/* 4. tap the scene (with true/false fallback) */
+/* Alarm cells (mast cells) and a nerve, shown over the sigmoid colon scene */
 const CELLS=[
   {x:30,y:72,target:true, label:"Alarm cell, lower left"},
   {x:70,y:34,target:false,label:"Alarm cell, upper right"},
@@ -1412,33 +1450,37 @@ function drawMast(canvas){
   [[5,5],[8,5],[6,8],[9,9],[7,7],[4,8],[10,7],[6,10]].forEach(([x,y],i)=>px(c,x,y,i%2?"#5c0f1f":"#fff0f2"));
 }
 function clearOverlay(){ document.querySelectorAll(".tapzone,.bubblezone").forEach(n=>n.remove()); }
-function playTap(st,el){
+/* 4. tell the GP: pick what's worth saying at the appointment (the alarm cells and nerve show in the scene) */
+function playGp(st,el){
   clearOverlay();
-  const zone=document.createElement("div"); zone.className="tapzone";
-  zone.innerHTML=`<div class="nerve" aria-hidden="true"><span>NERVE</span></div>`+CELLS.map((c,i)=>
-    `<button type="button" class="cellbtn" data-i="${i}" style="left:${c.x}%;top:${c.y}%" aria-label="${c.label}"><canvas aria-hidden="true"></canvas></button>`).join("");
+  const zone=document.createElement("div"); zone.className="tapzone deco"; zone.setAttribute("aria-hidden","true");
+  zone.innerHTML=`<div class="nerve"><span>NERVE</span></div>`+CELLS.map(c=>
+    `<div class="cellbtn${c.target?" hot":""}" style="left:${c.x}%;top:${c.y}%"><canvas></canvas></div>`).join("");
   $("#sceneWrap").appendChild(zone);
   zone.querySelectorAll("canvas").forEach(drawMast);
-  el.innerHTML=`<p class="hint2" style="text-align:left">Tap one of the three red alarm cells in the picture above.</p>
-    <button type="button" class="textbtn" id="fbk">Can't tap the picture? Answer a true/false question instead</button>`;
-  zone.querySelectorAll(".cellbtn").forEach(b=>b.addEventListener("click",()=>{
+  el.innerHTML=`<div class="gpnotes" role="group" aria-labelledby="qText">${st.notes.map((n,i)=>
+      `<button type="button" class="gpnote px" aria-pressed="false" data-i="${i}"><span>${esc(fmt(pick(n.t)))}</span></button>`).join("")}</div>
+    <button type="button" class="btn big px" id="gpCheck" disabled>${esc(fmt("Check {name}'s notes"))} &#9654;</button>`;
+  const notes=[...el.querySelectorAll(".gpnote")];
+  notes.forEach(b=>b.addEventListener("click",()=>{
     if(S.answered) return;
-    const ok=CELLS[+b.dataset.i].target;
-    zone.querySelectorAll(".cellbtn").forEach(x=>{ x.disabled=true; x.classList.add(CELLS[+x.dataset.i].target?"reveal":"miss"); });
-    $("#fbk")?.remove();
-    finish(ok?"ok":"no", ok?"Found it!":"Not that one", ok?st.right:st.wrong);
+    b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")==="true"?"false":"true");
+    beep([[659,.04]]);
+    $("#gpCheck").disabled=!notes.some(x=>x.getAttribute("aria-pressed")==="true");
   }));
-  $("#fbk").addEventListener("click",()=>{
-    clearOverlay();
-    const f=st.fallback;
-    el.innerHTML=tfItemHtml(f,"True or false");
-    el.querySelectorAll("[data-v]").forEach(b=>b.addEventListener("click",()=>{
-      if(S.answered) return;
-      const ok=(b.dataset.v==="1")===f.a;
-      el.querySelectorAll("[data-v]").forEach(x=>x.disabled=true);
-      finish(ok?"ok":"no", ok?"Correct!":"Not quite", ok?f.right:f.wrong);
-    }));
-    el.querySelector("[data-v]").focus();
+  $("#gpCheck").addEventListener("click",()=>{
+    if(S.answered) return;
+    let right=0;
+    notes.forEach(b=>{
+      const n=st.notes[+b.dataset.i], picked=b.getAttribute("aria-pressed")==="true";
+      if(picked===n.good) right++;
+      b.disabled=true;
+      b.classList.add(n.good?(picked?"hit":"missed"):(picked?"wrongpick":"skipped"));
+      b.insertAdjacentHTML("beforeend",`<small class="gp-why"><b>${n.good?"&#10004; Worth telling the GP":"&#10008; Best left out"}</b>${esc(n.why)}</small>`);
+    });
+    $("#gpCheck").remove();
+    const ok=right>=st.notes.length-1;
+    finish(ok?"ok":"no", ok?"Great notes!":"Nearly there", ok?st.right:st.wrong);
   });
 }
 
