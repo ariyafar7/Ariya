@@ -468,6 +468,13 @@ body.playing{overflow:hidden}
 @media (max-width: 900px){
   .gutmap{display:none}
 }
+/* v11: room for the music button in the header on narrow phones */
+@media (max-width: 480px){
+  .pop-head{gap:5px;padding:9px 10px 8px}
+  .eyebrow{font-size:6.5px}
+  .pop-head h1{font-size:11.5px}
+  .hbtn{padding:7px 5px;font-size:7px}
+}
 
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
@@ -506,6 +513,7 @@ body.playing{overflow:hidden}
           <p class="eyebrow">World IBS Day · 19 April</p>
           <h1 id="gameTitle"><span>Michael</span> the Microbe</h1>
         </div>
+        <button type="button" class="hbtn" id="musicBtn" aria-pressed="true" title="Soundtrack">MUSIC ON</button>
         <button type="button" class="hbtn" id="sfxBtn" aria-pressed="false" title="Sound effects">SFX OFF</button>
         <button type="button" class="hbtn" id="closeBtn" aria-label="Close the game">X</button>
       </header>
@@ -527,6 +535,7 @@ body.playing{overflow:hidden}
         <button type="button" class="skipbtn" id="skipBtn" aria-expanded="false" aria-controls="skipMenu">Skip to &#9650;</button>
       </nav>
     </div>
+    <audio id="music" src="soundtrack.mp3" loop preload="none"></audio>
   </section>
 
 </main>
@@ -936,6 +945,33 @@ $("#sfxBtn").addEventListener("click",e=>{
   if(sfx) beep([[784,.06],[1047,.1]]);
 });
 
+
+/* Soundtrack: starts when the player taps into the game from the Doodle, loops,
+   fades out when the game is closed and picks up where it left off. */
+const music=$("#music"), MUSIC_VOL=.5;
+let musicOn=true, musicFade=null;
+function fadeMusic(to,ms,done){
+  clearInterval(musicFade);
+  const from=music.volume, t0=performance.now();
+  musicFade=setInterval(()=>{
+    const k=Math.min(1,(performance.now()-t0)/ms);
+    music.volume=from+(to-from)*k;
+    if(k>=1){ clearInterval(musicFade); if(done) done(); }
+  },40);
+}
+function playMusic(){
+  if(!musicOn) return;
+  if(music.paused) music.volume=0;
+  const p=music.play();
+  if(p) p.then(()=>fadeMusic(MUSIC_VOL,1500)).catch(()=>{});   // blocked until the player taps: retried below
+}
+function pauseMusic(){ fadeMusic(0,400,()=>music.pause()); }
+$("#musicBtn").addEventListener("click",e=>{
+  musicOn=!musicOn; e.currentTarget.setAttribute("aria-pressed",musicOn); e.currentTarget.textContent=musicOn?"MUSIC ON":"MUSIC OFF";
+  musicOn?playMusic():pauseMusic();
+});
+// if the game opened without a tap (a restored session), start the music on the first tap inside it
+$("#popup").addEventListener("pointerdown",()=>{ if(musicOn && music.paused && document.body.classList.contains("playing")) playMusic(); });
 
 /* ---------------------------------------------------------------
    Pixel art: palettes, sprites, primitives
@@ -2495,6 +2531,7 @@ function showGame(){
 /* Click the Doodle: dive into Michael's mouth, and the game fills the screen. */
 function openGame(animate=true){
   if(document.body.classList.contains("playing") || portalBusy) return;
+  playMusic();   // called inside the tap, so browsers allow the soundtrack to start
   if(!animate || reduce){ showGame(); return; }
   portalBusy=true;
   // first, on the Doodle itself, Michael says "ahh" and opens wide
@@ -2518,6 +2555,7 @@ function stepMouth(from,to,gap,done){
 /* The game's X zooms back out of Michael's mouth to the Doodle; progress is kept. */
 function closeGame(){
   if(!document.body.classList.contains("playing") || portalBusy) return;
+  pauseMusic();
   document.body.classList.remove("playing");
   if(reduce){ $("#doodle").focus({preventScroll:true}); return; }
   portalBusy=true;

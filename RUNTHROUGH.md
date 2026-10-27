@@ -92,7 +92,8 @@ The tunnel is kept calm so players can focus on the question.
 - **No timer, and never punishing.** The audience is already stressed.
 - **Tap-only interactions.** There's no typing on phones. Swiping also works with buttons and arrow keys, and the tap activity has a true/false fallback.
 - **The breathing break** models a coping tool instead of only describing it.
-- **Sound is off by default** because it's on a search page.
+- **Soundtrack:** the team's own track (`soundtrack.mp3`, re-encoded to 128 kbps from the 320 kbps original to fit the publishing limit) starts when the player taps into the game from the Doodle, fades in, and loops. Browsers only allow sound after a tap, which is why it starts there. Closing the game fades it out, and reopening picks up where it left off. A MUSIC ON/OFF button sits in the game header.
+- **Sound effects are off by default** because it's on a search page (SFX button in the header).
 - **Original sprites,** drawn in the style of the team's reference image. The reference itself is a stock image and is not used.
 
 ## 5. Before final submission
