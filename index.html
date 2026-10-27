@@ -1,8 +1,14 @@
 <title>Michael the Microbe</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Pixelify+Sans:wght@400;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
 <style>
+/* Reading fonts: Jersey 15 for body text and Silkscreen for labels and buttons, both clearer than the
+   wide Press Start 2P at small sizes (kept for big display text). size-adjust scales them to the old sizes. */
+@font-face{font-family:"MM Body";src:url(https://fonts.gstatic.com/s/jersey15/v4/_6_9EDzuROGsUuk2TWjiZYAg.woff2) format("woff2");unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;size-adjust:118%;font-display:swap}
+@font-face{font-family:"MM Body";src:url(https://fonts.gstatic.com/s/jersey15/v4/_6_9EDzuROGsUuk2TWjia4AggCk.woff2) format("woff2");unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;size-adjust:118%;font-display:swap}
+@font-face{font-family:"MM Pixel";src:url(https://fonts.gstatic.com/s/silkscreen/v6/m8JXjfVPf62XiF7kO-i9YLNlaw.woff2) format("woff2");unicode-range:U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;size-adjust:135%;font-display:swap}
+@font-face{font-family:"MM Pixel";src:url(https://fonts.gstatic.com/s/silkscreen/v6/m8JXjfVPf62XiF7kO-i9YL1la1OD.woff2) format("woff2");unicode-range:U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;size-adjust:135%;font-display:swap}
 /* Layout: a parody 'elgoog' homepage whose pixel Doodle opens the game; clicking it dives into Michael's mouth and the 8-bit game fills the screen, with a pixel gut map beside it.
    Top = low-resolution canvas (drawn at ~130px wide, scaled up with hard pixels) with a game HUD.
    Bottom = an RPG-style dialog box holding the question. One deliberate look, so no theme switching. */
@@ -19,8 +25,9 @@
   --g1:#1f4d22; --g2:#3f8f2f; --g3:#7ccf4a; --g4:#b9f27c;   /* Michael greens */
   --acid:#f2d14a; --orange:#ff9d5c; --red:#ff6b6b; --sky:#8fd3ff;
   --ink:#fff4e8; --ink-soft:#e2c7d6; --ink-faint:#a985a0;
-  --f-pixel:"Press Start 2P","Courier New",monospace;
-  --f-body:"Pixelify Sans","Trebuchet MS",system-ui,sans-serif;
+  --f-display:"Press Start 2P","Courier New",monospace;
+  --f-pixel:"MM Pixel","Courier New",monospace;
+  --f-body:"MM Body","Trebuchet MS",system-ui,sans-serif;
 }
 [hidden]{display:none!important}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
@@ -61,7 +68,7 @@ button{font:inherit;cursor:pointer}
 .pop-head{display:flex;align-items:center;gap:8px;padding:10px 12px 9px;background:var(--plum);border-bottom:4px solid var(--k)}
 .pop-head > div:first-child{flex:1;min-width:0}
 .eyebrow{margin:0 0 5px;font-family:var(--f-pixel);font-size:7.5px;letter-spacing:.06em;color:var(--acid);text-transform:uppercase}
-.pop-head h1{margin:0;font-family:var(--f-pixel);font-weight:400;font-size:13px;line-height:1.2;color:var(--ink)}
+.pop-head h1{margin:0;font-family:var(--f-display);font-weight:400;font-size:13px;line-height:1.2;color:var(--ink)}
 .pop-head h1 span{color:var(--g3)}
 .hbtn{background:var(--plum-2);color:var(--ink-soft);border:0;padding:7px 8px;font-family:var(--f-pixel);font-size:8px;line-height:1;box-shadow:inset -2px -2px 0 rgba(0,0,0,.4),inset 2px 2px 0 rgba(255,255,255,.12)}
 .hbtn:hover{color:var(--ink)}
@@ -144,7 +151,7 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
 .src em{color:var(--ink-soft)}
 .fine{font-size:13px;color:var(--ink-faint)}
 .title-card{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
-.title-card .big{font-family:var(--f-pixel);font-size:19px;line-height:1.45;color:var(--ink);margin:0;text-shadow:3px 3px 0 var(--k)}
+.title-card .big{font-family:var(--f-display);font-size:19px;line-height:1.45;color:var(--ink);margin:0;text-shadow:3px 3px 0 var(--k)}
 .title-card .big span{color:var(--g3)}
 .blink{animation:blink 1s steps(2) infinite}
 @keyframes blink{50%{opacity:0}}
@@ -328,7 +335,7 @@ details.more summary:focus-visible{outline:3px solid var(--acid);outline-offset:
 .ptype:focus-visible{outline:3px solid var(--acid);outline-offset:-5px}
 
 /* finale */
-.theend{position:absolute;left:0;right:0;top:13%;text-align:center;font-family:var(--f-pixel);font-size:24px;line-height:1.2;color:var(--acid);
+.theend{position:absolute;left:0;right:0;top:13%;text-align:center;font-family:var(--f-display);font-size:24px;line-height:1.2;color:var(--acid);
   text-shadow:3px 3px 0 var(--k);letter-spacing:.06em;pointer-events:none;animation:endIn .7s steps(5) both}
 @keyframes endIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion: reduce){ .theend{animation:none} }
@@ -475,6 +482,13 @@ body.playing{overflow:hidden}
   .pop-head h1{font-size:11.5px}
   .hbtn{padding:7px 5px;font-size:7px}
 }
+/* v12: small labels a touch larger in the clearer pixel font */
+.eg-cap{font-size:11px}
+details.more summary{font-size:10px}
+.say .who,.line .who{font-size:8.5px}
+.rm-h{font-size:9px}
+.fb .v{font-size:11px}
+@media (min-width: 901px){ .say .who{font-size:9.5px} details.more summary{font-size:11px} .fb .dyk b{font-size:10.5px} }
 
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}

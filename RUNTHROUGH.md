@@ -94,6 +94,7 @@ The tunnel is kept calm so players can focus on the question.
 - **The breathing break** models a coping tool instead of only describing it.
 - **Soundtrack:** the team's own track (`soundtrack.mp3`, re-encoded to 128 kbps from the 320 kbps original to fit the publishing limit) starts when the player taps into the game from the Doodle, fades in, and loops. Browsers only allow sound after a tap, which is why it starts there. Closing the game fades it out, and reopening picks up where it left off. A MUSIC ON/OFF button sits in the game header.
 - **Sound effects are off by default** because it's on a search page (SFX button in the header).
+- **Readable pixel fonts.** Body text uses Jersey 15 and labels and buttons use Silkscreen: both are pixel fonts but much clearer at small sizes than the wide Press Start 2P, which is kept only for big display text (the title and THE END).
 - **Original sprites,** drawn in the style of the team's reference image. The reference itself is a stock image and is not used.
 
 ## 5. Before final submission
