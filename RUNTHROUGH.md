@@ -25,7 +25,7 @@ The page is a clean parody homepage spelled **"elgoog"** (Google backwards), so 
 | 0b | Play as Sam or Alex | outside | Two short cards, each with a "Click here to play" bubble, then a "Click here to dive in" bubble and a pixel zoom into the mouth | Stress looks different for everyone |
 | 1 | Mouth | 0.00 m | Scenario multiple choice | A dry mouth and clenched jaw are stress signs |
 | 2 | Oesophagus | 0.25 m | True/false quick-fire (3 statements) | The brain and gut talk both ways |
-| 3 | Stomach | 0.45 m | Put the stress chain in order | Stress hormones slow the stomach, so eat small rather than skip |
+| 3 | Stomach | 0.45 m | Put the stress chain in order: steps go into the slots in any order (tap a placed step to take it back out), then it checks | Stress hormones slow the stomach, so eat small rather than skip |
 | 🎮 | **Mini-game 1: pop the stress bubbles** | 0.60 m | Tap 6 bubbles labelled with the person's stressors. Each pop reveals one step of the stress chain, from the brain to the gut bacteria. | Stress travels all the way to the gut |
 | ☁ | Breathing break | 0.60 m | 3 slow breaths (skippable) | You can turn down how strongly your body reacts |
 | 4 | Small intestine | 1.20 m | Scenario: a presentation (class or team) | Stress can make the gut lining let more through, so build in rest |
@@ -49,7 +49,7 @@ The page is a clean parody homepage spelled **"elgoog"** (Google backwards), so 
 
 The Rome IV criteria and how common IBS is (about 4 in 100 worldwide) now sit in the exit stop's Digest the evidence, beside the poo chart, instead of on the title screen. The end screen keeps the results, the pledge and the "see a doctor" box visible; the four takeaways and all the papers are in its Digest the evidence.
 
-Wrong answers still move Michael on. Verdicts are words, not scores ("Correct!", "Nice work!", "Not quite").
+**One more try:** a first wrong answer on any question shows "Not quite", a short nudge and a **One more try** button. The answer is only revealed after the second go. Multiple choice crosses out the option already tried; true/false re-asks only the missed statements; put-in-order keeps the steps already in the right place; Tell the GP lets the player change their picks; choose-the-path replays the three choices. Wrong answers still move Michael on. Verdicts are words, not scores ("Correct!", "Nice work!", "Not quite").
 
 **What changes between Sam and Alex:** every scenario line, the stress bubble labels, Bifi's opening line, the three end decisions, and the results heading. The science, questions and answers stay the same.
 

@@ -528,6 +528,16 @@ details.more summary{font-size:10px}
 .pop-word{font-family:var(--f-pixel);font-size:12px;color:var(--acid);text-shadow:2px 2px 0 var(--k);white-space:nowrap}
 @media (prefers-reduced-motion: reduce){ .bubble{animation:none;transition:none} .bubble.pop{animation:none;opacity:0} }
 
+/* v15: one more try, and free placement in the put-in-order activity */
+.opt.tried{opacity:.45}
+.opt.tried span:last-child{text-decoration:line-through}
+.slot.locked,.slot.rightpos{background:#21481f;color:var(--ink)}
+.slot.wrongpos{background:#5a2020;color:var(--ink)}
+.slot-undo{flex:1;display:flex;align-items:center;justify-content:space-between;gap:10px;background:transparent;border:0;padding:0;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.slot-undo i{font-style:normal;font-size:12px;color:var(--ink-faint)}
+.slot-undo:hover i{color:var(--ink)}
+.slot-undo:focus-visible{outline:3px solid var(--acid);outline-offset:3px}
+
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
 .btn:disabled{opacity:.45;cursor:default}
@@ -1334,7 +1344,7 @@ function startDive(){
 ---------------------------------------------------------------- */
 function renderStop(){
   const st=STOPS[S.idx];
-  S.answered=false;
+  S.answered=false; S.tries=0;
   sheet.innerHTML=`
     <div class="meta"><span class="chip px">${esc(st.zone)}</span></div>
     ${sayBox(fmt(st.say))}
@@ -1361,6 +1371,14 @@ function nextLabel(){
   if(S.idx===5) return "Mini-game: meet a microbe &#9660;";
   return "Keep diving &#9660;";
 }
+/* First wrong answer: a nudge and one more try. The answer is only revealed after the second go. */
+function oneMoreTry(msg,redo){
+  S.tries=1; reward(false);
+  $("#fbSlot").innerHTML=`<div class="fb mid px"><span class="v">Not quite</span><p>${esc(fmt(msg))}</p></div>
+    <button type="button" class="btn big alt px" id="retryBtn">&#8635; One more try</button>`;
+  $("#retryBtn").addEventListener("click",()=>{ beep([[523,.05],[659,.07]]); $("#fbSlot").innerHTML=""; redo(); });
+  requestAnimationFrame(()=>{ $("#fbSlot").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"}); $("#retryBtn").focus({preventScroll:true}); });
+}
 function finish(kind,verdict,text,extra=""){
   if(S.answered) return; S.answered=true;
   reward(kind==="ok");
@@ -1377,18 +1395,28 @@ function finish(kind,verdict,text,extra=""){
   requestAnimationFrame(()=>$("#fbSlot").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"}));
 }
 
-/* 1. multiple choice (scenario, fill the gap, myth-buster) */
+/* 1. multiple choice (scenario, fill the gap, myth-buster); a wrong first pick gets one more try */
 function playMcq(st,el){
   el.innerHTML=`<div class="opts" role="group" aria-labelledby="qText">${st.options.map((o,i)=>
     `<button type="button" class="opt px" data-i="${i}"><span class="L">${"ABCD"[i]}</span><span>${esc(fmt(o))}</span></button>`).join("")}</div>`;
-  el.querySelectorAll(".opt").forEach(b=>b.addEventListener("click",()=>{
-    if(S.answered) return;
+  const opts=[...el.querySelectorAll(".opt")];
+  opts.forEach(b=>b.addEventListener("click",()=>{
+    if(S.answered || b.disabled) return;
     const i=+b.dataset.i, ok=i===st.answer;
-    el.querySelectorAll(".opt").forEach(x=>{
-      const j=+x.dataset.i; x.disabled=true;
+    if(!ok && !S.tries){
+      opts.forEach(x=>x.disabled=true); b.classList.add("wrongpick");
+      oneMoreTry("That's not it. Have another look at the other options.",()=>{
+        b.classList.replace("wrongpick","tried");
+        opts.forEach(x=>{ if(x!==b) x.disabled=false; });
+        opts.find(x=>!x.disabled)?.focus();
+      });
+      return;
+    }
+    opts.forEach(x=>{
+      const j=+x.dataset.i; x.disabled=true; x.classList.remove("tried");
       x.classList.add(j===st.answer?"right":j===i?"wrongpick":"dim");
     });
-    finish(ok?"ok":"no", ok?"Correct!":"Not quite", ok?st.right:st.wrong);
+    finish(ok?"ok":"no", ok?(S.tries?"Got it!":"Correct!"):"Not quite", ok?st.right:st.wrong);
   }));
 }
 
@@ -1398,58 +1426,84 @@ function tfItemHtml(it,label){
     <div class="duo"><button type="button" class="btn px" data-v="1">True</button><button type="button" class="btn px" data-v="0">False</button></div>`;
 }
 function playTf(st,el){
-  let k=0, c=0; const log=[];
+  // first round: wrong answers aren't revealed yet, so the missed ones can be tried once more
+  const got=new Set(), entries=[]; let queue=st.items.map((_,i)=>i), k=0, round=0;
+  const logHtml=reveal=>entries.map(({i,ok})=>{
+    const it=st.items[i];
+    return ok||reveal
+      ? `<li><span class="r ${ok?"ok":"no"}">${ok?"✔ Right":"✘ Not quite"} · it's ${it.a?"true":"false"}</span>${esc(fmt(it.s))} ${esc(it.fb)}</li>`
+      : `<li><span class="r no">✘ Not quite</span>${esc(fmt(it.s))}</li>`;
+  }).join("");
+  const end=()=>{
+    const ok=got.size>=2;
+    if(!ok && !S.tries){
+      el.innerHTML=`<ul class="log">${logHtml(false)}</ul>`;
+      oneMoreTry("Some of those weren't right. Try the ones you missed again.",()=>{
+        queue=st.items.map((_,i)=>i).filter(i=>!got.has(i)); k=0; round=1;
+        entries.splice(0,entries.length,...entries.filter(e=>e.ok)); draw();
+      });
+      return;
+    }
+    el.innerHTML=`<ul class="log">${logHtml(true)}</ul>`;
+    finish(ok?"ok":"no", ok?(round?"Got there!":"Nice work!"):"Good try", ok?st.right:st.wrong);
+  };
   const draw=()=>{
-    const it=st.items[k];
-    el.innerHTML=(log.length?`<ul class="log">${log.join("")}</ul>`:"")+(it?tfItemHtml(it,"True or false?"):"");
-    if(!it) return;
+    const i=queue[k];
+    if(i===undefined){ end(); return; }
+    el.innerHTML=(entries.length?`<ul class="log">${logHtml(round>0)}</ul>`:"")+tfItemHtml(st.items[i],round?"One more try: true or false?":"True or false?");
     el.querySelectorAll("[data-v]").forEach(b=>b.addEventListener("click",()=>{
-      const ok=(b.dataset.v==="1")===it.a; if(ok) c++;
+      const ok=(b.dataset.v==="1")===st.items[i].a; if(ok) got.add(i);
       beep(ok?[[784,.06]]:[[220,.08]]);
-      log.push(`<li><span class="r ${ok?"ok":"no"}">${ok?"✔ Right":"✘ Not quite"} · it's ${it.a?"true":"false"}</span>${esc(it.s)} ${esc(it.fb)}</li>`);
-      k++; draw();
-      if(k===st.items.length) finish(c>=2?"ok":"no", c>=2?"Nice work!":"Good try", c>=2?st.right:st.wrong);
-      else el.querySelector("[data-v]").focus();
+      entries.push({i,ok}); k++; draw();
+      el.querySelector("[data-v]")?.focus();
     }));
   };
   draw();
 }
 
-/* 3. put in order */
+/* 3. put in order: place the steps in any order, then it checks; one more try keeps the steps already right */
 function playOrder(st,el){
-  const shuffled=[2,0,3,1].filter(i=>i<st.steps.length);
-  let nextIdx=0, mistakes=0;
-  el.innerHTML=`
-    <ol class="slots">${st.steps.map((_,i)=>`<li class="slot px" id="slot${i}"><b>${i+1}</b><span>…</span></li>`).join("")}</ol>
-    <div class="opts" id="pool">${shuffled.map(i=>`<button type="button" class="opt px" data-i="${i}"><span class="L">+</span><span>${esc(fmt(st.steps[i]))}</span></button>`).join("")}</div>
-    <button type="button" class="textbtn" id="showOrder">Stuck? Show me the order</button>`;
-  const done=shown=>{
-    $("#showOrder").remove();
-    const ok=!shown && mistakes<=1;
-    finish(ok?"ok":"no", ok?"Chain complete!":shown?"Here's the order":"Got there!", ok?st.right:st.wrong,
-      shown?"":`<p class="mist">${mistakes===0?"No wrong taps.":mistakes===1?"Just one wrong tap.":mistakes+" wrong taps along the way."}</p>`);
+  const n=st.steps.length, pool=[2,0,3,1].filter(i=>i<n);
+  const slots=Array(n).fill(null), locked=Array(n).fill(false);
+  let marks=false;
+  const render=()=>{
+    const free=slots.some((v,p)=>v!==null && !locked[p]);
+    el.innerHTML=`
+      <ol class="slots">${slots.map((v,p)=>{
+        const cls=v===null?"":marks?(v===p?" filled rightpos":" wrongpos"):locked[p]?" filled locked":" filled";
+        const body=v===null?"<span>…</span>"
+          : (marks||locked[p]) ? `<span>${esc(fmt(st.steps[v]))}</span>`
+          : `<button type="button" class="slot-undo" data-p="${p}" aria-label="Take out: ${esc(fmt(st.steps[v]))}"><span>${esc(fmt(st.steps[v]))}</span><i aria-hidden="true">&#10005;</i></button>`;
+        return `<li class="slot px${cls}"><b>${p+1}</b>${body}</li>`;
+      }).join("")}</ol>
+      <div class="opts" id="pool">${pool.filter(i=>!slots.includes(i)).map(i=>`<button type="button" class="opt px" data-i="${i}"${marks?" disabled":""}><span class="L">+</span><span>${esc(fmt(st.steps[i]))}</span></button>`).join("")}</div>
+      ${free&&!marks?`<p class="hint2" style="text-align:left">Tap a placed step to take it back out.</p>`:""}
+      ${marks?"":`<button type="button" class="textbtn" id="showOrder">Stuck? Show me the order</button>`}`;
+    el.querySelectorAll("#pool .opt").forEach(b=>b.addEventListener("click",()=>{
+      if(S.answered || marks) return;
+      const p=slots.indexOf(null); slots[p]=+b.dataset.i; beep([[523+p*80,.06]]);
+      if(!slots.includes(null)) check(); else { render(); el.querySelector("#pool .opt")?.focus(); }
+    }));
+    el.querySelectorAll(".slot-undo").forEach(b=>b.addEventListener("click",()=>{
+      if(S.answered || marks) return;
+      slots[+b.dataset.p]=null; beep([[330,.05]]); render();
+    }));
+    $("#showOrder")?.addEventListener("click",()=>{ if(!S.answered) reveal(); });
   };
-  const place=i=>{
-    const s=$("#slot"+i); s.classList.add("filled"); s.querySelector("span").textContent=fmt(st.steps[i]);
-    el.querySelector(`#pool [data-i="${i}"]`)?.remove();
+  const reveal=()=>{ for(let p=0;p<n;p++){ slots[p]=p; locked[p]=true; } marks=false; render(); $("#showOrder")?.remove();
+    finish("no","Here's the order",st.wrong); };
+  const check=()=>{
+    const right=slots.filter((v,p)=>v===p).length;
+    if(right===n){ slots.forEach((_,p)=>locked[p]=true); render(); $("#showOrder")?.remove();
+      finish("ok", S.tries?"Got there!":"Chain complete!", st.right); return; }
+    if(S.tries){ reveal(); return; }
+    marks=true; render();
+    oneMoreTry(`${right} of ${n} steps are in the right place. The green ones stay put; try the rest again.`,()=>{
+      slots.forEach((v,p)=>{ if(v===p) locked[p]=true; else slots[p]=null; });
+      marks=false; render(); el.querySelector("#pool .opt")?.focus();
+    });
   };
-  el.querySelectorAll("#pool .opt").forEach(b=>b.addEventListener("click",()=>{
-    if(S.answered) return;
-    const i=+b.dataset.i;
-    if(i===nextIdx){
-      place(i); nextIdx++; beep([[523+nextIdx*80,.06]]);
-      if(nextIdx===st.steps.length) done(false);
-      else el.querySelector("#pool .opt")?.focus();
-    } else {
-      mistakes++; beep([[200,.08]]);
-      b.classList.remove("shake"); void b.offsetWidth; b.classList.add("shake");
-    }
-  }));
-  $("#showOrder").addEventListener("click",()=>{
-    if(S.answered) return;
-    for(let i=nextIdx;i<st.steps.length;i++) place(i);
-    done(true);
-  });
+  render();
 }
 
 /* Alarm cells (mast cells) and a nerve, shown over the sigmoid colon scene */
@@ -1485,6 +1539,14 @@ function playGp(st,el){
   }));
   $("#gpCheck").addEventListener("click",()=>{
     if(S.answered) return;
+    const score=notes.filter(b=>(b.getAttribute("aria-pressed")==="true")===st.notes[+b.dataset.i].good).length;
+    if(score<st.notes.length-1 && !S.tries){
+      notes.forEach(b=>b.disabled=true); $("#gpCheck").disabled=true;
+      oneMoreTry(`${st.notes.length-score} of your choices need another look. Change your picks, then check again.`,()=>{
+        notes.forEach(b=>b.disabled=false); $("#gpCheck").disabled=false; notes[0].focus();
+      });
+      return;
+    }
     let right=0;
     notes.forEach(b=>{
       const n=st.notes[+b.dataset.i], picked=b.getAttribute("aria-pressed")==="true";
@@ -1495,7 +1557,7 @@ function playGp(st,el){
     });
     $("#gpCheck").remove();
     const ok=right>=st.notes.length-1;
-    finish(ok?"ok":"no", ok?"Great notes!":"Nearly there", ok?st.right:st.wrong);
+    finish(ok?"ok":"no", ok?(S.tries?"Got there!":"Great notes!"):"Nearly there", ok?st.right:st.wrong);
   });
 }
 
@@ -1527,7 +1589,12 @@ function playPath(st,el){
       k++; draw();
       if(k===decisions.length){
         const ok=goods>=2;
-        finish(ok?"ok":"no", ok?"Great choices!":"Some tricky choices",
+        if(!ok && !S.tries){
+          el.querySelectorAll(".opt").forEach(x=>x.disabled=true);
+          oneMoreTry(`${who().name}'s stress is still high. Try those choices again.`,()=>playPath(st,el));
+          return;
+        }
+        finish(ok?"ok":"no", ok?(S.tries?"Got there!":"Great choices!"):"Some tricky choices",
           `${ok?st.right:st.wrong} ${who().name}'s stress ended at ${S.meters.stress}/10 and gut at ${S.meters.gut}/10.`);
       } else el.querySelector(".opt").focus();
     }));
