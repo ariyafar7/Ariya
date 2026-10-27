@@ -538,6 +538,23 @@ details.more summary{font-size:10px}
 .slot-undo:hover i{color:var(--ink)}
 .slot-undo:focus-visible{outline:3px solid var(--acid);outline-offset:3px}
 
+/* v16: the gut toolkit on the end page */
+.toolkit{display:flex;flex-direction:column;gap:10px}
+.toolkit h3{margin:4px 0 0;font-family:var(--f-pixel);font-weight:400;font-size:13px;color:var(--g3);letter-spacing:.04em;text-transform:uppercase}
+.tk-lead{color:var(--ink-soft)}
+.tk-group{background:var(--night);padding:12px 14px}
+.tk-group h4{margin:0 0 8px;font-family:var(--f-pixel);font-weight:400;font-size:10px;color:var(--acid);letter-spacing:.04em;text-transform:uppercase}
+.tk-group.urgent{background:#3a1a24;box-shadow:inset 0 0 0 3px var(--red)}
+.tk-group.urgent h4{color:#ffb3bd}
+.tk-group ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px}
+.tk-group li p{margin:0 0 6px}
+.tk-links{display:flex;flex-wrap:wrap;gap:6px}
+.tk-link{display:inline-flex;align-items:center;gap:6px;background:var(--plum-2);color:var(--sky);text-decoration:none;padding:7px 10px;font-size:15px;line-height:1.2;
+  box-shadow:inset -2px -2px 0 rgba(0,0,0,.35)}
+.tk-link:hover{background:#4c2142;color:#c9ecff}
+.tk-link:focus-visible{outline:3px solid var(--acid);outline-offset:2px}
+@media (min-width: 901px){ .toolkit h3{font-size:15px} .tk-group h4{font-size:11px} .tk-link{font-size:16px} }
+
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
 .btn:disabled{opacity:.45;cursor:default}
@@ -965,6 +982,48 @@ const SORT_CARDS = [
   {t:"Cutting out whole food groups on your own",helps:false,fb:"Strict diets like low-FODMAP should be done with a dietitian."},
   {t:"Oats or psyllium fibre, added slowly",helps:true,fb:"Soluble fibre helps IBS. Increase it gradually."},
   {t:"A probiotic as a \"cure\"",helps:false,fb:"It's an optional extra to try, not a fix."}
+];
+
+/* End page: the gut toolkit. Practical fixes, each with trusted places to start (Australian services). */
+const TOOLKIT = [
+  {h:"Calm the stress response", items:[
+    {t:"Do a few minutes of slow breathing or a guided meditation most days.",
+     links:[["Smiling Mind (free app)","https://www.smilingmind.com.au/smiling-mind-app"]]},
+    {t:"Learn stress skills with a free online CBT course.",
+     links:[["THIS WAY UP: Coping with Stress","https://thiswayup.org.au/courses/coping-with-stress-course"],["MindSpot","https://www.mindspot.org.au/"]]},
+    {t:"Talk it through. If you're 12 to 25, headspace is free and needs no referral.",
+     links:[["headspace","https://headspace.org.au/"],["Call eheadspace 1800 650 890","tel:1800650890"]]}
+  ]},
+  {h:"Retrain the gut–brain connection", items:[
+    {t:"CBT and gut-directed hypnotherapy have the strongest evidence of any mind-based treatment for IBS.",
+     links:[["Mind over Gut: free IBS program","https://ibs.mindovergut.com/"]]},
+    {t:"Try gut-directed hypnotherapy at home with an app developed at Monash University (paid, with a free trial).",
+     links:[["About the Nerva app","https://www.monash.edu/medicine/news/latest/2024-articles/hypnotherapy-reduces-irritable-bowel-syndrome-symptoms-and-now-theres-an-app-for-that"]]}
+  ]},
+  {h:"Feed your gut and its microbes", items:[
+    {t:"Eat regular meals. Add soluble fibre like oats or psyllium slowly.",
+     links:[["High-fibre foods","https://www.healthdirect.gov.au/high-fibre-foods-and-diet"],["Gut health","https://www.healthdirect.gov.au/gut-health"]]},
+    {t:"Thinking about a low FODMAP diet? It's short-term, and best done with a dietitian.",
+     links:[["Monash FODMAP","https://www.monashfodmap.com/about-fodmap-and-ibs/"],["Find a dietitian","https://dietitiansaustralia.org.au/find-dietitian"]]},
+    {t:"Probiotics are optional. If you try one, give it up to 12 weeks and stop if it doesn't help.",
+     links:[["About probiotics","https://www.healthdirect.gov.au/probiotics"]]}
+  ]},
+  {h:"Move and sleep", items:[
+    {t:"Get moving for 30 minutes or more on most days, and break up long stretches of sitting.",
+     links:[["Australia's movement guidelines","https://www.health.gov.au/topics/physical-activity/24-hour-movement-guidelines-for-all-australians"]]},
+    {t:"Keep regular sleep times and switch screens off before bed.",
+     links:[["Good sleep habits","https://www.sleephealthfoundation.org.au/sleep-topics/sleep-hygiene-good-sleep-habits"]]}
+  ]},
+  {h:"Get checked and learn more", items:[
+    {t:"Note your symptoms and poo type for two weeks, then take it to a GP.",
+     links:[["Bristol poo chart","https://theromefoundation.org/wp-content/uploads/Bristol-Stool-Form-Scale-Card-2021.pdf"],["Find a GP","https://www.healthdirect.gov.au/australian-health-services/guided-search/general-practice"]]},
+    {t:"Read up on IBS from trusted sources. For 24-hour health advice, call 1800 022 222.",
+     links:[["IBS on healthdirect","https://www.healthdirect.gov.au/irritable-bowel-syndrome-ibs"],["The IBS Network","https://www.theibsnetwork.org/"]]}
+  ]},
+  {h:"Need to talk to someone now?", urgent:true, items:[
+    {t:"Free, confidential support, 24 hours a day. In an emergency, call 000.",
+     links:[["Call Lifeline 13 11 14","tel:131114"],["Lifeline chat and text","https://www.lifeline.org.au/131114"],["Call Beyond Blue 1300 22 4636","tel:1300224636"]]}
+  ]}
 ];
 
 /* Pixel look for each stop. pal = [lumen, wall dark, wall mid, wall edge] */
@@ -1880,6 +1939,15 @@ const TAKEAWAYS=[
   "3. Stress changes the world your gut bacteria live in. Probiotics are an optional extra, not a fix.",
   "4. Sleep, regular meals, moving and talking to someone help calm the loop. IBS is common and manageable."
 ];
+/* The gut toolkit on the end page: practical fixes, each with links to trusted resources. */
+function toolkitHtml(){
+  return `<section class="toolkit" aria-labelledby="tkTitle">
+    <h3 id="tkTitle">Your gut toolkit</h3>
+    <p class="tk-lead">Practical things that help with stress, the gut and IBS, and trusted places to start.</p>
+    ${TOOLKIT.map(g=>`<div class="tk-group px${g.urgent?" urgent":""}"><h4>${esc(g.h)}</h4><ul>${g.items.map(it=>`<li><p>${esc(it.t)}</p>
+      <span class="tk-links">${it.links.map(([l,u])=>`<a class="tk-link px" href="${u}"${u.startsWith("tel:")?"":' target="_blank" rel="noopener"'}>${esc(l)}${u.startsWith("tel:")?"":' <span aria-hidden="true">&#8599;</span>'}</a>`).join("")}</span></li>`).join("")}</ul></div>`).join("")}
+  </section>`;
+}
 function renderEnd(){
   S.phase="end"; S.outside=false; S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M;
   S.scene="toilet"; S.morph=1; S.hop=1; S.drop=1; S.splash=1; S.flush=1; S.fade=0; showTheEnd(true); updateHud();
@@ -1888,13 +1956,14 @@ function renderEnd(){
     <h2>Thanks for diving with Michael!</h2>
     <button type="button" class="btn big px" id="againBtn">&#9654; Dive again</button>
     ${S.pledge?`<div class="pledge px"><b>YOUR ONE THING THIS WEEK</b>${esc(S.pledge)}</div>`:""}
+    ${toolkitHtml()}
     <div class="warn px"><b>See a doctor if you notice:</b> blood in your poo, weight loss you can't explain, symptoms that wake you at night, fever, or a family history of bowel cancer, coeliac disease or IBD.</div>
     <div class="row">
       <button type="button" class="ghost px" id="shareBtn">Copy a message for a friend</button>
     </div>
     <p class="fine" id="shareMsg" aria-live="polite"></p>
     ${moreHtml({text:"These are the main papers behind the game. Some are free to read, and others may only show a summary.",papers:allPapers},TAKEAWAYS)}
-    <p class="fine">General health information, not medical advice. A concept Doodle made for a university project.</p>`;
+    <p class="fine">General health information, not medical advice. The services listed are Australian; elsewhere, ask your local doctor or health service. A concept Doodle made for a university project.</p>`;
   sheet.scrollTop=0;
   setMood("wow",2500); beep(SFX.end);
   $("#againBtn").addEventListener("click",restart);
