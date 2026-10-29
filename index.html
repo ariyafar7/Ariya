@@ -630,19 +630,19 @@ details.more summary{font-size:10px}
 /* Accessibility: answer and sort buttons at least 44px tall, the recommended touch size */
 .btn{min-height:44px}
 
-/* Pledge: five equal bubbles to pick from, popped like the stress bubbles */
-.pledgezone{position:relative;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 14px;padding:8px 0}
-.pbubble{position:relative;flex:0 0 auto;width:min(29%,128px);aspect-ratio:1;border:0;padding:10px;cursor:pointer;display:grid;place-items:center;text-align:center;
-  font-family:var(--f-body);font-size:15px;line-height:1.2;color:#fff4e8;text-shadow:1px 1px 0 var(--k);
-  background:rgba(255,93,115,.32);box-shadow:inset 0 0 0 3px #ff9db0,inset 9px 9px 0 rgba(255,255,255,.18);
+/* Pledge: five equal bubbles around Michael in the gut scene, popped like the stress bubbles */
+.pbubble{position:absolute;translate:-50% -50%;width:100px;height:100px;border:0;padding:9px;cursor:pointer;display:grid;place-items:center;text-align:center;
+  font-family:var(--f-body);font-size:14px;line-height:1.15;color:#fff4e8;text-shadow:1px 1px 0 var(--k);
+  background:rgba(255,93,115,.42);box-shadow:inset 0 0 0 3px #ff9db0,inset 9px 9px 0 rgba(255,255,255,.18);
   clip-path:polygon(30% 0,70% 0,70% 6%,85% 6%,85% 15%,94% 15%,94% 30%,100% 30%,100% 70%,94% 70%,94% 85%,85% 85%,85% 94%,70% 94%,70% 100%,30% 100%,30% 94%,15% 94%,15% 85%,6% 85%,6% 70%,0 70%,0 30%,6% 30%,6% 15%,15% 15%,15% 6%,30% 6%);
-  animation:bob 2.4s ease-in-out infinite alternate;transition:scale .14s cubic-bezier(.2,.8,.2,1),background-color .14s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-.pbubble:hover,.pbubble:focus-visible{scale:1.06;background:rgba(242,209,74,.4);outline:none}
+  animation:bob 2.4s ease-in-out infinite alternate;transition:scale .14s cubic-bezier(.2,.8,.2,1),background-color .14s,opacity .4s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.pbubble:hover,.pbubble:focus-visible{scale:1.07;background:rgba(242,209,74,.5);outline:none}
 .pbubble:active{scale:.9}
 .pbubble.pop{animation:pop .14s ease-out forwards;pointer-events:none}
-.pledge-pick{text-align:center;color:var(--ink-soft);font-size:15px}
+.pbubble.leave{opacity:0;pointer-events:none}
+.pledge-pick{color:var(--ink-soft);font-size:16px}
 .pledge-pick b{color:var(--acid)}
-@media (max-width:480px){ .pledgezone{gap:8px} .pbubble{width:min(calc((100% - 16px) / 3),118px);font-size:13px;padding:8px} }
+@media (max-width:480px){ .pbubble{font-size:12px;padding:7px} }
 @media (prefers-reduced-motion: reduce){ .pbubble{animation:none;transition:none} .pbubble.pop{animation:none;opacity:0} }
 
 /* GP check-in: running tally under the notes */
@@ -2115,34 +2115,51 @@ function renderSort(){
 }
 
 const pledgeChoices=()=>[...SORT_CARDS.filter(c=>c.helps).map(c=>c.t),...PLEDGE_EXTRA];
-/* Pick one thing: five bubbles; the one you tap pops like the stress bubbles, and tapping another swaps your pick */
+/* Pick one thing: five bubbles float around Michael in the gut scene. Tapping one pops it
+   like the stress bubbles and goes straight on to the finale. */
 function renderPledge(){
-  S.phase="pledge"; updateHud(); S.pledge=null;
+  S.phase="pledge"; updateHud(); S.pledge=null; clearOverlay();
   sheet.innerHTML=`
     <h2>Pick one thing to try this week</h2>
-    <div class="pledgezone" role="group" aria-label="Pick one thing to try">${S.kit.map((t,i)=>`<button type="button" class="pbubble" aria-pressed="false" data-i="${i}" style="animation-delay:${(i*.41).toFixed(2)}s"><span>${esc(t)}</span></button>`).join("")}</div>
-    <p class="pledge-pick" id="pledgePick" aria-live="polite">Tap a bubble to pop it.</p>
-    <button type="button" class="btn big px" id="doneBtn" disabled>Finish the dive &#9654;</button>
+    <p class="pledge-pick">Tap a bubble around Michael to choose it.</p>
     <button type="button" class="textbtn" id="skipPledge">Skip this</button>`;
   sheet.scrollTop=0;
-  const zone=sheet.querySelector(".pledgezone");
+  const zone=document.createElement("div"); zone.className="bubblezone";
+  zone.setAttribute("role","group"); zone.setAttribute("aria-label","Pick one thing to try this week");
+  zone.innerHTML=S.kit.map((t,i)=>`<button type="button" class="pbubble" data-i="${i}" style="animation-delay:${(i*.41).toFixed(2)}s"><span>${esc(t)}</span></button>`).join("");
+  $("#sceneWrap").appendChild(zone);
+  // a ring around Michael, kept inside the scene and above the organ name
+  const place=()=>{
+    const zr=zone.getBoundingClientRect(), tag=$("#organTag").getBoundingClientRect();
+    const floor=tag.height?tag.top-zr.top:zr.height;
+    const size=Math.round(Math.max(70,Math.min(112,Math.min(zr.width,floor)/3.4)));
+    const cx=(S.mx+6.5)*PX, cy=clamp((S.my+8.5)*PX,size/2+6,floor-size/2-6);
+    const rx=Math.min(zr.width/2-size/2-8,size*1.45), ry=Math.min(floor/2-size/2-6,size*1.25);   // an oval, so short screens still fit
+    zone.querySelectorAll(".pbubble").forEach((b,i)=>{
+      const a=-Math.PI/2+i*2*Math.PI/S.kit.length;
+      b.style.width=b.style.height=size+"px";
+      b.style.left=Math.round(clamp(cx+Math.cos(a)*rx,size/2+6,zr.width-size/2-6))+"px";
+      b.style.top=Math.round(clamp(cy+Math.sin(a)*ry,size/2+6,floor-size/2-6))+"px";
+    });
+  };
+  place(); zone._ro=new ResizeObserver(place); zone._ro.observe(zone);
+  let chosen=false;
   const pick=(b,x,y)=>{
-    if(b.disabled) return;
-    zone.querySelectorAll(".pbubble.pop").forEach(p=>{ p.classList.remove("pop"); p.disabled=false; p.setAttribute("aria-pressed","false"); });
+    if(chosen) return; chosen=true;
     const zr=zone.getBoundingClientRect(), br=b.getBoundingClientRect();
     burstAt(zone, x??br.left+br.width/2-zr.left, y??br.top+br.height/2-zr.top);
-    b.classList.add("pop"); b.disabled=true; b.setAttribute("aria-pressed","true");
-    beep([[880,.04],[1320,.06]]);
+    b.classList.add("pop"); beep([[880,.04],[1320,.06]]);
+    zone.querySelectorAll(".pbubble:not(.pop)").forEach(o=>o.classList.add("leave"));
     S.pledge=S.kit[+b.dataset.i];
-    $("#pledgePick").innerHTML=`Your one thing: <b>${esc(S.pledge)}</b>. Tap another bubble to swap.`;
-    $("#doneBtn").disabled=false; $("#doneBtn").focus({preventScroll:true});
+    sheet.querySelector(".pledge-pick").innerHTML=`Your one thing: <b>${esc(S.pledge)}</b>`;
+    setTimeout(startFinale,reduce?300:750);
   };
   zone.querySelectorAll(".pbubble").forEach(b=>{
     b.addEventListener("pointerdown",e=>{ const zr=zone.getBoundingClientRect(); pick(b,e.clientX-zr.left,e.clientY-zr.top); });
     b.addEventListener("click",()=>pick(b));
   });
-  $("#doneBtn").addEventListener("click",startFinale);
-  $("#skipPledge").addEventListener("click",()=>{ S.pledge=null; startFinale(); });
+  zone.querySelector(".pbubble").focus({preventScroll:true});
+  $("#skipPledge").addEventListener("click",()=>{ if(chosen) return; chosen=true; S.pledge=null; startFinale(); });
 }
 
 /* Finale: Michael turns into the poo, leaves the body and is flushed. Then THE END. */
