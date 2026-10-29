@@ -1044,16 +1044,6 @@ const POO_TYPES = [
   {n:7,name:"Watery",look:"Watery, with no solid pieces.",means:"Diarrhoea.",tag:"Linked to IBS-D"}
 ];
 
-/* Mini-game 1 (after stop 3): pop the stress bubbles */
-const POP_FACTS = [
-  "{name}'s brain spots the stress and sounds the alarm.",
-  "Cortisol rises. Handy for a short burst.",
-  "The gut speeds up or slows down.",
-  "Alarm cells in the gut wall get twitchy.",
-  "The gut lining lets more through.",
-  "Gut bacteria feel the change too."
-];
-
 /* Mini-game 2 (after stop 6): meet Bifi, Michael's purple twin (a fibre-loving Bifidobacterium) */
 const MEET = {
   open:[
@@ -1887,7 +1877,6 @@ function playBubbles(){
   sheet.innerHTML=`
     <div class="meta"><span class="chip k px">Mini-game</span></div>
     ${sayBox(line)}
-    <ul class="log" id="popLog"></ul>
     <div id="popEnd"></div>`;
   sheet.scrollTop=0;
   mountSay(line,"stressed");
@@ -1902,8 +1891,7 @@ function playBubbles(){
     const zr=zone.getBoundingClientRect(), br=b.getBoundingClientRect();
     burstAt(zone, x??br.left+br.width/2-zr.left, y??br.top+br.height/2-zr.top);
     beep([[880,.04],[1320,.06]]);
-    const fact=fmt(POP_FACTS[popped]); popped++;
-    $("#popLog").insertAdjacentHTML("beforeend",`<li><span class="r ok">POP! ${esc(labels[+b.dataset.i])}</span>${esc(fact)}</li>`);
+    popped++;
     const nb=zone.querySelector(".bubble:not(:disabled)"); if(nb) nb.focus();
     if(popped===labels.length){
       setTimeout(clearOverlay,700);
