@@ -630,6 +630,27 @@ details.more summary{font-size:10px}
 /* Accessibility: answer and sort buttons at least 44px tall, the recommended touch size */
 .btn{min-height:44px}
 
+/* Pledge: five equal bubbles to pick from, popped like the stress bubbles */
+.pledgezone{position:relative;display:flex;flex-wrap:wrap;justify-content:center;gap:10px 14px;padding:8px 0}
+.pbubble{position:relative;flex:0 0 auto;width:min(29%,128px);aspect-ratio:1;border:0;padding:10px;cursor:pointer;display:grid;place-items:center;text-align:center;
+  font-family:var(--f-body);font-size:15px;line-height:1.2;color:#fff4e8;text-shadow:1px 1px 0 var(--k);
+  background:rgba(255,93,115,.32);box-shadow:inset 0 0 0 3px #ff9db0,inset 9px 9px 0 rgba(255,255,255,.18);
+  clip-path:polygon(30% 0,70% 0,70% 6%,85% 6%,85% 15%,94% 15%,94% 30%,100% 30%,100% 70%,94% 70%,94% 85%,85% 85%,85% 94%,70% 94%,70% 100%,30% 100%,30% 94%,15% 94%,15% 85%,6% 85%,6% 70%,0 70%,0 30%,6% 30%,6% 15%,15% 15%,15% 6%,30% 6%);
+  animation:bob 2.4s ease-in-out infinite alternate;transition:scale .14s cubic-bezier(.2,.8,.2,1),background-color .14s;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+.pbubble:hover,.pbubble:focus-visible{scale:1.06;background:rgba(242,209,74,.4);outline:none}
+.pbubble:active{scale:.9}
+.pbubble.pop{animation:pop .14s ease-out forwards;pointer-events:none}
+.pledge-pick{text-align:center;color:var(--ink-soft);font-size:15px}
+.pledge-pick b{color:var(--acid)}
+@media (max-width:480px){ .pledgezone{gap:8px} .pbubble{width:min(calc((100% - 16px) / 3),118px);font-size:13px;padding:8px} }
+@media (prefers-reduced-motion: reduce){ .pbubble{animation:none;transition:none} .pbubble.pop{animation:none;opacity:0} }
+
+/* GP check-in: running tally under the notes */
+.gp-tally{color:var(--ink-soft);font-size:15px}
+.gpnote.hit,.gpnote.wrongpick{animation:gpReveal .25s ease-out}
+@keyframes gpReveal{from{opacity:.6;scale:.98}to{opacity:1;scale:1}}
+@media (prefers-reduced-motion: reduce){ .gpnote.hit,.gpnote.wrongpick{animation:none} }
+
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
 .btn:disabled{opacity:.45;cursor:default}
@@ -1095,6 +1116,9 @@ const SORT_CARDS = [
   {t:"Oats or psyllium fibre, added slowly",helps:true,fb:"Soluble fibre helps IBS. Increase it gradually."},
   {t:"A probiotic as a \"cure\"",helps:false,fb:"It's an optional extra to try, not a fix."}
 ];
+
+/* Pledge bubbles: the four "Helps" cards above, plus one more so there are five to pick from */
+const PLEDGE_EXTRA=["Keep regular sleep times"];
 
 /* End page: the gut toolkit. Practical fixes, each with trusted places to start (Australian services).
    Every item has at least one web link, so it all works online; phone numbers are extra tap-to-call links. */
@@ -1783,38 +1807,37 @@ function playGp(st,el){
     `<div class="cellbtn${c.target?" hot":""}" style="left:${c.x}%;top:${c.y}%"><canvas></canvas></div>`).join("");
   $("#sceneWrap").appendChild(zone);
   zone.querySelectorAll("canvas").forEach(drawMast);
+  // each note shows straight away whether it's worth telling the GP, and why
+  const goods=st.notes.filter(n=>n.good).length;
   el.innerHTML=`<div class="gpnotes" role="group" aria-labelledby="qText">${st.notes.map((n,i)=>
-      `<button type="button" class="gpnote px" aria-pressed="false" data-i="${i}"><span>${esc(fmt(pick(n.t)))}</span></button>`).join("")}</div>
-    <button type="button" class="btn big px" id="gpCheck" disabled>${esc(fmt("Check {name}'s notes"))} &#9654;</button>`;
+      `<button type="button" class="gpnote px" data-i="${i}"><span>${esc(fmt(pick(n.t)))}</span></button>`).join("")}</div>
+    <p class="gp-tally" id="gpTally" aria-live="polite">Found 0 of ${goods} things worth telling the GP.</p>
+    <button type="button" class="btn big px" id="gpCheck" disabled>That's everything &#9654;</button>`;
   const notes=[...el.querySelectorAll(".gpnote")];
-  notes.forEach(b=>b.addEventListener("click",()=>{
+  let found=0, wrong=0;
+  const reveal=(b,cls)=>{
+    const n=st.notes[+b.dataset.i];
+    b.disabled=true; b.classList.add(cls);
+    b.insertAdjacentHTML("beforeend",`<small class="gp-why"><b>${n.good?"&#10004; Worth telling the GP":"&#10008; Best left out"}</b>${esc(fmt(n.why))}</small>`);
+  };
+  const done=()=>{
     if(S.answered) return;
-    b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")==="true"?"false":"true");
-    beep([[659,.04]]);
-    $("#gpCheck").disabled=!notes.some(x=>x.getAttribute("aria-pressed")==="true");
-  }));
-  $("#gpCheck").addEventListener("click",()=>{
-    if(S.answered) return;
-    const score=notes.filter(b=>(b.getAttribute("aria-pressed")==="true")===st.notes[+b.dataset.i].good).length;
-    if(score<st.notes.length-1 && !S.tries){
-      notes.forEach(b=>b.disabled=true); $("#gpCheck").disabled=true;
-      oneMoreTry(`${st.notes.length-score} of your choices need another look. Change your picks, then check again.`,()=>{
-        notes.forEach(b=>b.disabled=false); $("#gpCheck").disabled=false; notes[0].focus();
-      });
-      return;
-    }
-    let right=0;
-    notes.forEach(b=>{
-      const n=st.notes[+b.dataset.i], picked=b.getAttribute("aria-pressed")==="true";
-      if(picked===n.good) right++;
-      b.disabled=true;
-      b.classList.add(n.good?(picked?"hit":"missed"):(picked?"wrongpick":"skipped"));
-      b.insertAdjacentHTML("beforeend",`<small class="gp-why"><b>${n.good?"&#10004; Worth telling the GP":"&#10008; Best left out"}</b>${esc(n.why)}</small>`);
-    });
+    notes.filter(b=>!b.disabled).forEach(b=>reveal(b,st.notes[+b.dataset.i].good?"missed":"skipped"));
     $("#gpCheck").remove();
-    const ok=right>=st.notes.length-1;
-    finish(ok?"ok":"no", ok?(S.tries?"Got there!":"Great notes!"):"Nearly there", ok?st.right:st.wrong);
-  });
+    const ok=found===goods && !wrong;
+    finish(ok?"ok":"no", ok?"Great notes!":"Nearly there", ok?st.right:st.wrong);
+  };
+  notes.forEach(b=>b.addEventListener("click",()=>{
+    if(S.answered || b.disabled) return;
+    const n=st.notes[+b.dataset.i];
+    reveal(b,n.good?"hit":"wrongpick");
+    if(n.good){ found++; beep([[659,.04],[880,.06]]); } else { wrong++; beep(SFX.wrong); }
+    $("#gpTally").textContent=`${n.good?"Worth telling the GP.":"Best left out."} Found ${found} of ${goods} things worth telling the GP.`;
+    $("#gpCheck").disabled=false;
+    if(found===goods){ done(); return; }
+    (notes.find(x=>!x.disabled)||$("#gpCheck")).focus({preventScroll:true});
+  }));
+  $("#gpCheck").addEventListener("click",done);
 }
 
 /* 5. choose the character's path */
@@ -2050,7 +2073,7 @@ function playMeet(){
 ---------------------------------------------------------------- */
 function renderSort(){
   S.phase="sort"; updateHud();
-  S.kit=SORT_CARDS.filter(c=>c.helps).map(c=>c.t); S.sortRight=0;
+  S.kit=pledgeChoices(); S.sortRight=0;
   let k=0;
   const draw=()=>{
     const c=SORT_CARDS[k];
@@ -2089,18 +2112,33 @@ function renderSort(){
   draw();
 }
 
+const pledgeChoices=()=>[...SORT_CARDS.filter(c=>c.helps).map(c=>c.t),...PLEDGE_EXTRA];
+/* Pick one thing: five bubbles; the one you tap pops like the stress bubbles, and tapping another swaps your pick */
 function renderPledge(){
-  S.phase="pledge"; updateHud();
+  S.phase="pledge"; updateHud(); S.pledge=null;
   sheet.innerHTML=`
     <h2>Pick one thing to try this week</h2>
-    <div class="kit" role="group" aria-label="Gut kit">${S.kit.map((t,i)=>`<button type="button" class="kitbtn px" aria-pressed="false" data-i="${i}">${esc(t)}</button>`).join("")}</div>
+    <div class="pledgezone" role="group" aria-label="Pick one thing to try">${S.kit.map((t,i)=>`<button type="button" class="pbubble" aria-pressed="false" data-i="${i}" style="animation-delay:${(i*.41).toFixed(2)}s"><span>${esc(t)}</span></button>`).join("")}</div>
+    <p class="pledge-pick" id="pledgePick" aria-live="polite">Tap a bubble to pop it.</p>
     <button type="button" class="btn big px" id="doneBtn" disabled>Finish the dive &#9654;</button>
     <button type="button" class="textbtn" id="skipPledge">Skip this</button>`;
   sheet.scrollTop=0;
-  sheet.querySelectorAll(".kitbtn").forEach(b=>b.addEventListener("click",()=>{
-    sheet.querySelectorAll(".kitbtn").forEach(x=>x.setAttribute("aria-pressed","false"));
-    b.setAttribute("aria-pressed","true"); S.pledge=S.kit[+b.dataset.i]; $("#doneBtn").disabled=false;
-  }));
+  const zone=sheet.querySelector(".pledgezone");
+  const pick=(b,x,y)=>{
+    if(b.disabled) return;
+    zone.querySelectorAll(".pbubble.pop").forEach(p=>{ p.classList.remove("pop"); p.disabled=false; p.setAttribute("aria-pressed","false"); });
+    const zr=zone.getBoundingClientRect(), br=b.getBoundingClientRect();
+    burstAt(zone, x??br.left+br.width/2-zr.left, y??br.top+br.height/2-zr.top);
+    b.classList.add("pop"); b.disabled=true; b.setAttribute("aria-pressed","true");
+    beep([[880,.04],[1320,.06]]);
+    S.pledge=S.kit[+b.dataset.i];
+    $("#pledgePick").innerHTML=`Your one thing: <b>${esc(S.pledge)}</b>. Tap another bubble to swap.`;
+    $("#doneBtn").disabled=false; $("#doneBtn").focus({preventScroll:true});
+  };
+  zone.querySelectorAll(".pbubble").forEach(b=>{
+    b.addEventListener("pointerdown",e=>{ const zr=zone.getBoundingClientRect(); pick(b,e.clientX-zr.left,e.clientY-zr.top); });
+    b.addEventListener("click",()=>pick(b));
+  });
   $("#doneBtn").addEventListener("click",startFinale);
   $("#skipPledge").addEventListener("click",()=>{ S.pledge=null; startFinale(); });
 }
@@ -2998,7 +3036,7 @@ const flowItems=[
   {n:"Pick",d:"Play as Sam or Alex, then zoom in",s:"Uni student or new graduate at work",go:()=>{ stopAll(); S.outside=true; S.char=null; renderChoose(); }},
   ...STOPS.map((st,i)=>({n:`${st.depth.toFixed(2)} m`,d:`${i+1}. ${st.zone}: ${st.kind.toLowerCase()}`,s:st.scene,go:()=>jumpTo(i)})),
   {n:"Bonus",d:"Swipe to sort: build the gut kit",s:"8 cards, helps or doesn't help",go:()=>{ atEnd(); renderSort(); }},
-  {n:"Pledge",d:"Pick one thing to try this week",s:"Chosen from the gut kit",go:()=>{ atEnd(); S.kit=SORT_CARDS.filter(c=>c.helps).map(c=>c.t); renderPledge(); }},
+  {n:"Pledge",d:"Pick one thing to try this week",s:"Chosen from the gut kit",go:()=>{ atEnd(); S.kit=pledgeChoices(); renderPledge(); }},
   {n:"Finale",d:"Michael turns into the poo and is flushed",s:"Toilet scene, then THE END",go:()=>{ atEnd(); startFinale(); }},
   {n:"End",d:"THE END: Dive again, pledge, see a doctor",s:"Pledge, share message, Digest the evidence",go:()=>{ atEnd(); renderEnd(); }}
 ];
