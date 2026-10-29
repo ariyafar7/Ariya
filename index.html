@@ -610,6 +610,12 @@ details.more summary{font-size:10px}
 /* v22: the caption under the logo in plain sentence case, matching the clean logo (not pixel capitals) */
 .eg-cap{font-family:Poppins,"Trebuchet MS",sans-serif;font-weight:500;font-size:15px;letter-spacing:0;text-transform:none;color:#5f6368;margin-top:-2px}
 
+/* v23: select-all-that-apply options */
+.opt.multi[aria-pressed="true"]{background:#21481f;box-shadow:inset 0 0 0 3px var(--g3)}
+.opt.multi[aria-pressed="true"] .L{background:var(--g3);color:var(--k)}
+.opt.missed{box-shadow:inset 0 0 0 3px var(--orange)}
+.opt.missed .L{background:var(--orange);color:var(--k)}
+
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
 .btn:disabled{opacity:.45;cursor:default}
@@ -851,7 +857,7 @@ const STOPS = [
   zone:"Oesophagus", depth:0.25, type:"chat", kind:"Group chat",
   // no say line: Michael tells the scenario himself
   scene:{sam:"It's exam day. Sam feels a lump in their throat outside the hall as last-minute revision messages flood their phone.",
-         alex:"It's exam day. Alex feels a lump in their throat before their first team meeting as messages from their new manager appear."},
+         alex:"It's Alex's first day. Alex feels a lump in their throat before their first team meeting as messages from their new manager appear."},
   q:"Tap each message to read the chat between {name}'s brain and gut.",
   // the brain–gut group chat, revealed one message at a time
   chat:[
@@ -874,7 +880,7 @@ const STOPS = [
 {
   zone:"Stomach", depth:0.45, type:"order", kind:"Put in order",
   say:"Splash! Stomach acid! And the stress signal from {name}'s brain just arrived.",
-  scene:{sam:"Sam is having difficulty facing their breakfast. It's exam morning.",
+  scene:{sam:"It's the morning of Sam's second exam, and they're having difficulty facing their breakfast.",
          alex:"It's the morning of Alex's first big client call and they can't face breakfast."},
   q:"Rearrange the stress chain to the correct order, from first to last.",
   steps:[
@@ -891,19 +897,21 @@ const STOPS = [
     papers:[P.tache,P.lee]}
 },
 {
-  zone:"Small intestine", depth:1.2, type:"mcq", kind:"Scenario",
+  zone:"Small intestine", depth:1.2, type:"multi", kind:"Select all that apply",
   say:"Most nutrients are absorbed here, through a lining just one cell thick. That lining also helps keep unwanted substances out.",
   scene:{sam:"Sam is about to give a class presentation, and their heart is racing.",
          alex:"Alex is about to present their first project update to the whole team, and their heart is racing."},
   q:"What changes might stress cause in {name}'s intestines?",
-  options:["The gut lining may become more permeable, and the balance of gut bacteria may change.","The gut lining becomes less permeable, and all gut bacteria stop growing.","The gut lining becomes permanently damaged, and all helpful bacteria disappear.","Stress affects digestion but cannot affect the gut lining or gut bacteria."],
-  answer:0,
+  // select all that apply: correct lists every right option
+  options:["The gut lining becomes more permeable (\"leakier\"), letting more through","The gut microbiome changes: the mix of gut bacteria shifts","The gut lining becomes permanently damaged","All the helpful gut bacteria disappear","The small intestine stops absorbing nutrients","Nothing changes, because the gut can't sense stress"],
+  correct:[0,1],
+  retryMsg:"Some of your picks need another look. Change them, then check again.",
   right:"Exactly! Stress may affect the gut lining and alter the gut microbiota. These changes vary between people, and researchers are still investigating how they contribute to IBS.",
   wrong:"Not quite! Stress can affect gut function and may influence both the gut lining and its microbial community, but these effects aren't inevitable or the same for everyone.",
   dyk:"Most gut bacteria live in the large intestine, where they help break down parts of food that your body can't digest on its own.",
   tip:"Short bursts of stress pass. Weeks with no break wear the gut down, so build rest into busy periods.",
   more:{text:"Healthy volunteers who had to give a public speech developed a leakier small intestine, but only those whose stress hormone went up. A drug that calms \"alarm cells\" in the gut wall stopped this from happening. In rats, two weeks of crowding kept the lining leaky for up to a week after the stress ended. Scientists are still working out how big this effect is in everyday life.",
-    papers:[P.vanuytsel,P.vicario]}
+    papers:[P.vanuytsel,P.vicario,P.cryan]}
 },
 {
   zone:"Ileum", depth:4.5, type:"mcq", kind:"Fill the gap",
@@ -1552,7 +1560,7 @@ function renderStop(){
     <div id="fbSlot"></div>`;
   sheet.scrollTop=0;
   mountSay(fmt(st.say??pick(st.scene)));
-  ({tfmcq:playTfMcq, mcq:playMcq, chat:playChat, order:playOrder, gp:playGp, path:playPath, poo:playPoo})[st.type](st,$("#play"));
+  ({tfmcq:playTfMcq, multi:playMulti, mcq:playMcq, chat:playChat, order:playOrder, gp:playGp, path:playPath, poo:playPoo})[st.type](st,$("#play"));
 }
 
 function reward(ok){
@@ -1632,6 +1640,39 @@ function playTfMcq(st,el){
     playMcq(st,$("#mq"));
     $("#mq").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"});
   }));
+}
+
+/* 1c. select all that apply: tap to pick options, then check; one more try keeps the picks */
+function playMulti(st,el){
+  const good=new Set(st.correct);
+  el.innerHTML=`<p class="hint2" style="text-align:left">Select all that apply, then check your answer.</p>
+    <div class="opts" role="group" aria-labelledby="qText">${st.options.map((o,i)=>
+      `<button type="button" class="opt multi px" aria-pressed="false" data-i="${i}"><span class="L">${"ABCDEF"[i]}</span><span>${esc(fmt(o))}</span></button>`).join("")}</div>
+    <button type="button" class="btn big px" id="multiCheck" disabled>Check my answer &#9654;</button>`;
+  const opts=[...el.querySelectorAll(".opt")], check=$("#multiCheck");
+  const picked=()=>opts.filter(b=>b.getAttribute("aria-pressed")==="true").map(b=>+b.dataset.i);
+  opts.forEach(b=>b.addEventListener("click",()=>{
+    if(S.answered || b.disabled) return;
+    b.setAttribute("aria-pressed",b.getAttribute("aria-pressed")==="true"?"false":"true");
+    beep([[659,.04]]); check.disabled=!picked().length;
+  }));
+  check.addEventListener("click",()=>{
+    if(S.answered) return;
+    const p=picked(), ok=p.length===good.size && p.every(i=>good.has(i));
+    if(!ok && !S.tries){
+      opts.forEach(b=>b.disabled=true); check.disabled=true;
+      oneMoreTry(st.retryMsg||"Some of your picks need another look. Change them, then check again.",()=>{
+        opts.forEach(b=>b.disabled=false); check.disabled=false; opts[0].focus();
+      });
+      return;
+    }
+    opts.forEach(b=>{
+      const i=+b.dataset.i, on=p.includes(i); b.disabled=true; b.removeAttribute("aria-pressed");   // the result colours take over
+      b.classList.add(good.has(i)?(on?"right":"missed"):(on?"wrongpick":"dim"));
+    });
+    check.remove();
+    finish(ok?"ok":"no", ok?(S.tries?"Got there!":"Correct!"):(st.oops||"Not quite"), ok?st.right:st.wrong);
+  });
 }
 
 /* 2. group chat: tap to reveal each brain/gut message, then a multiple-choice question about it */

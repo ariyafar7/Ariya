@@ -29,7 +29,7 @@ The page is a clean parody homepage spelled **"elgoog"** (Google backwards), so 
 | 3 | Stomach | 0.45 m | Put the stress chain in order: steps go into the slots in any order (tap a placed step to take it back out), then it checks | Stress hormones slow the stomach, so eat small rather than skip |
 | 🎮 | **Mini-game 1: pop the stress bubbles** | 0.60 m | Tap 6 bubbles labelled with the person's stressors. Each pop reveals one step of the stress chain, from the brain to the gut bacteria. | Stress travels all the way to the gut |
 | ☁ | Breathing break | 0.60 m | 3 slow breaths (skippable) | You can turn down how strongly your body reacts |
-| 4 | Small intestine | 1.20 m | Scenario: a presentation (class or team) | Stress can make the gut lining let more through, so build in rest |
+| 4 | Small intestine | 1.20 m | Select all that apply (6 options): the gut lining becoming more permeable and the microbiome changing are both right; check, with one more try | Stress can make the gut lining leakier and shift the gut bacteria |
 | 5 | Ileum | 4.50 m | Fill the gap | Most serotonin is made in the gut, and it sets gut speed |
 | 6 | Colon | 7.20 m | Myth-buster: "just take a probiotic" | Probiotics are an optional extra, not a fix |
 | 🎮 | **Mini-game 2: meet another microbe** | 7.80 m | Michael meets Bifi, his purple twin, a fibre-loving bacterium (*Bifidobacterium*). The player picks at least 2 of 4 questions, then Bifi joins the colony. | Stress changes the microbes' world; fibre feeds them; microbes talk back to the brain |
