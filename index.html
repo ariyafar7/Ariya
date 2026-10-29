@@ -811,6 +811,18 @@ const P = {
   romecard:{t:"Rome Foundation · Bristol Stool Form Scale card",u:"https://theromefoundation.org/wp-content/uploads/Bristol-Stool-Form-Scale-Card-2021.pdf"}
 };
 
+/* Quick check after choosing Sam or Alex, before the dive */
+const IBS_CHECK = {
+  ask:"Before we dive deeper, have you heard of IBS?",
+  q:"What does IBS stand for, and what is it?",
+  options:["Irritable bowel syndrome","Inflammatory bowel syndrome","Intestinal bacterial sickness","Irritated belly syndrome"],
+  answer:0,
+  right:"That's right! IBS stands for irritable bowel syndrome. It causes recurring tummy pain, bloating, constipation or diarrhoea. Stress may contribute to symptoms by changing how the brain and gut communicate.",
+  wrong:"No worries! IBS stands for irritable bowel syndrome. Stress can affect gut movement and sensitivity, potentially triggering or worsening tummy pain, bloating, constipation or diarrhoea.",
+  dyk:"Stress doesn't cause IBS in everyone, but it can contribute to symptoms by changing gut movement, sensitivity and signals between the brain and gut.",
+  then:"So, how can stress affect your tummy? Your brain and gut constantly communicate, and stress can change how your gut works. Let's follow these signals to see how they might trigger IBS symptoms!"
+};
+
 const STOPS = [
 {
   zone:"Mouth", depth:0.0, type:"tfmcq", kind:"True or false, then a scenario",
@@ -1453,15 +1465,40 @@ function renderChoose(){
   mountSay(line);
   sheet.querySelectorAll(".charcard").forEach(b=>b.addEventListener("click",()=>{
     S.char=b.dataset.c; setMood("wow",1500); beep([[659,.06],[880,.1]]);
-    const go=fmt("Great! {name} is about to have a stressful week. Let's shrink down and dive into their gut.");
-    sheet.innerHTML=`${sayBox(go)}
-      <button type="button" class="say-btn" id="diveBtn">&#9660; Click here to dive in</button>
-      <button type="button" class="textbtn" id="backBtn">Choose someone else</button>`;
-    mountSay(go);
-    $("#diveBtn").addEventListener("click",startDive);
-    $("#backBtn").addEventListener("click",renderChoose);
-    $("#diveBtn").focus();
+    renderIbsCheck();
   }));
+}
+
+/* Quick check: what is IBS? Then Michael sets up the dive. */
+function renderIbsCheck(){
+  const c=IBS_CHECK, go=fmt("Great! {name} is about to have a stressful week. Let's shrink down and dive into their gut. "+c.ask);
+  sheet.innerHTML=`${sayBox(go)}
+    <div class="meta"><span class="chip k px">Quick check</span></div>
+    <p class="q" id="qText">${esc(c.q)}</p>
+    <div class="opts" role="group" aria-labelledby="qText">${c.options.map((o,i)=>
+      `<button type="button" class="opt px" data-i="${i}"><span class="L">${"ABCD"[i]}</span><span>${esc(o)}</span></button>`).join("")}</div>
+    <div id="ibsFb"></div>
+    <button type="button" class="textbtn" id="backBtn">Choose someone else</button>`;
+  sheet.scrollTop=0;
+  mountSay(go);
+  $("#backBtn").addEventListener("click",renderChoose);
+  const opts=[...sheet.querySelectorAll(".opt")];
+  opts.forEach(b=>b.addEventListener("click",()=>{
+    const i=+b.dataset.i, ok=i===c.answer;
+    opts.forEach(x=>{ const j=+x.dataset.i; x.disabled=true; x.classList.add(j===c.answer?"right":j===i?"wrongpick":"dim"); });
+    setMood(ok?"wow":"happy",1500); beep(ok?SFX.right:[[392,.08]]);
+    $("#ibsFb").innerHTML=`
+      <div class="fb ${ok?"ok":"mid"} px"><span class="v">${ok?"Correct!":"Not quite"}</span><p>${esc(ok?c.right:c.wrong)}</p>
+        <p class="dyk"><b class="lbl">Did you know?</b> ${esc(c.dyk)}</p></div>
+      ${sayBox(c.then)}
+      <button type="button" class="say-btn" id="diveBtn">&#9660; Click here to dive in</button>`;
+    const box=$("#ibsFb .say"); portrait(box.querySelector("canvas"),"happy");
+    clearInterval(S.typeT); typeInto(box.querySelector(".txt"),c.then);
+    $("#diveBtn").addEventListener("click",startDive);
+    $("#ibsFb").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"});
+    $("#diveBtn").focus({preventScroll:true});
+  }));
+  opts[0].focus({preventScroll:true});
 }
 
 function startDive(){

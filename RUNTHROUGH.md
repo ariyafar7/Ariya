@@ -23,6 +23,7 @@ The page is a clean parody homepage spelled **"elgoog"** (Google backwards), so 
 |---|---|---|---|---|
 | 0 | Title: Michael beside the silhouette | outside | Michael introduces himself; a speech bubble says "Click here to play" | Stress travels from your head to your gut |
 | 0b | Play as Sam or Alex | outside | Two short cards, each with a "Click here to play" bubble, then a "Click here to dive in" bubble and a pixel zoom into the mouth | Stress looks different for everyone |
+| 0c | Quick check: what is IBS? | outside | Michael asks "have you heard of IBS?"; one multiple-choice question (what IBS stands for), feedback and a Did you know, then Michael explains that stress changes how the gut works, and the dive button | IBS is irritable bowel syndrome, and stress can contribute to its symptoms |
 | 1 | Mouth | 0.00 m | A warm-up true/false statement (stress only affects the mind?) with instant feedback, then a scenario multiple choice that differs for Sam (1am before the exam) and Alex (night before the new job) | A dry mouth and clenched jaw are stress signs |
 | 2 | Oesophagus | 0.25 m | Michael narrates the scenario; group chat: tap to reveal three messages between the brain and gut, then a multiple-choice question on what the chat shows | The brain and gut talk both ways, and each can influence the other |
 | 3 | Stomach | 0.45 m | Put the stress chain in order: steps go into the slots in any order (tap a placed step to take it back out), then it checks | Stress hormones slow the stomach, so eat small rather than skip |
