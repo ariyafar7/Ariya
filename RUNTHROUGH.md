@@ -30,7 +30,7 @@ The page is a clean parody homepage spelled **"elgoog"** (Google backwards), so 
 | 🎮 | **Mini-game 1: pop the stress bubbles** | 0.60 m | Tap 6 bubbles labelled with the person's stressors. Each one bursts with a pixel pop; once all are popped, Michael says "Woah! Lots of stressors!" and leads into breathing. | Stress travels all the way to the gut |
 | ☁ | Breathing break | 0.60 m | 3 slow breaths (skippable) | You can turn down how strongly your body reacts |
 | 4 | Small intestine | 1.20 m | Select all that apply (6 options): the gut lining becoming more permeable and the microbiome changing are both right; check, with one more try | Stress can make the gut lining leakier and shift the gut bacteria |
-| 5 | Ileum | 4.50 m | Fill the gap | Most serotonin is made in the gut, and it sets gut speed |
+| 5 | Ileum | 4.50 m | Connect the dots | Stress changes gut signals like serotonin, so food can move through faster |
 | 6 | Colon | 7.20 m | Myth-buster: "just take a probiotic" | Probiotics are an optional extra, not a fix |
 | 🎮 | **Mini-game 2: meet another microbe** | 7.80 m | Michael meets Bifi, his purple twin, a fibre-loving bacterium (*Bifidobacterium*). The player picks at least 2 of 4 questions, then Bifi joins the colony. | Stress changes the microbes' world; fibre feeds them; microbes talk back to the brain |
 | 7 | Sigmoid colon | 8.40 m | Tell the GP: tap everything worth telling the doctor (8 notes, 5 helpful, 3 unhelpful), then check the notes, each with a why | The pain is real, and a GP diagnoses IBS from the symptom pattern, so describe it clearly and never play it down |
