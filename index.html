@@ -570,6 +570,10 @@ details.more summary{font-size:10px}
 .tk-group ul{padding:0 14px 14px}
 @media (min-width: 901px){ .tk-h{font-size:11px} }
 
+/* v18: "Try this" stands out in the game's yellow */
+.more-body .try{color:var(--acid)}
+.more-body .try b{font-weight:700;color:var(--acid)}
+
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
 .btn:disabled{opacity:.45;cursor:default}
@@ -1273,9 +1277,10 @@ function linksHtml(papers){
     p.u?`<a href="${p.u}" target="_blank" rel="noopener">${esc(p.t)}</a>`
        :`<span class="pending">${esc(p.t)} (link coming soon)</span>`}</li>`).join("")}</ul>`;
 }
-function moreHtml(m,lead=[]){
+function moreHtml(m,lead=[],tip=""){
   return `<details class="more"><summary>Digest the evidence</summary><div class="more-body">
     ${lead.map(t=>`<p>${esc(fmt(t))}</p>`).join("")}
+    ${tip?`<p class="try"><b>Try this:</b> ${esc(fmt(tip))}</p>`:""}
     <p>${esc(fmt(m.text))}</p>
     ${m.papers&&m.papers.length?`<p class="rm-h">Further reading</p>${linksHtml(m.papers)}`:""}
   </div></details>`;
@@ -1463,7 +1468,7 @@ function finish(kind,verdict,text,extra=""){
       <span class="v">${esc(verdict)}</span>
       ${extra}
       <p class="dyk"><b>Did you know?</b> ${esc(fmt(st.dyk))}</p>
-      ${moreHtml(st.more,[text,"Try this: "+st.tip])}
+      ${moreHtml(st.more,[text],st.tip)}
     </div>
     <button type="button" class="btn big px" id="nextBtn">${nextLabel()}</button>`;
   $("#nextBtn").addEventListener("click",next);
