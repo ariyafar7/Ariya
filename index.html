@@ -822,6 +822,7 @@ const P = {
   lee:{t:"Lee et al. 2013 · acute stress slows stomach emptying in healthy people",u:"https://doi.org/10.1111/jgh.12309"},
   vicario:{t:"Vicario et al. 2012 · crowding stress in rats",u:"https://doi.org/10.1016/j.psyneuen.2011.05.005"},
   vanuytsel:{t:"Vanuytsel et al. 2014 · public speaking and the gut lining, Gut",u:"https://gut.bmj.com/content/63/8/1293"},
+  abubaker:{t:"Abubaker et al. 2026 · gut microbes and the serotonin made in the gut",u:"https://doi.org/10.1016/j.microb.2026.100668"},
   gershon:{t:"Gershon & Tack 2007 · serotonin in the gut, Gastroenterology",u:""},
   qin:{t:"Qin et al. 2014 · how stress affects IBS",u:"https://doi.org/10.3748/wjg.v20.i39.14126"},
   zhang:{t:"Zhang et al. 2020 · probiotics and stress in healthy adults",u:"https://pubmed.ncbi.nlm.nih.gov/32662591/"},
@@ -833,7 +834,7 @@ const P = {
   marx:{t:"Marx et al. 2017 · nutritional psychiatry",u:"https://doi.org/10.1017/S0029665117002026"},
   barbara:{t:"Barbara et al. 2004 · alarm cells next to gut nerves",u:"https://doi.org/10.1053/j.gastro.2003.11.055"},
   dickhaus:{t:"Dickhaus et al. 2003 · stress and gut sensitivity in IBS",u:"https://doi.org/10.1111/j.1572-0241.2003.07156.x"},
-  black:{t:"Black et al. 2020 · talking therapies for IBS, Gut",u:"https://gut.bmj.com/content/69/8/1441"},
+  black:{t:"Black et al. 2020 · talking therapies for IBS, Gut",u:"https://doi.org/10.1136/gutjnl-2020-321191"},
   johann:{t:"Johannesson et al. 2011 · exercise trial in IBS",u:"https://doi.org/10.1038/ajg.2010.480"},
   smith:{t:"Smith et al. 2019 · sleep and gut bacteria",u:"https://doi.org/10.1371/journal.pone.0222394"},
   bristol:{t:"Lewis & Heaton 1997 · the Bristol Stool Form Scale",u:"https://doi.org/10.3109/00365529709011203"},
@@ -932,28 +933,28 @@ const STOPS = [
 },
 {
   zone:"Ileum", depth:4.5, type:"mcq", kind:"Fill the gap",
-  scene:{sam:"Sam has been rushing to the toilet all exam week.",
-         alex:"Alex has been rushing to the toilet between meetings all week."},
-  q:"Most of the body's serotonin, a key messenger chemical, is made in the…",
-  options:["brain","gut","blood","skin"],
+  scene:{sam:"Sam's been rushing to the toilet while studying. It's happened multiple times this week.",
+         alex:"Alex has been rushing to the toilet all week, and it's disturbed multiple meetings."},
+  q:"Serotonin is a key chemical signal. Where is it mostly made?",
+  options:["Brain","Gut","Blood","Skin"],
   answer:1,
-  right:"About 9 out of 10 serotonin molecules are made in the gut lining. Stress changes these signals, so things can speed up (diarrhoea) or slow down (constipation).",
-  wrong:"It's the gut! About 9 out of 10 serotonin molecules are made in the gut lining, where they set how fast things move.",
-  dyk:"About 9 out of 10 serotonin molecules in your body are made in your gut, not your brain.",
-  tip:"Toilet changes during stressful weeks are common. Noting when they happen helps you spot your triggers.",
-  more:{text:"Special cells in the gut lining make most of the body's serotonin. In the gut, its main jobs are controlling how fast food moves, how much fluid is released and how strongly pain signals travel. That's why some IBS medicines target serotonin.",
-    papers:[P.gershon,P.qin]}
+  right:"Correct! Almost all serotonin is made in the gut. Stress makes more of these signals, making things move faster through the gut.",
+  wrong:"It's actually the gut! Almost all serotonin is made there. It helps set how fast things move through the gut.",
+  dyk:"Serotonin is also a brain chemical linked to mood, but the gut makes its own supply, which mostly works on the gut itself.",
+  tip:"Toilet changes when you're stressed are common. It can help to know what triggers them.",
+  more:{text:"Serotonin is made in the gut lining. Its main jobs are controlling how fast food moves, how much fluid the gut releases and how strong gut pain is. That's why some medicines target serotonin.",
+    papers:[P.abubaker,P.gershon,P.qin]}
 },
 {
   zone:"Colon", depth:7.2, type:"mcq", kind:"Myth-buster",
-  scene:{sam:"Sam's flatmate says, \"Just take a probiotic. It fixes stress.\"",
-         alex:"A coworker tells Alex, \"Just take a probiotic. It fixes stress.\""},
+  scene:{sam:"Sam's flatmate says, \"It's just stress, take some probiotics or something.\"",
+         alex:"A coworker tells Alex, \"Just take a probiotic, I heard it's good for stress.\""},
   q:"What does the research actually say?",
-  options:["Probiotics cure stress and anxiety","Some may slightly ease stress in healthy adults, but in young people they haven't been shown to help anxiety. They're no substitute for sleep, movement and support.","Probiotics are dangerous for everyone","Any yoghurt works the same as a probiotic supplement"],
+  options:["Probiotics cure stress and anxiety, and should be taken often.","Some may slightly ease stress in healthy adults, but in young people they haven't been shown to help anxiety. They're no substitute for sleep, movement and support.","Probiotics are unnecessary, and have little effect.","Yoghurt works the same as a probiotic supplement. {name} should buy more."],
   answer:1,
-  right:"Probiotics aren't a fix. Effects are small and depend on the exact strain. For IBS, guidelines say you can try one for up to 12 weeks, and stop if it doesn't help.",
-  wrong:"The evidence is more modest. Some probiotics may slightly ease stress, but studies in young people found no clear effect on anxiety.",
-  dyk:"Probiotics only slightly ease stress, and studies in young people found no clear effect on anxiety.",
+  right:"Probiotics aren't a complete fix! Effects are small and depend on the exact probiotic type. Guidelines say you can try probiotics for up to 12 weeks if you have IBS, and should stop if they don't help.",
+  wrong:"Not quite, the evidence for probiotics is modest. Some probiotics may help with stress, but studies in young people have found no clear effect on anxiety.",
+  dyk:"Probiotics may slightly ease stress, and studies in young people found no clear effect on anxiety.",
   tip:"Feed your gut community with regular meals and fibre that suits you. Treat probiotics as an optional extra, not a cure.",
   more:{text:"Across 7 trials in healthy adults, probiotics slightly lowered how stressed people felt, but didn't change cortisol. Across trials in 10- to 24-year-olds, there was no clear effect on anxiety. People with IBS tend to have a different mix of gut bacteria, but scientists haven't shown this causes symptoms.",
     papers:[P.zhang,P.kadosh,P.pitta,P.exam]}
@@ -997,47 +998,47 @@ const STOPS = [
   decisions:{
     sam:[
       {moment:"Night before the last exam",
-       good:{t:"Revise until a set time, then sleep at the usual hour",why:"Sleep helps the stress system reset. A small study also linked better sleep with a more varied gut community (a link, not proof)."},
-       bad:{t:"Pull an all-nighter with energy drinks",why:"Missing sleep keeps the stress alarm switched on, and Sam walks into the exam running on empty."}},
+       good:{t:"Revise until a set time, then sleep at the usual hour",why:"Sleep helps reset your stress system. A small study also linked quality sleep with a more diverse and healthy gut community."},
+       bad:{t:"Pull an all-nighter with energy drinks",why:"Sacrificing sleep keeps your internal stress alarm active, which means you head into the exam completely exhausted."}},
       {moment:"Exam-day lunch",
-       good:{t:"Have something small and plain",why:"Regular meals are standard first-line advice for IBS. Skipping meals adds to the stress load."},
-       bad:{t:"Skip it, there's no time",why:"Skipping meals adds to the stress load. Regular meals are first-line advice for IBS."}},
+       good:{t:"Have something small and plain",why:"Regular meals are standard first-line advice for managing IBS symptoms. Skipping food altogether just adds more stress to your body."},
+       bad:{t:"Skip lunch, there's no time for it",why:"Going without food increases your physical stress load, whereas eating regularly helps keep your digestive system stable."}},
       {moment:"The week after exams",
-       good:{t:"Go for a brisk 20–30 minute walk with a friend",why:"In a trial, people with IBS who exercised 3 to 5 times a week had fewer symptoms. Time with friends helps with stress too."},
-       bad:{t:"Stay in and scroll",why:"Moving your body and seeing people are two of the best-supported ways to calm the stress–gut loop."}}
+       good:{t:"Go for a brisk 20–30 minute walk with a friend",why:"A clinical trial showed that people with IBS who exercised 3 to 5 times a week experienced fewer symptoms. Catching up with friends also lowers stress."},
+       bad:{t:"Stay in and doom scroll",why:"Moving your body and socialising are two of the most effective and proven ways to interrupt a negative stress and gut loop."}}
     ],
     alex:[
       {moment:"Night before the deadline",
-       good:{t:"Stop work at a set time, then sleep at the usual hour",why:"Sleep helps the stress system reset. A small study also linked better sleep with a more varied gut community (a link, not proof)."},
-       bad:{t:"Work past midnight with energy drinks",why:"Missing sleep keeps the stress alarm switched on, and Alex starts the big day running on empty."}},
+       good:{t:"Stop working at a set time and go to sleep at the usual hour",why:"Sleep gives your stress response a chance to reset. Good sleep patterns are also linked to a healthier, more varied gut environment."},
+       bad:{t:"Keep working well past midnight with energy drinks",why:"Running on empty keeps your body in a constant state of alert, leaving you drained before the big day even starts."}},
       {moment:"Lunch on a packed workday",
-       good:{t:"Step away from the desk for something small and plain",why:"Regular meals are standard first-line advice for IBS, and a short break from the screen helps too."},
-       bad:{t:"Skip lunch and keep answering emails",why:"Skipping meals adds to the stress load. Regular meals are first-line advice for IBS."}},
+       good:{t:"Step away from your desk for a small, plain meal",why:"Eating regular meals is standard advice for managing IBS, and taking a short break from the screen helps lower your tension."},
+       bad:{t:"Skip lunch entirely to keep answering urgent emails",why:"Missing meals adds unnecessary stress to your system. Routine eating patterns are essential for keeping your gut steady."}},
       {moment:"The weekend after the deadline",
-       good:{t:"Go for a brisk 20–30 minute walk with a friend",why:"In a trial, people with IBS who exercised 3 to 5 times a week had fewer symptoms. Time with friends helps with stress too."},
-       bad:{t:"Stay in and keep checking work email",why:"Switching off, moving your body and seeing people all help calm the stress–gut loop."}}
+       good:{t:"Go for a brisk 20–30 minute walk with a friend",why:"Regular exercise has been shown to clearly reduce IBS symptoms. Getting fresh air with friends provides excellent psychological relief."},
+       bad:{t:"Stay indoors and keep checking your work emails",why:"Taking a break from work, moving your body and spending time with people all work together to calm the communication loop between your brain and gut."}}
     ]
   },
   right:"{name}'s calmer, and their gut community is happier.",
   wrong:"Small choices add up. Sleep, regular meals, moving and seeing people all help calm the loop.",
-  dyk:"Sleep, regular meals and a walk with a friend all help calm the stress–gut loop.",
-  tip:"Pick one small change, not ten. That's how habits stick.",
-  more:{text:"Across 41 trials, talking therapies like CBT (including online versions) and gut-directed hypnotherapy reduced IBS symptoms. In one trial, people with IBS who exercised 20 to 30 minutes, 3 to 5 times a week, had clearly fewer symptoms after 3 months. UK guidelines recommend regular exercise for everyone with IBS.",
+  dyk:"Small habits add up quickly. Prioritising sleep, eating regular meals, staying active and staying connected are all vital to keeping your system balanced.",
+  tip:"If you want to make a change, pick just one small habit to focus on first.",
+  more:{text:"Data from 41 clinical trials shows that talking therapies like cognitive behavioural therapy (CBT), including online programs, and gut-directed hypnotherapy significantly reduce IBS symptoms. Research also indicates that exercising for 20 to 30 minutes, three to five times a week, leads to a noticeable improvement in digestive comfort within three months. Because of this, official UK medical guidelines explicitly recommend regular exercise for anyone managing IBS.",
     papers:[P.black,P.johann,P.bsg,P.smith]}
 },
 {
   zone:"Exit", depth:8.9, type:"poo", kind:"Poo chart",
-  scene:{sam:"After weeks of exams, Sam notices their poo keeps changing: hard lumps some days, mushy on others.",
-         alex:"Since starting the job, Alex notices their poo keeps changing: hard lumps some days, mushy on others."},
-  q:"Doctors use a 7-type poo chart. Tap at least 3 types to see what they mean.",
+  scene:{sam:"After weeks of exams, Sam notices they've been running to the toilet most mornings, and their poo keeps changing: hard lumps some days, mushy on others.",
+         alex:"Since starting their corporate job, Alex notices they're rushing to the toilet much more often, and their poo keeps changing: hard lumps some days, mushy on others."},
+  q:"Doctors use a 7-type faecal chart. Tap at least 3 types to learn more about what they indicate.",
   q2:"In bad weeks, {name}'s poo is mostly types 6 and 7. Doctors would call that pattern…",
   options:["IBS with constipation (IBS-C)","IBS with diarrhoea (IBS-D)","Mixed IBS (IBS-M)","Nothing worth noting"],
   answer:1,
-  right:"Mushy or watery poo (types 6–7) on bad days points to IBS-D. Often hard lumps (types 1–2) points to IBS-C, and often both is mixed IBS (IBS-M). Only a doctor can diagnose IBS.",
-  wrong:"Types 6–7 (mushy or watery) on bad days point to IBS with diarrhoea (IBS-D). Often types 1–2 points to IBS-C, and often both is mixed IBS (IBS-M). Only a doctor can diagnose IBS.",
-  dyk:"About 1 in 25 people worldwide have IBS, and the type of poo can show which kind.",
-  tip:"Jot down your poo type for a week or two. It makes a GP visit much easier. Blood or black poo always needs checking.",
-  more:{text:"The Bristol Stool Form Scale sorts poo into 7 types, from hard lumps (type 1) to watery (type 7). Harder types usually mean food moved through slowly, and looser types that it moved fast. For IBS, doctors look at poo on days with symptoms: often types 1–2 is IBS with constipation, often types 6–7 is IBS with diarrhoea, and often both is mixed IBS. Stress can speed the gut up or slow it down, so many people see their type shift in stressful weeks. Doctors diagnose IBS using a checklist called the Rome IV criteria: repeated tummy pain, linked to changes in poo, for at least 3 months. When researchers pooled studies of more than 80,000 people in 34 countries, about 4 in 100 met it. Older, looser checklists gave about 9 in 100, which is why you'll see bigger numbers quoted elsewhere. Tests usually show a normal-looking gut, but the symptoms are real.",
+  right:"Types 6–7 mean the gut is moving too fast, which fits IBS-D. If it were mostly hard lumps it would be IBS-C, and a mix of both would be IBS-M. IBS can only be diagnosed by a doctor.",
+  wrong:"Almost there! Types 6–7 mean the gut is moving too fast, which fits IBS-D. If it were mostly hard lumps it would be IBS-C, and a mix of both would be IBS-M. IBS can only be diagnosed by a doctor.",
+  dyk:"About 1 in 25 people worldwide have IBS, and the type of poo can show which kind they have.",
+  tip:"Observe your poo for a week or two, as it makes a GP visit much easier. If you notice it's bloody or black, see a doctor straight away.",
+  more:{text:"The Bristol Stool Form Scale sorts poo into 7 types, from hard lumps (type 1) to watery (type 7). Harder poos generally mean food has moved through slowly, and looser types indicate faster movement. In IBS, doctors look at poo on days with symptoms, alongside other symptoms: mostly types 1–2 points to IBS with constipation, types 6–7 to IBS with diarrhoea, and both to mixed IBS. Stress can speed up or slow down the gut, so many people see their poo type shift during stressful periods. Doctors use a checklist called the Rome IV criteria to diagnose IBS. It looks for repeated tummy pain linked to changes in poo, for at least 3 months.",
     papers:[P.bristol,P.romecard,P.oka,P.meds]}
 }
 ];
@@ -1047,7 +1048,7 @@ const POO_TYPES = [
   {n:1,name:"Hard lumps",look:"Separate hard lumps, like nuts. Hard to pass.",means:"Constipation: food moved through slowly.",tag:"Linked to IBS-C"},
   {n:2,name:"Lumpy sausage",look:"Sausage-shaped but lumpy.",means:"Mild constipation.",tag:"Linked to IBS-C"},
   {n:3,name:"Cracked sausage",look:"Like a sausage, with cracks on the surface.",means:"Normal.",tag:"Healthy range"},
-  {n:4,name:"Smooth snake",look:"Smooth and soft, like a sausage or snake.",means:"Normal, and usually the easiest to pass.",tag:"Healthy range"},
+  {n:4,name:"Smooth sausage",look:"Smooth and soft, like a sausage.",means:"Normal, and usually the easiest to pass.",tag:"Healthy range"},
   {n:5,name:"Soft blobs",look:"Soft blobs with clear-cut edges. Easy to pass.",means:"On the soft side. Often fine, but leaning loose.",tag:"Borderline"},
   {n:6,name:"Mushy",look:"Fluffy, mushy pieces with ragged edges.",means:"Mild diarrhoea: food moved through fast.",tag:"Linked to IBS-D"},
   {n:7,name:"Watery",look:"Watery, with no solid pieces.",means:"Diarrhoea.",tag:"Linked to IBS-D"}
@@ -1056,22 +1057,22 @@ const POO_TYPES = [
 /* Mini-game 2 (after stop 6): meet Bifi, Michael's purple twin (a fibre-loving Bifidobacterium) */
 const MEET = {
   open:[
-    ["bifi","Oh! Hi, Michael. I'm Bifi, short for Bifidobacterium. Sorry, I'm a bit frazzled. Ever since {stressor} started, our neighbourhood has changed."],
-    ["michael","Nice to meet you, Bifi. We could be twins! What's going on down here?"]
+    ["bifi","Oh! Hi, Michael! It seems you brought a friend! I'm Bifi, short for Bifidobacterium, a kind of bacterium. Sorry, I'm a bit frazzled. Ever since {stressor} started, our neighbourhood has changed."],
+    ["michael","Oh no, Bifi! What's going on down here?"]
   ],
   questions:[
     {ask:"Why is everything moving so differently?",
-     reply:"Stress signals from the brain change how fast the gut moves. Some days everything rushes through, so there's less time for us to eat. Other days it crawls and backs up."},
+     reply:"Stress signals from the brain change how fast the gut moves. Some days everything rushes through, other days it crawls and backs up."},
     {ask:"Why are some microbes crowding the wall?",
-     reply:"When stress goes on for a while, the mix of microbes can shift, and some bacteria cling closer to the gut wall, right next to the immune system. Scientists are still working out how much this matters for IBS."},
+     reply:"When stress goes on for a while, the mix of microbes can shift, and some bacteria cling closer to the gut wall, where they can stir up the immune system. Scientists are still working out how much this matters for IBS."},
     {ask:"What do you need to thrive?",
-     reply:"Fibre! I ferment it into short-chain fatty acids, which help keep the gut lining healthy. For people with IBS, gentle soluble fibre like oats suits best, added slowly."},
+     reply:"Fibre! I use it to keep the gut healthy! For people with IBS, gentle fibre-rich foods like oats suit best, added slowly."},
     {ask:"Can we microbes talk back to the brain?",
-     reply:"We sure can. We make chemicals that send signals through nerves like the vagus nerve and through the immune system. Scientists call it the microbiota–gut–brain axis."}
+     reply:"We sure can. We make chemicals that send signals through nerves and through the immune system. Scientists call it the microbiota–gut–brain axis."}
   ],
   close:[
     ["michael","Thanks, Bifi. Want to come along for the rest of the dive?"],
-    ["bifi","Count me in! Look after {name}'s stress and you look after all of us."]
+    ["bifi","Count me in!"]
   ],
   more:{text:"Stress can change how fast the gut moves and the mix of microbes living there. Fibre that bacteria can ferment helps them make substances that support the gut lining. For IBS, guidelines suggest soluble fibre (like oats or psyllium), added gradually. Wheat bran can make IBS worse.",
     papers:[P.tache,P.cryan,P.fibre,P.bsg]}
@@ -1882,7 +1883,7 @@ function next(){
   if(S.idx===STOPS.length-1){ renderSort(); return; }
   beep(SFX.dive);
   if(S.idx===2){ travel(2.5,0.6,"Leaving the stomach... uh oh. What's floating down?",playBubbles); return; }
-  if(S.idx===5){ travel(5.5,7.8,"Hang on, someone's waving at us...",playMeet); return; }
+  if(S.idx===5){ travel(5.5,7.8,"Hang on, my friend is waving at us...",playMeet); return; }
   descendTo(S.idx+1);
 }
 
@@ -2009,8 +2010,8 @@ function playMeet(){
       $("#wrapUp")?.addEventListener("click",()=>{ ended=true; lines.push(...MEET.close); draw(); });
     } else {
       S.guest=false; addFriend("bifi"); setMood("wow",1800); beep(SFX.right);
-      ch.innerHTML=`<div class="fb ok px"><span class="v">Bifi joined the colony!</span>
-          <p>${esc(fmt("Stress changes the world gut microbes live in, and they talk back to the brain. Looking after {name}'s stress, sleep and food looks after them too."))}</p>
+      ch.innerHTML=`<div class="fb ok px"><span class="v">Bifi joined the journey!</span>
+          <p>${esc(fmt("Stress changes the gut microbiome, and the microbes talk back to the brain. Eat right to treat {name} right!"))}</p>
           ${moreHtml(MEET.more)}
         </div>
         <button type="button" class="btn big px" id="nextBtn">Keep diving &#9660;</button>`;
