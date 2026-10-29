@@ -650,6 +650,8 @@ details.more summary{font-size:10px}
 .gpnote.hit,.gpnote.wrongpick{animation:gpReveal .25s ease-out}
 @keyframes gpReveal{from{opacity:.6;scale:.98}to{opacity:1;scale:1}}
 @media (prefers-reduced-motion: reduce){ .gpnote.hit,.gpnote.wrongpick{animation:none} }
+/* "Try this instead" reads as advice, so it uses the same yellow as the Try this labels */
+.gpnote.wrongpick .gp-why b,.gpnote.skipped .gp-why b{color:var(--acid)}
 
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
@@ -1818,7 +1820,7 @@ function playGp(st,el){
   const reveal=(b,cls)=>{
     const n=st.notes[+b.dataset.i];
     b.disabled=true; b.classList.add(cls);
-    b.insertAdjacentHTML("beforeend",`<small class="gp-why"><b>${n.good?"&#10004; Worth telling the GP":"&#10008; Best left out"}</b>${esc(fmt(n.why))}</small>`);
+    b.insertAdjacentHTML("beforeend",`<small class="gp-why"><b>${n.good?"&#10004; Worth telling the GP":"Try this instead"}</b>${esc(fmt(n.why))}</small>`);
   };
   const done=()=>{
     if(S.answered) return;
@@ -1832,7 +1834,7 @@ function playGp(st,el){
     const n=st.notes[+b.dataset.i];
     reveal(b,n.good?"hit":"wrongpick");
     if(n.good){ found++; beep([[659,.04],[880,.06]]); } else { wrong++; beep(SFX.wrong); }
-    $("#gpTally").textContent=`${n.good?"Worth telling the GP.":"Best left out."} Found ${found} of ${goods} things worth telling the GP.`;
+    $("#gpTally").textContent=`${n.good?"Worth telling the GP.":"Try this instead."} Found ${found} of ${goods} things worth telling the GP.`;
     $("#gpCheck").disabled=false;
     if(found===goods){ done(); return; }
     (notes.find(x=>!x.disabled)||$("#gpCheck")).focus({preventScroll:true});
