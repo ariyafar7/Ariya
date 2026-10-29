@@ -790,7 +790,8 @@ const P = {
   brux:{t:"Stress and jaw clenching · Frontiers in Neurology 2020",u:"https://www.frontiersin.org/articles/10.3389/fneur.2020.590779/full"},
   koloski:{t:"Koloski et al. 2012 · 12-year brain–gut study, Gut",u:"https://gut.bmj.com/content/61/9/1284"},
   cryan:{t:"Cryan et al. 2019 · the microbiota–gut–brain axis",u:"https://doi.org/10.1152/physrev.00018.2018"},
-  tache:{t:"Taché & Bonaz 2007 · stress signals and gut movement",u:"https://doi.org/10.1172/JCI30085"},
+  tache:{t:"Taché & Bonaz 2007 · why stress can alter stomach movement",u:"https://doi.org/10.1172/JCI30085"},
+  lee:{t:"Lee et al. 2013 · acute stress slows stomach emptying in healthy people",u:"https://doi.org/10.1111/jgh.12309"},
   vicario:{t:"Vicario et al. 2012 · crowding stress in rats",u:"https://doi.org/10.1016/j.psyneuen.2011.05.005"},
   vanuytsel:{t:"Vanuytsel et al. 2014 · public speaking and the gut lining, Gut",u:"https://gut.bmj.com/content/63/8/1293"},
   gershon:{t:"Gershon & Tack 2007 · serotonin in the gut, Gastroenterology",u:""},
@@ -849,8 +850,8 @@ const STOPS = [
 {
   zone:"Oesophagus", depth:0.25, type:"chat", kind:"Group chat",
   // no say line: Michael tells the scenario himself
-  scene:{sam:"Sam feels a lump in their throat outside the exam hall as last-minute revision messages flood their phone.",
-         alex:"Alex feels a lump in their throat before their first team meeting as messages from their new manager appear."},
+  scene:{sam:"It's exam day. Sam feels a lump in their throat outside the hall as last-minute revision messages flood their phone.",
+         alex:"It's exam day. Alex feels a lump in their throat before their first team meeting as messages from their new manager appear."},
   q:"Tap each message to read the chat between {name}'s brain and gut.",
   // the brain–gut group chat, revealed one message at a time
   chat:[
@@ -872,10 +873,10 @@ const STOPS = [
 },
 {
   zone:"Stomach", depth:0.45, type:"order", kind:"Put in order",
-  say:"Splash! Stomach acid! And a stress signal from {name}'s brain just arrived.",
-  scene:{sam:"It's exam morning and Sam can't face breakfast.",
+  say:"Splash! Stomach acid! And the stress signal from {name}'s brain just arrived.",
+  scene:{sam:"Sam is having difficulty facing their breakfast. It's exam morning.",
          alex:"It's the morning of Alex's first big client call and they can't face breakfast."},
-  q:"Tap the stress chain in order, from first to last.",
+  q:"Rearrange the stress chain to the correct order, from first to last.",
   steps:[
     "{name}'s brain spots the stress",
     "A gland under the brain passes the message on",
@@ -884,22 +885,22 @@ const STOPS = [
   ],
   right:"That's the body's stress alarm system. It's useful for a short burst, but if it stays switched on for weeks, the gut feels it.",
   wrong:"Here's the right order. It's the body's stress alarm system: useful for a short burst, hard on the gut if it stays on for weeks.",
-  dyk:"Cortisol, the stress hormone, can slow your stomach down. That's why stress can kill your appetite.",
+  dyk:"Cortisol, the stress hormone, can slow your stomach down. That's why stress can reduce your appetite.",
   tip:"Losing your appetite under stress is common. Something small and plain beats skipping meals altogether.",
   more:{text:"The stress alarm runs from the brain (the hypothalamus) to a gland below it (the pituitary) and then to the adrenal glands, which release cortisol. The brain's first stress messenger, CRF, also acts on the gut directly and changes how fast the stomach and bowel move. In one study, rats kept in crowded cages for two weeks had about three and a half times more stress hormone than calm rats.",
-    papers:[P.tache,P.vicario]}
+    papers:[P.tache,P.lee]}
 },
 {
   zone:"Small intestine", depth:1.2, type:"mcq", kind:"Scenario",
-  say:"Most food gets absorbed here, through a wall just one cell thick.",
-  scene:{sam:"Sam has to give a class presentation, and their heart is racing.",
-         alex:"Alex has to present their first project update to the whole team, and their heart is racing."},
-  q:"What's most likely happening in {name}'s small intestine?",
-  options:["Nothing. The intestine can't sense stress","The gut lining briefly lets more through, especially if {name}'s stress hormone spikes","The intestine stops working completely","The gut lining gets thicker and stronger"],
-  answer:1,
-  right:"When healthy volunteers had to give a speech, their gut lining got leakier, but only in people whose stress hormone rose. A short burst like this usually settles.",
-  wrong:"The gut does react. Stress can make the gut lining let more through for a while.",
-  dyk:"Giving a speech made volunteers' gut lining leakier, but only in people whose stress hormone rose.",
+  say:"Most nutrients are absorbed here, through a lining just one cell thick. That lining also helps keep unwanted substances out.",
+  scene:{sam:"Sam is about to give a class presentation, and their heart is racing.",
+         alex:"Alex is about to present their first project update to the whole team, and their heart is racing."},
+  q:"What changes might stress cause in {name}'s intestines?",
+  options:["The gut lining may become more permeable, and the balance of gut bacteria may change.","The gut lining becomes less permeable, and all gut bacteria stop growing.","The gut lining becomes permanently damaged, and all helpful bacteria disappear.","Stress affects digestion but cannot affect the gut lining or gut bacteria."],
+  answer:0,
+  right:"Exactly! Stress may affect the gut lining and alter the gut microbiota. These changes vary between people, and researchers are still investigating how they contribute to IBS.",
+  wrong:"Not quite! Stress can affect gut function and may influence both the gut lining and its microbial community, but these effects aren't inevitable or the same for everyone.",
+  dyk:"Most gut bacteria live in the large intestine, where they help break down parts of food that your body can't digest on its own.",
   tip:"Short bursts of stress pass. Weeks with no break wear the gut down, so build rest into busy periods.",
   more:{text:"Healthy volunteers who had to give a public speech developed a leakier small intestine, but only those whose stress hormone went up. A drug that calms \"alarm cells\" in the gut wall stopped this from happening. In rats, two weeks of crowding kept the lining leaky for up to a week after the stress ended. Scientists are still working out how big this effect is in everyday life.",
     papers:[P.vanuytsel,P.vicario]}
@@ -1865,9 +1866,8 @@ function playBubbles(){
       setTimeout(clearOverlay,700);
       S.moodUntil=0; setMood("wow",1800); addFriend(); beep(SFX.right);
       $("#popEnd").innerHTML=`
-        <div class="fb ok px"><span class="v">Bubble buster!</span>
-          <p class="dyk"><b class="lbl">Did you know?</b> You can't pop every stressor, but you can calm how strongly your body reacts.</p>
-          ${moreHtml({text:"That's the stress chain, all the way from the brain to the gut bacteria. "+"Stress signals from the brain (CRF and cortisol) and the nervous system reach the gut. They change how fast it moves, how much the lining lets through, how sensitive gut nerves are, and the world gut bacteria live in.",papers:[P.tache,P.qin]})}
+        <div class="fb ok px"><span class="v">Woah! Lots of stressors!</span>
+          <p class="dyk"><b class="lbl">Did you know?</b> You don't have to just sit through the stress, there are ways to calm yourself down, let's start by breathing!</p>
         </div>
         <button type="button" class="btn big px" id="toBreathe">Breathe with Michael &#9654;</button>`;
       $("#toBreathe").addEventListener("click",renderBreathe);
