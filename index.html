@@ -789,6 +789,19 @@ const CHARS = {
        stressor:"Alex's new job", bubbles:["Inbox 99+","Deadline","Manager","Commute","Rent","No sleep"]}
 };
 
+/* What Michael says between stops. {name} becomes Sam or Alex. */
+const LINES = {
+  hello:"Hi! I'm Michael, one of the trillions of microbes living in your gut. Stress doesn't stay in your head. It can change what happens all the way down here too!",
+  disclaimer:"General health information, not medical advice. If gut symptoms are affecting your life, talk to a doctor.",
+  choose:"Stress looks different for everyone. Who do you want to play as?",
+  go:"Great! {name} is about to have a stressful week. Let's shrink down and dive into their gut.",
+  dive:"Shrinking down... first stop, {name}'s mouth!",
+  popIntro:"Whoa! {name}'s stress is sending signals all the way down here. Tap the stress bubbles before they reach the gut lining!",
+  bubblesDone:"Woah! Lots of stressors!",
+  bubblesDyk:"You don't have to just sit through the stress, there are ways to calm yourself down, let's start by breathing!",
+  bye:"That's the end of the line. Time for me to go! Bye, {name}. Look after that gut."
+};
+
 const P = {
   oka:{t:"Oka et al. 2020 · how common IBS is worldwide",u:"https://pubmed.ncbi.nlm.nih.gov/32702295/"},
   meds:{t:"IBS in medical students · review of 43 studies",u:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12745469/"},
@@ -1349,7 +1362,7 @@ const pick = v => (v && typeof v==="object" && !Array.isArray(v) && ("sam" in v 
 
 function linksHtml(papers){
   return `<ul class="links">${papers.map(p=>`<li>${
-    p.u?`<a href="${p.u}" target="_blank" rel="noopener">${esc(p.t)}</a>`
+    p.u?`<a href="${esc(p.u)}" target="_blank" rel="noopener">${esc(p.t)}</a>`
        :`<span class="pending">${esc(p.t)} (link coming soon)</span>`}</li>`).join("")}</ul>`;
 }
 function moreHtml(m,lead=[],tip=""){
@@ -1456,12 +1469,12 @@ function drawBifi(c,x,y,t,mood){ drawMichael(c,x,y,mood||"happy",t,true,BIFI_PAL
 function renderIntro(){
   S.phase="intro"; S.outside=true; S.zoom=0; S.fade=0; S.guest=false;
   updateHud();
-  const hello="Hi! I'm Michael, one of the trillions of microbes living in your gut. Stress doesn't stay in your head. It can change what happens all the way down here too!";
+  const hello=LINES.hello;
   sheet.innerHTML = `
     <div class="title-card"><p class="big"><span>Michael</span><br>the Microbe</p></div>
     ${sayBox(hello)}
     <button type="button" class="say-btn" id="startBtn">&#9654; Click here to play</button>
-    <p class="fine">General health information, not medical advice. If gut symptoms are affecting your life, talk to a doctor.</p>`;
+    <p class="fine">${esc(LINES.disclaimer)}</p>`;
   sheet.scrollTop=0;
   mountSay(hello);
   $("#startBtn").addEventListener("click",()=>{ beep(SFX.start); renderChoose(); });
@@ -1469,7 +1482,7 @@ function renderIntro(){
 
 function renderChoose(){
   S.phase="choose"; S.outside=true; updateHud();
-  const line="Stress looks different for everyone. Who do you want to play as?";
+  const line=LINES.choose;
   sheet.innerHTML=`
     ${sayBox(line)}
     <div class="chars" role="group" aria-label="Choose who to play as">
@@ -1486,7 +1499,7 @@ function renderChoose(){
 
 /* Quick check: what is IBS? Then Michael sets up the dive. */
 function renderIbsCheck(){
-  const c=IBS_CHECK, go=fmt("Great! {name} is about to have a stressful week. Let's shrink down and dive into their gut. "+c.ask);
+  const c=IBS_CHECK, go=fmt(LINES.go+" "+c.ask);
   sheet.innerHTML=`${sayBox(go)}
     <div class="meta"><span class="chip k px">Quick check</span></div>
     <p class="q" id="qText">${esc(c.q)}</p>
@@ -1517,7 +1530,7 @@ function renderIbsCheck(){
 
 function startDive(){
   S.phase="zoom"; clearInterval(S.typeT);
-  const line=fmt("Shrinking down... first stop, {name}'s mouth!");
+  const line=fmt(LINES.dive);
   sheet.innerHTML=sayBox(line); mountSay(line);
   beep(SFX.dive);
   const dur=reduce?0:3600, t0=performance.now();
@@ -1870,7 +1883,7 @@ const BUBBLE_SPOTS=[{x:22,y:28},{x:68,y:24},{x:30,y:66},{x:72,y:60},{x:14,y:47},
 function playBubbles(){
   S.phase="mini1"; updateHud(); clearOverlay();
   const labels=who().bubbles; let popped=0;
-  const line=fmt("Whoa! {name}'s stress is sending signals all the way down here. Tap the stress bubbles before they reach the gut lining!");
+  const line=fmt(LINES.popIntro);
   sheet.innerHTML=`
     <div class="meta"><span class="chip k px">Mini-game</span></div>
     ${sayBox(line)}
@@ -1896,8 +1909,8 @@ function playBubbles(){
       setTimeout(clearOverlay,700);
       S.moodUntil=0; setMood("wow",1800); addFriend(); beep(SFX.right);
       $("#popEnd").innerHTML=`
-        <div class="fb ok px"><span class="v">Woah! Lots of stressors!</span>
-          <p class="dyk"><b class="lbl">Did you know?</b> You don't have to just sit through the stress, there are ways to calm yourself down, let's start by breathing!</p>
+        <div class="fb ok px"><span class="v">${esc(fmt(LINES.bubblesDone))}</span>
+          <p class="dyk"><b class="lbl">Did you know?</b> ${esc(fmt(LINES.bubblesDyk))}</p>
         </div>
         <button type="button" class="btn big px" id="toBreathe">Breathe with Michael &#9654;</button>`;
       $("#toBreathe").addEventListener("click",renderBreathe);
@@ -2072,7 +2085,7 @@ function startFinale(){
   S.phase="finale"; S.outside=false; S.scene="tunnel"; S.morph=0; S.hop=0; S.drop=0; S.splash=0; S.flush=0; S.fade=0;
   S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M; updateHud();
   clearInterval(S.typeT); clearOverlay(); showTheEnd(false);
-  const line=fmt("That's the end of the line. Time for me to go! Bye, {name}. Look after that gut.");
+  const line=fmt(LINES.bye);
   sheet.innerHTML=sayBox(line); mountSay(line,"wow");
   beep([[784,.08],[659,.08],[523,.08],[392,.16]]);
   if(reduce){ renderEnd(); return; }
@@ -2110,7 +2123,7 @@ function toolkitHtml(){
     <h3 id="tkTitle">Your gut toolkit</h3>
     <p class="tk-lead">Practical things that help with stress, the gut and IBS, and trusted places to start. Tap an area to open it.</p>
     ${TOOLKIT.map(g=>`<details class="tk-group px${g.urgent?" urgent":""}"${g.urgent?" open":""}><summary><span class="tk-h">${esc(g.h)}</span><span class="tk-n">${g.items.length} ${g.items.length>1?"tips":"tip"}</span></summary><ul>${g.items.map(it=>`<li><p>${esc(it.t)}</p>
-      <span class="tk-links">${it.links.map(([l,u])=>`<a class="tk-link px" href="${u}"${u.startsWith("tel:")?"":' target="_blank" rel="noopener"'}>${esc(l)}${u.startsWith("tel:")?"":' <span aria-hidden="true">&#8599;</span>'}</a>`).join("")}</span></li>`).join("")}</ul></details>`).join("")}
+      <span class="tk-links">${it.links.map(([l,u])=>`<a class="tk-link px" href="${esc(u)}"${u.startsWith("tel:")?"":' target="_blank" rel="noopener"'}>${esc(l)}${u.startsWith("tel:")?"":' <span aria-hidden="true">&#8599;</span>'}</a>`).join("")}</span></li>`).join("")}</ul></details>`).join("")}
   </section>`;
 }
 function renderEnd(){
