@@ -570,9 +570,9 @@ details.more summary{font-size:10px}
 .tk-group ul{padding:0 14px 14px}
 @media (min-width: 901px){ .tk-h{font-size:11px} }
 
-/* v18: "Try this" stands out in the game's yellow */
-.more-body .try{color:var(--acid)}
-.more-body .try b{font-weight:700;color:var(--acid)}
+/* v19: labels (Did you know? / Try this: / Summary:) in the game's yellow; the text after them stays white */
+.lbl,.more-body .lbl,.fb .lbl{color:var(--acid);font-weight:700}
+.fb .dyk b.lbl{display:inline;font-family:var(--f-body);font-size:inherit;letter-spacing:0;margin:0;text-transform:none}
 
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
@@ -1280,8 +1280,8 @@ function linksHtml(papers){
 function moreHtml(m,lead=[],tip=""){
   return `<details class="more"><summary>Digest the evidence</summary><div class="more-body">
     ${lead.map(t=>`<p>${esc(fmt(t))}</p>`).join("")}
-    ${tip?`<p class="try"><b>Try this:</b> ${esc(fmt(tip))}</p>`:""}
-    <p>${esc(fmt(m.text))}</p>
+    ${tip?`<p><b class="lbl">Try this:</b> ${esc(fmt(tip))}</p>`:""}
+    <p>${m.plain?"":`<b class="lbl">Summary:</b> `}${esc(fmt(m.text))}</p>
     ${m.papers&&m.papers.length?`<p class="rm-h">Further reading</p>${linksHtml(m.papers)}`:""}
   </div></details>`;
 }
@@ -1467,7 +1467,7 @@ function finish(kind,verdict,text,extra=""){
     <div class="fb ${kind} px">
       <span class="v">${esc(verdict)}</span>
       ${extra}
-      <p class="dyk"><b>Did you know?</b> ${esc(fmt(st.dyk))}</p>
+      <p class="dyk"><b class="lbl">Did you know?</b> ${esc(fmt(st.dyk))}</p>
       ${moreHtml(st.more,[text],st.tip)}
     </div>
     <button type="button" class="btn big px" id="nextBtn">${nextLabel()}</button>`;
@@ -1752,7 +1752,7 @@ function playBubbles(){
       S.moodUntil=0; setMood("wow",1800); addFriend(); beep(SFX.right);
       $("#popEnd").innerHTML=`
         <div class="fb ok px"><span class="v">Bubble buster!</span>
-          <p class="dyk"><b>Did you know?</b> You can't pop every stressor, but you can calm how strongly your body reacts.</p>
+          <p class="dyk"><b class="lbl">Did you know?</b> You can't pop every stressor, but you can calm how strongly your body reacts.</p>
           ${moreHtml({text:"That's the stress chain, all the way from the brain to the gut bacteria. "+"Stress signals from the brain (CRF and cortisol) and the nervous system reach the gut. They change how fast it moves, how much the lining lets through, how sensitive gut nerves are, and the world gut bacteria live in.",papers:[P.tache,P.qin]})}
         </div>
         <button type="button" class="btn big px" id="toBreathe">Breathe with Michael &#9654;</button>`;
@@ -1983,7 +1983,7 @@ function renderEnd(){
       <button type="button" class="ghost px" id="shareBtn">Copy a message for a friend</button>
     </div>
     <p class="fine" id="shareMsg" aria-live="polite"></p>
-    ${moreHtml({text:"These are the main papers behind the game. Some are free to read, and others may only show a summary.",papers:allPapers},TAKEAWAYS)}
+    ${moreHtml({text:"These are the main papers behind the game. Some are free to read, and others may only show a summary.",papers:allPapers,plain:true},TAKEAWAYS)}
     <p class="fine">General health information, not medical advice. The services listed are Australian; elsewhere, ask your local doctor or health service. A concept Doodle made for a university project.</p>`;
   sheet.scrollTop=0;
   setMood("wow",2500); beep(SFX.end);
