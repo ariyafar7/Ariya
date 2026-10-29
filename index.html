@@ -616,13 +616,13 @@ details.more summary{font-size:10px}
 .opt.missed{box-shadow:inset 0 0 0 3px var(--orange)}
 .opt.missed .L{background:var(--orange);color:var(--k)}
 
-/* Organ title at each stop: big, centred, fades over from the previous organ */
-.sheet h2.organ{display:grid;place-items:center;margin:2px 0 4px;text-align:center;font-size:clamp(22px,2.3vw,30px);line-height:1.25;color:var(--ink);text-shadow:3px 3px 0 var(--k)}
-.organ > span{grid-area:1/1}
-.organ.fade .was{animation:organOut .6s ease-in forwards}
-.organ.fade .now{opacity:0;animation:organIn .7s ease-out .45s forwards}
-@keyframes organOut{to{opacity:0}}
+/* Organ name at the bottom of the gut scene; fades from the last organ to the next */
+.organ-tag{position:absolute;left:12px;right:12px;bottom:5%;z-index:2;display:grid;place-items:center;pointer-events:none;text-align:center}
+.organ-tag span{grid-area:1/1;padding:4px 12px 6px;background:rgba(13,7,16,.55);font-family:var(--f-pixel);font-size:clamp(20px,2.3vw,30px);line-height:1.2;letter-spacing:.04em;color:var(--ink);text-shadow:3px 3px 0 var(--k),-1px -1px 0 var(--k);animation:organIn .7s ease-out .35s both}
+.organ-tag span.out{animation:organOut .6s ease-in forwards}
+@keyframes organOut{from{opacity:1}to{opacity:0}}
 @keyframes organIn{from{opacity:0}to{opacity:1}}
+@media (prefers-reduced-motion: reduce){ .organ-tag span{animation:none} .organ-tag span.out{display:none} }
 
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
@@ -688,6 +688,7 @@ details.more summary{font-size:10px}
       <div class="scene" id="sceneWrap">
         <canvas id="scene" aria-hidden="true"></canvas>
         <canvas id="zoomcv" aria-hidden="true"></canvas>
+        <div class="organ-tag" id="organTag" aria-hidden="true"></div>
       </div>
       <div class="sheet" id="sheet" aria-live="polite"></div>
       <nav class="skipnav" aria-label="Skip to a section">
@@ -1465,7 +1466,6 @@ function drawBifi(c,x,y,t,mood){ drawMichael(c,x,y,mood||"happy",t,true,BIFI_PAL
    Opening: title -> choose a person -> zoom into the body
 ---------------------------------------------------------------- */
 function renderIntro(){
-  lastOrgan=null;
   S.phase="intro"; S.outside=true; S.zoom=0; S.fade=0; S.guest=false;
   updateHud();
   const hello=LINES.hello;
@@ -1549,18 +1549,20 @@ function startDive(){
 /* ---------------------------------------------------------------
    A stop: shared frame + one of five interactions
 ---------------------------------------------------------------- */
-/* The organ's name, centred at the top of the text screen; it fades over from the last organ's name. */
-let lastOrgan=null;
-function organTitle(zone){
-  const prev=lastOrgan; lastOrgan=zone;
-  const fade=prev && prev!==zone && !reduce;
-  return `<h2 class="organ${fade?" fade":""}">${fade?`<span class="was" aria-hidden="true">${esc(prev)}</span>`:""}<span class="now">${esc(zone)}</span></h2>`;
+/* The organ's name sits at the bottom of the gut scene. When Michael reaches the next organ,
+   the old name fades out as the new one fades in. Called from the map label update, every frame. */
+let organShown=null;
+function setOrganTag(name){
+  if(name===organShown) return; organShown=name;
+  const box=$("#organTag");
+  box.querySelectorAll("span:not(.out)").forEach(o=>{ o.classList.add("out"); setTimeout(()=>o.remove(),reduce?0:700); });
+  if(name){ const s=document.createElement("span"); s.textContent=name; box.appendChild(s); }
 }
 function renderStop(){
   const st=STOPS[S.idx];
   S.answered=false; S.tries=0;
   sheet.innerHTML=`
-    ${organTitle(st.zone)}
+    <h2 class="sr">${esc(st.zone)}</h2>
     ${sayBox(fmt(st.say??pick(st.scene)))}
     ${st.say?`<p class="scenario">${esc(fmt(pick(st.scene)))}</p>`:""}
     <p class="q" id="qText">${esc(fmt(st.q))}</p>
@@ -2768,6 +2770,7 @@ function updateMapLabel(){
     const p=clamp(S.pos||0,0,STOPS.length-1), zi=Math.floor(p+1e-6);
     zone=STOPS[zi].zone; sub="";
   }
+  setOrganTag(S.scene==="toilet"||S.outside?"":zone);
   const txt=zone+"|"+sub;
   if(txt===mapText) return; mapText=txt;
   $("#mapZone").textContent=zone; $("#mapSub").textContent=sub;
