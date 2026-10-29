@@ -1107,6 +1107,12 @@ $("#sfxBtn").addEventListener("click",e=>{
    fades out when the game is closed and picks up where it left off. */
 const music=$("#music"), MUSIC_VOL=.5;
 let musicOn=true, musicFade=null;
+music.loop=true;
+// backup for browsers that ignore loop: when the track ends, start it again from the top
+music.addEventListener("ended",()=>{
+  if(!musicOn || !document.body.classList.contains("playing")) return;
+  music.currentTime=0; music.play().catch(()=>{});
+});
 function fadeMusic(to,ms,done){
   clearInterval(musicFade);
   const from=music.volume, t0=performance.now();
