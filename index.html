@@ -778,7 +778,7 @@ const TOTAL_M = 8.9;
 
 /* ---------------------------------------------------------------
    Content. Edit text here. {name} becomes Sam or Alex.
-   scene/decisions have a version for each character.
+   scene/decisions have a version for each character. Michael's speech bubble at each stop says the scenario.
    Digest the evidence = a short plain summary + optional papers. Sources: EVIDENCE.md.
    A paper with no url shows "link coming soon" until fact-checked.
 ---------------------------------------------------------------- */
@@ -832,7 +832,6 @@ const IBS_CHECK = {
 const STOPS = [
 {
   zone:"Mouth", depth:0.0, type:"tfmcq", kind:"True or false, then a scenario",
-  say:"First stop, the mouth! Digestion starts here, and so do a lot of stress signs.",
   scene:{sam:"It's 1am before Sam's first exam, there are flashcards and energy drinks everywhere, their mouth feels dry and their jaw aches from clenching.",
          alex:"It's the night before Alex's first day at the new job. Their mouth feels dry and their jaw aches from clenching."},
   q:"True or false?",
@@ -854,7 +853,6 @@ const STOPS = [
 },
 {
   zone:"Oesophagus", depth:0.25, type:"chat", kind:"Group chat",
-  // no say line: Michael tells the scenario himself
   scene:{sam:"It's exam day. Sam feels a lump in their throat outside the hall as last-minute revision messages flood their phone.",
          alex:"It's Alex's first day. Alex feels a lump in their throat before their first team meeting as messages from their new manager appear."},
   q:"Tap each message to read the chat between {name}'s brain and gut.",
@@ -878,7 +876,6 @@ const STOPS = [
 },
 {
   zone:"Stomach", depth:0.45, type:"order", kind:"Put in order",
-  say:"Splash! Stomach acid! And the stress signal from {name}'s brain just arrived.",
   scene:{sam:"It's the morning of Sam's second exam, and they're having difficulty facing their breakfast.",
          alex:"It's the morning of Alex's first big client call and they can't face breakfast."},
   q:"Rearrange the stress chain to the correct order, from first to last.",
@@ -897,7 +894,6 @@ const STOPS = [
 },
 {
   zone:"Small intestine", depth:1.2, type:"multi", kind:"Select all that apply",
-  say:"Most nutrients are absorbed here, through a lining just one cell thick. That lining also helps keep unwanted substances out.",
   scene:{sam:"Sam is about to give a class presentation, and their heart is racing.",
          alex:"Alex is about to present their first project update to the whole team, and their heart is racing."},
   q:"What changes might stress cause in {name}'s intestines?",
@@ -914,7 +910,6 @@ const STOPS = [
 },
 {
   zone:"Ileum", depth:4.5, type:"mcq", kind:"Fill the gap",
-  say:"The longest stretch, packed with cells that make chemical messengers.",
   scene:{sam:"Sam has been rushing to the toilet all exam week.",
          alex:"Alex has been rushing to the toilet between meetings all week."},
   q:"Most of the body's serotonin, a key messenger chemical, is made in the…",
@@ -929,7 +924,6 @@ const STOPS = [
 },
 {
   zone:"Colon", depth:7.2, type:"mcq", kind:"Myth-buster",
-  say:"Welcome to the big city! Trillions of microbes live here, including me.",
   scene:{sam:"Sam's flatmate says, \"Just take a probiotic. It fixes stress.\"",
          alex:"A coworker tells Alex, \"Just take a probiotic. It fixes stress.\""},
   q:"What does the research actually say?",
@@ -944,7 +938,6 @@ const STOPS = [
 },
 {
   zone:"Sigmoid colon", depth:8.4, type:"gp", kind:"Tell the GP",
-  say:"See those red alarm cells by the nerve? They turn up the pain. Time for a GP visit.",
   scene:{sam:"Sam's tummy pain keeps coming back, even after exams finish.",
          alex:"Alex's tummy pain keeps coming back, even on weekends."},
   q:"{name} has a GP appointment. Tap everything worth telling the doctor.",
@@ -976,7 +969,6 @@ const STOPS = [
 },
 {
   zone:"Rectum", depth:8.75, type:"path", kind:"Choose {name}'s path",
-  say:"Nearly out! You decide what {name} does next.",
   scene:{sam:"The last exam is coming up. Every choice moves Sam's stress meter and gut meter.",
          alex:"A big work deadline is coming up. Every choice moves Alex's stress meter and gut meter."},
   q:"What should {name} do?",
@@ -1013,7 +1005,6 @@ const STOPS = [
 },
 {
   zone:"Exit", depth:8.9, type:"poo", kind:"Poo chart",
-  say:"Out we go! Say hi to my friend the poo. Poo comes in seven types, and they can say a lot about the gut.",
   scene:{sam:"After weeks of exams, Sam notices their poo keeps changing: hard lumps some days, mushy on others.",
          alex:"Since starting the job, Alex notices their poo keeps changing: hard lumps some days, mushy on others."},
   q:"Doctors use a 7-type poo chart. Tap at least 3 types to see what they mean.",
