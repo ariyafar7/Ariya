@@ -23,8 +23,8 @@ The page is a clean parody homepage spelled **"elgoog"** (Google backwards), so 
 |---|---|---|---|---|
 | 0 | Title: Michael beside the silhouette | outside | Michael introduces himself; a speech bubble says "Click here to play" | Stress travels from your head to your gut |
 | 0b | Play as Sam or Alex | outside | Two short cards, each with a "Click here to play" bubble, then a "Click here to dive in" bubble and a pixel zoom into the mouth | Stress looks different for everyone |
-| 1 | Mouth | 0.00 m | Scenario multiple choice | A dry mouth and clenched jaw are stress signs |
-| 2 | Oesophagus | 0.25 m | Group chat: tap to reveal three messages between the brain and gut, then a multiple-choice question on what the chat shows | The brain and gut talk both ways, and each can influence the other |
+| 1 | Mouth | 0.00 m | A warm-up true/false statement (stress only affects the mind?) with instant feedback, then a scenario multiple choice that differs for Sam (1am before the exam) and Alex (night before the new job) | A dry mouth and clenched jaw are stress signs |
+| 2 | Oesophagus | 0.25 m | Michael narrates the scenario; group chat: tap to reveal three messages between the brain and gut, then a multiple-choice question on what the chat shows | The brain and gut talk both ways, and each can influence the other |
 | 3 | Stomach | 0.45 m | Put the stress chain in order: steps go into the slots in any order (tap a placed step to take it back out), then it checks | Stress hormones slow the stomach, so eat small rather than skip |
 | 🎮 | **Mini-game 1: pop the stress bubbles** | 0.60 m | Tap 6 bubbles labelled with the person's stressors. Each pop reveals one step of the stress chain, from the brain to the gut bacteria. | Stress travels all the way to the gut |
 | ☁ | Breathing break | 0.60 m | 3 slow breaths (skippable) | You can turn down how strongly your body reacts |
@@ -93,7 +93,7 @@ The tunnel is kept calm so players can focus on the question.
 - **Tap-only interactions.** There's no typing on phones. Swiping also works with buttons and arrow keys.
 - **The breathing break** models a coping tool instead of only describing it.
 - **Soundtrack:** the team's own track (`soundtrack.mp3`, re-encoded to 128 kbps from the 320 kbps original to fit the publishing limit) starts when the player taps into the game from the Doodle, fades in, and loops. Browsers only allow sound after a tap, which is why it starts there. Closing the game fades it out, and reopening picks up where it left off. A MUSIC ON/OFF button sits in the game header.
-- **Sound effects are off by default** because it's on a search page (SFX button in the header).
+- **No sound effects:** the SFX button was removed; the soundtrack is the only audio (MUSIC ON/OFF in the header).
 - **Readable pixel fonts.** Body text uses Jersey 15 and labels and buttons use Silkscreen: both are pixel fonts but much clearer at small sizes than the wide Press Start 2P, which is kept only for big display text (the title and THE END).
 - **Original sprites,** drawn in the style of the team's reference image. The reference itself is a stock image and is not used.
 

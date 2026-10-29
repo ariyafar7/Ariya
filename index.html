@@ -628,7 +628,7 @@ details.more summary{font-size:10px}
       <button type="button" id="egSearchBtn">elgoog Search</button>
       <button type="button" id="egLucky">I'm Feeling Gutsy</button>
     </div>
-    <p class="eg-foot" id="egFoot">A concept Doodle for World IBS Day, 19 April. "elgoog" is a parody spelling; this university prototype isn't affiliated with any search engine.</p>
+    <p class="eg-foot" id="egFoot">This concept Doodle for World IBS Day, 19 April. "elgoog" is a parody spelling. This university prototype isn't affiliated with any search engine.</p>
   </section>
 
   <section class="popup" id="popup" role="dialog" aria-modal="true" aria-labelledby="gameTitle">
@@ -639,7 +639,6 @@ details.more summary{font-size:10px}
           <h1 id="gameTitle"><span>Michael</span> the Microbe</h1>
         </div>
         <button type="button" class="hbtn" id="musicBtn" aria-pressed="true" title="Soundtrack">MUSIC ON</button>
-        <button type="button" class="hbtn" id="sfxBtn" aria-pressed="false" title="Sound effects">SFX OFF</button>
         <button type="button" class="hbtn" id="closeBtn" aria-label="Close the game">X</button>
       </header>
       <aside class="gutmap" id="gutmap" aria-label="Gut map: where Michael is in the body">
@@ -765,6 +764,7 @@ const CHARS = {
 const P = {
   oka:{t:"Oka et al. 2020 · how common IBS is worldwide",u:"https://pubmed.ncbi.nlm.nih.gov/32702295/"},
   meds:{t:"IBS in medical students · review of 43 studies",u:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC12745469/"},
+  drymouth:{t:"Stress, dry mouth and bad breath in university students · BMC Oral Health 2026",u:"https://link.springer.com/article/10.1186/s12903-026-09460-7"},
   brux:{t:"Stress and jaw clenching · Frontiers in Neurology 2020",u:"https://www.frontiersin.org/articles/10.3389/fneur.2020.590779/full"},
   koloski:{t:"Koloski et al. 2012 · 12-year brain–gut study, Gut",u:"https://gut.bmj.com/content/61/9/1284"},
   cryan:{t:"Cryan et al. 2019 · the microbiota–gut–brain axis",u:"https://doi.org/10.1152/physrev.00018.2018"},
@@ -791,38 +791,47 @@ const P = {
 
 const STOPS = [
 {
-  zone:"Mouth", depth:0.0, type:"mcq", kind:"Scenario",
+  zone:"Mouth", depth:0.0, type:"tfmcq", kind:"True or false, then a scenario",
   say:"First stop, the mouth! Digestion starts here, and so do a lot of stress signs.",
-  scene:{sam:"It's the night before Sam's first exam. Their mouth feels dry and their jaw aches from clenching.",
+  scene:{sam:"It's 1am before Sam's first exam, there are flashcards and energy drinks everywhere, their mouth feels dry and their jaw aches from clenching.",
          alex:"It's the night before Alex's first day at the new job. Their mouth feels dry and their jaw aches from clenching."},
-  q:"What's going on?",
-  options:["{name}'s coming down with a cold","{name}'s body has switched into \"alarm mode\"","{name} needs to brush their teeth more","It's unrelated to stress"],
-  answer:1,
-  right:"Stress flips your body into alarm mode. Digestion goes on hold, so saliva drops, and lots of people clench their jaw without noticing.",
+  q:"True or false?",
+  // a warm-up statement, then a scenario question that differs for Sam and Alex
+  tf:{s:{sam:"Mental stress from Sam's exam only affects their mind, not their body.",
+         alex:"Mental stress from Alex's new job only affects their mind, not their body."},a:false,
+      fb:"Stress can trigger real physical changes, including changes in jaw tension, digestion and gut sensations."},
+  q2:{sam:"Sam's mouth has gone dry and their jaw won't unclench. What's their body doing?",
+      alex:"Alex is ready for bed, but their jaw is clenched and their mouth feels like sandpaper. What's happening?"},
+  options:{sam:["Saving energy because Sam's brain has been revising for too long.","Switching into alarm mode, preparing Sam to deal with the exam.","Warning Sam that they're definitely getting sick.","Flushing stress chemicals out through their mouth."],
+           alex:["Their body is reacting to the new-job nerves to prepare for the new environment.","Their body is adjusting to a new sleep schedule before the first shift.","Their mouth is dry because they're not used to talking to colleagues yet.","Their gut has stopped working because they skipped dinner."]},
+  answer:{sam:1,alex:0},
+  right:"Stress can switch your body into alarm mode. This can reduce saliva production and contribute to jaw clenching, even when you don't notice it happening.",
   wrong:"These are classic stress signs. {name}'s body is in alarm mode, getting ready to act instead of digest.",
   dyk:"Stress puts digestion on hold, so your mouth can go dry and your jaw can clench without you noticing.",
   tip:"Notice the signs early. Unclench your jaw, sip some water, and breathe out slowly.",
   more:{text:"When you're stressed, your nervous system switches into \"fight or flight\" and turns down jobs like digestion, which is why your mouth can go dry. Studies link stress and anxiety to clenching your jaw during the day.",
-    papers:[P.brux]}
+    papers:[P.drymouth,P.brux]}
 },
 {
   zone:"Oesophagus", depth:0.25, type:"chat", kind:"Group chat",
-  say:"This tube carries food down to your stomach. But your brain and gut have another way to stay in touch!",
+  // no say line: Michael tells the scenario himself
   scene:{sam:"Sam feels a lump in their throat outside the exam hall as last-minute revision messages flood their phone.",
          alex:"Alex feels a lump in their throat before their first team meeting as messages from their new manager appear."},
   q:"Tap each message to read the chat between {name}'s brain and gut.",
   // the brain–gut group chat, revealed one message at a time
   chat:[
-    {from:"brain",text:"We're under pressure! Get the body ready to deal with this."},
-    {from:"gut",text:"Got it. Stress signals can change how I move and how sensitive I feel."},
-    {from:"brain",text:"Wait, you're uncomfortable down there? That can affect how I feel, too."}
+    {from:"brain",text:{sam:"We're under pressure from this exam! We gotta get the body ready to deal with this.",
+                        alex:"We're under pressure from this new job! We gotta get the body ready to deal with this."}},
+    {from:"gut",text:"Got it Brain! However these stress signals are changing how I move and feel."},
+    {from:"brain",text:"Wait, are you uncomfortable down there? That can affect how I feel too."}
   ],
   q2:"What does this chat tell us about the brain and gut?",
   options:["The brain controls the gut, but the gut can't send messages back.","The brain and gut communicate both ways, and each can influence the other.","The gut only sends messages when someone eats food.","Stress affects the brain, but gut symptoms are unrelated."],
   answer:1,
-  right:"Your brain and gut talk both ways. Stress shows up in your belly, and belly trouble can raise stress.",
-  wrong:"The big idea: your brain and gut talk both ways. Stress shows up in your belly, and belly trouble can raise stress.",
-  dyk:"Your gut has its own network of nerves, called the enteric nervous system, that helps control digestion.",
+  retryMsg:"Have another look at the other options.", oops:"Oops",
+  right:"Your brain and gut talk both ways. Mental stress can show up in your belly, and your belly trouble can also raise mental stress.",
+  wrong:"The big idea: your brain and gut talk both ways. Mental stress can show up in your belly, and your belly trouble can also raise mental stress.",
+  dyk:"Your gut has its own network of nerves, called the enteric nervous system, which helps control digestion but also influences your emotions too!",
   tip:"When you notice a \"gut feeling\", pause and notice both your emotions and your body's sensations. Neither tells the whole story on its own.",
   more:{text:"A 12-year Australian study by Koloski et al. (2012) found that people with anxiety were more likely to develop gut disorders later, while people with gut disorders were more likely to develop anxiety. This supports a two-way relationship, although it doesn't prove that one directly causes the other. Nerves, hormones and immune signals help connect the brain and gut.",
     papers:[P.koloski,P.cryan]}
@@ -1104,7 +1113,7 @@ const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const $ = s => document.querySelector(s);
 const sheet = $("#sheet");
 /* ---------------------------------------------------------------
-   8-bit sound (off by default; starts only from a click)
+   8-bit sound effects (switched off: the game has no SFX button, only the soundtrack)
 ---------------------------------------------------------------- */
 let AC=null, sfx=false;
 function beep(seq){
@@ -1128,10 +1137,6 @@ const SFX={
   dive:[[523,.05],[440,.05],[349,.05],[262,.09]],
   end:[[523,.1],[659,.1],[784,.1],[1047,.1],[784,.08],[1047,.24]]
 };
-$("#sfxBtn").addEventListener("click",e=>{
-  sfx=!sfx; e.currentTarget.setAttribute("aria-pressed",sfx); e.currentTarget.textContent=sfx?"SFX ON":"SFX OFF";
-  if(sfx) beep([[784,.06],[1047,.1]]);
-});
 
 
 /* Soundtrack: starts when the player taps into the game from the Doodle, loops,
@@ -1307,7 +1312,7 @@ function drawMicrobe(c,type,x,y,col,t,ph){
 const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const who = () => CHARS[S.char||"sam"];
 const fmt = s => String(s).replace(/\{name\}/g,who().name).replace(/\{stressor\}/g,who().stressor);
-const pick = v => (v && typeof v==="object" && !Array.isArray(v) && (v.sam||v.alex)) ? v[S.char||"sam"] : v;
+const pick = v => (v && typeof v==="object" && !Array.isArray(v) && ("sam" in v || "alex" in v)) ? v[S.char||"sam"] : v;
 
 function linksHtml(papers){
   return `<ul class="links">${papers.map(p=>`<li>${
@@ -1402,7 +1407,7 @@ function drawBifi(c,x,y,t,mood){ drawMichael(c,x,y,mood||"happy",t,true,BIFI_PAL
 function renderIntro(){
   S.phase="intro"; S.outside=true; S.zoom=0; S.fade=0; S.guest=false;
   updateHud();
-  const hello="Hi! I'm Michael, one of the trillions of microbes living in your gut. Stress doesn't stay in your head. It travels all the way down to where I live.";
+  const hello="Hi! I'm Michael, one of the trillions of microbes living in your gut. Stress doesn't stay in your head. It can change what happens all the way down here too!";
   sheet.innerHTML = `
     <div class="title-card"><p class="big"><span>Michael</span><br>the Microbe</p></div>
     ${sayBox(hello)}
@@ -1426,7 +1431,7 @@ function renderChoose(){
   mountSay(line);
   sheet.querySelectorAll(".charcard").forEach(b=>b.addEventListener("click",()=>{
     S.char=b.dataset.c; setMood("wow",1500); beep([[659,.06],[880,.1]]);
-    const go=fmt("Great! {name} is about to have a stressful fortnight. Let's shrink down and dive into their gut.");
+    const go=fmt("Great! {name} is about to have a stressful week. Let's shrink down and dive into their gut.");
     sheet.innerHTML=`${sayBox(go)}
       <button type="button" class="say-btn" id="diveBtn">&#9660; Click here to dive in</button>
       <button type="button" class="textbtn" id="backBtn">Choose someone else</button>`;
@@ -1439,7 +1444,7 @@ function renderChoose(){
 
 function startDive(){
   S.phase="zoom"; clearInterval(S.typeT);
-  const line=fmt("Shrinking down... next stop, {name}'s mouth!");
+  const line=fmt("Shrinking down... first stop, {name}'s mouth!");
   sheet.innerHTML=sayBox(line); mountSay(line);
   beep(SFX.dive);
   const dur=reduce?0:3600, t0=performance.now();
@@ -1464,14 +1469,14 @@ function renderStop(){
   S.answered=false; S.tries=0;
   sheet.innerHTML=`
     <div class="meta"><span class="chip px">${esc(st.zone)}</span></div>
-    ${sayBox(fmt(st.say))}
-    <p class="scenario">${esc(fmt(pick(st.scene)))}</p>
+    ${sayBox(fmt(st.say??pick(st.scene)))}
+    ${st.say?`<p class="scenario">${esc(fmt(pick(st.scene)))}</p>`:""}
     <p class="q" id="qText">${esc(fmt(st.q))}</p>
     <div id="play" style="display:flex;flex-direction:column;gap:10px"></div>
     <div id="fbSlot"></div>`;
   sheet.scrollTop=0;
-  mountSay(fmt(st.say));
-  ({mcq:playMcq, chat:playChat, order:playOrder, gp:playGp, path:playPath, poo:playPoo})[st.type](st,$("#play"));
+  mountSay(fmt(st.say??pick(st.scene)));
+  ({tfmcq:playTfMcq, mcq:playMcq, chat:playChat, order:playOrder, gp:playGp, path:playPath, poo:playPoo})[st.type](st,$("#play"));
 }
 
 function reward(ok){
@@ -1514,15 +1519,16 @@ function finish(kind,verdict,text,extra=""){
 
 /* 1. multiple choice (scenario, fill the gap, myth-buster); a wrong first pick gets one more try */
 function playMcq(st,el){
-  el.innerHTML=`<div class="opts" role="group" aria-labelledby="qText">${st.options.map((o,i)=>
+  const options=pick(st.options), answer=pick(st.answer);
+  el.innerHTML=`<div class="opts" role="group" aria-labelledby="qText">${options.map((o,i)=>
     `<button type="button" class="opt px" data-i="${i}"><span class="L">${"ABCD"[i]}</span><span>${esc(fmt(o))}</span></button>`).join("")}</div>`;
   const opts=[...el.querySelectorAll(".opt")];
   opts.forEach(b=>b.addEventListener("click",()=>{
     if(S.answered || b.disabled) return;
-    const i=+b.dataset.i, ok=i===st.answer;
+    const i=+b.dataset.i, ok=i===answer;
     if(!ok && !S.tries){
       opts.forEach(x=>x.disabled=true); b.classList.add("wrongpick");
-      oneMoreTry("That's not it. Have another look at the other options.",()=>{
+      oneMoreTry(st.retryMsg||"That's not it. Have another look at the other options.",()=>{
         b.classList.replace("wrongpick","tried");
         opts.forEach(x=>{ if(x!==b) x.disabled=false; });
         opts.find(x=>!x.disabled)?.focus();
@@ -1531,9 +1537,24 @@ function playMcq(st,el){
     }
     opts.forEach(x=>{
       const j=+x.dataset.i; x.disabled=true; x.classList.remove("tried");
-      x.classList.add(j===st.answer?"right":j===i?"wrongpick":"dim");
+      x.classList.add(j===answer?"right":j===i?"wrongpick":"dim");
     });
-    finish(ok?"ok":"no", ok?(S.tries?"Got it!":"Correct!"):"Not quite", ok?st.right:st.wrong);
+    finish(ok?"ok":"no", ok?(S.tries?"Got it!":"Correct!"):(st.oops||"Not quite"), ok?st.right:st.wrong);
+  }));
+}
+
+/* 1b. a warm-up true/false statement with instant feedback, then the multiple-choice scenario question */
+function playTfMcq(st,el){
+  const it=st.tf, stmt=fmt(pick(it.s));
+  el.innerHTML=`<div class="stmt px"><small>Statement</small>${esc(stmt)}</div>
+    <div class="duo"><button type="button" class="btn px" data-v="1">True</button><button type="button" class="btn px" data-v="0">False</button></div>`;
+  el.querySelectorAll("[data-v]").forEach(b=>b.addEventListener("click",()=>{
+    const ok=(b.dataset.v==="1")===it.a;
+    beep(ok?[[784,.06]]:[[220,.08]]);
+    el.innerHTML=`<ul class="log"><li><span class="r ${ok?"ok":"no"}">${ok?"✔ Right":"✘ Not quite"} · it's ${it.a?"true":"false"}</span>${esc(stmt)} ${esc(it.fb)}</li></ul>
+      <p class="moment">Next question</p><p class="q">${esc(fmt(pick(st.q2)))}</p><div id="mq"></div>`;
+    playMcq(st,$("#mq"));
+    $("#mq").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"});
   }));
 }
 
@@ -1545,7 +1566,7 @@ function playChat(st,el){
     el.innerHTML=`<div class="chat px" role="log" aria-label="${esc(fmt("Group chat between {name}'s brain and gut"))}">
         <div class="chat-top"><span class="chat-av brain" aria-hidden="true"></span><span class="chat-av gut" aria-hidden="true"></span><b>Brain and Gut</b><small>2 members</small></div>
         ${st.chat.map((m,i)=>i<shown
-          ? `<div class="msg ${m.from}"><b>${m.from.toUpperCase()}</b><p>${esc(fmt(m.text))}</p></div>`
+          ? `<div class="msg ${m.from}"><b>${m.from.toUpperCase()}</b><p>${esc(fmt(pick(m.text)))}</p></div>`
           : i===shown ? `<button type="button" class="msg ${m.from} sealed" id="nextMsg"><b>${m.from.toUpperCase()}</b><span class="typing" aria-hidden="true"><i></i><i></i><i></i></span><span class="sr">New message from the ${m.from}. </span><small>Tap to read</small></button>` : "").join("")}
       </div>
       ${done?`<p class="moment">Quick question</p><p class="q">${esc(fmt(st.q2))}</p><div id="chatQ"></div>`:""}`;
