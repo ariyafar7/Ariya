@@ -574,6 +574,33 @@ details.more summary{font-size:10px}
 .lbl,.more-body .lbl,.fb .lbl{color:var(--acid);font-weight:700}
 .fb .dyk b.lbl{display:inline;font-family:var(--f-body);font-size:inherit;letter-spacing:0;margin:0;text-transform:none}
 
+/* v20: brain–gut group chat (oesophagus) */
+.chat{background:#120914;display:flex;flex-direction:column;gap:8px;padding:0 0 12px;box-shadow:inset 0 0 0 3px var(--edge)}
+.chat-top{display:flex;align-items:center;gap:6px;padding:9px 12px;background:var(--plum-2);border-bottom:3px solid var(--k)}
+.chat-top b{font-family:var(--f-pixel);font-weight:400;font-size:9px;letter-spacing:.04em;color:var(--ink);margin-left:4px}
+.chat-top small{margin-left:auto;font-size:13px;color:var(--ink-faint)}
+.chat-av{width:14px;height:14px;display:inline-block;box-shadow:inset 0 0 0 2px var(--k)}
+.chat-av.brain{background:#ff8fa3}.chat-av.gut{background:var(--g3);margin-left:-6px}
+.msg{max-width:82%;margin:0 12px;padding:9px 12px;text-align:left;border:0;font:inherit;color:var(--ink);display:flex;flex-direction:column;gap:3px}
+.msg b{font-family:var(--f-pixel);font-weight:400;font-size:8px;letter-spacing:.06em}
+.msg p{margin:0;line-height:1.4}
+.msg.brain{align-self:flex-start;background:#4a2236;box-shadow:inset 3px 0 0 #ff8fa3}
+.msg.brain b{color:#ff8fa3}
+.msg.gut{align-self:flex-end;background:#1f3d1d;box-shadow:inset -3px 0 0 var(--g3)}
+.msg.gut b{color:var(--g3)}
+.msg:not(.sealed){animation:msgIn .28s cubic-bezier(.2,.8,.2,1)}
+@keyframes msgIn{from{opacity:0;translate:0 8px}to{opacity:1;translate:0 0}}
+.msg.sealed{cursor:pointer;outline:2px dashed rgba(255,255,255,.25);outline-offset:-2px}
+.msg.sealed:hover{filter:brightness(1.2)}
+.msg.sealed:focus-visible{outline:3px solid var(--acid);outline-offset:2px}
+.msg.sealed small{font-size:13px;color:var(--ink-soft)}
+.typing{display:flex;gap:4px;padding:4px 0}
+.typing i{width:7px;height:7px;background:var(--ink-soft);animation:typeDot 1s steps(2) infinite}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s}
+@keyframes typeDot{50%{opacity:.25}}
+@media (min-width: 901px){ .msg b{font-size:9px} }
+@media (prefers-reduced-motion: reduce){ .msg:not(.sealed),.typing i{animation:none} }
+
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
 .btn:disabled{opacity:.45;cursor:default}
@@ -669,7 +696,7 @@ details.more summary{font-size:10px}
       <h3>Interaction types</h3>
       <ul>
         <li><b>Scenario multiple choice</b>: mouth, small intestine, ileum, colon</li>
-        <li><b>True/false quick-fire</b>: oesophagus</li>
+        <li><b>Group chat</b>: oesophagus. Tap to reveal a brain–gut group chat, then answer what it shows.</li>
         <li><b>Put in order</b>: the stress chain in the stomach</li>
         <li><b>Tell the GP</b> (sigmoid colon): tap everything worth telling the doctor at a GP appointment, then check the notes. Red alarm cells pulse by a nerve in the scene.</li>
         <li><b>Choose the path</b> (rectum): 3 decisions that move a stress meter and a gut meter</li>
@@ -779,21 +806,25 @@ const STOPS = [
     papers:[P.brux]}
 },
 {
-  zone:"Oesophagus", depth:0.25, type:"tf", kind:"True or false",
-  say:"This tube is lined with nerves. They carry messages between your gut and your brain.",
-  scene:{sam:"Sam feels a lump in their throat walking into the exam hall.",
-         alex:"Alex feels a lump in their throat walking into their first team meeting."},
-  q:"Three quick ones. True or false?",
-  items:[
-    {s:"Stress only affects your mind, not your body.",a:false,fb:"Stress changes how your gut moves, feels and works."},
-    {s:"Gut problems can make you feel more anxious.",a:true,fb:"The gut sends signals to the brain too. It's a two-way street."},
-    {s:"Your gut has its own network of nerves.",a:true,fb:"It's sometimes called your \"second brain\"."}
+  zone:"Oesophagus", depth:0.25, type:"chat", kind:"Group chat",
+  say:"This tube carries food down to your stomach. But your brain and gut have another way to stay in touch!",
+  scene:{sam:"Sam feels a lump in their throat outside the exam hall as last-minute revision messages flood their phone.",
+         alex:"Alex feels a lump in their throat before their first team meeting as messages from their new manager appear."},
+  q:"Tap each message to read the chat between {name}'s brain and gut.",
+  // the brain–gut group chat, revealed one message at a time
+  chat:[
+    {from:"brain",text:"We're under pressure! Get the body ready to deal with this."},
+    {from:"gut",text:"Got it. Stress signals can change how I move and how sensitive I feel."},
+    {from:"brain",text:"Wait, you're uncomfortable down there? That can affect how I feel, too."}
   ],
+  q2:"What does this chat tell us about the brain and gut?",
+  options:["The brain controls the gut, but the gut can't send messages back.","The brain and gut communicate both ways, and each can influence the other.","The gut only sends messages when someone eats food.","Stress affects the brain, but gut symptoms are unrelated."],
+  answer:1,
   right:"Your brain and gut talk both ways. Stress shows up in your belly, and belly trouble can raise stress.",
   wrong:"The big idea: your brain and gut talk both ways. Stress shows up in your belly, and belly trouble can raise stress.",
-  dyk:"Your gut has its own network of nerves, and it talks to your brain in both directions.",
-  tip:"\"Gut feelings\" are real signals. Looking after one end helps the other.",
-  more:{text:"Researchers followed about 1,000 Australian adults for 12 years. People who were anxious at the start were more likely to develop gut problems later, and people who started with gut problems were more likely to become anxious. The gut and brain talk through nerves, hormones, the immune system and chemicals made by gut bacteria.",
+  dyk:"Your gut has its own network of nerves, called the enteric nervous system, that helps control digestion.",
+  tip:"When you notice a \"gut feeling\", pause and notice both your emotions and your body's sensations. Neither tells the whole story on its own.",
+  more:{text:"A 12-year Australian study by Koloski et al. (2012) found that people with anxiety were more likely to develop gut disorders later, while people with gut disorders were more likely to develop anxiety. This supports a two-way relationship, although it doesn't prove that one directly causes the other. Nerves, hormones and immune signals help connect the brain and gut.",
     papers:[P.koloski,P.cryan]}
 },
 {
@@ -1440,7 +1471,7 @@ function renderStop(){
     <div id="fbSlot"></div>`;
   sheet.scrollTop=0;
   mountSay(fmt(st.say));
-  ({mcq:playMcq, tf:playTf, order:playOrder, gp:playGp, path:playPath, poo:playPoo})[st.type](st,$("#play"));
+  ({mcq:playMcq, chat:playChat, order:playOrder, gp:playGp, path:playPath, poo:playPoo})[st.type](st,$("#play"));
 }
 
 function reward(ok){
@@ -1506,43 +1537,24 @@ function playMcq(st,el){
   }));
 }
 
-/* 2. true / false quick-fire */
-function tfItemHtml(it,label){
-  return `<div class="stmt px"><small>${label}</small>${esc(fmt(it.s))}</div>
-    <div class="duo"><button type="button" class="btn px" data-v="1">True</button><button type="button" class="btn px" data-v="0">False</button></div>`;
-}
-function playTf(st,el){
-  // first round: wrong answers aren't revealed yet, so the missed ones can be tried once more
-  const got=new Set(), entries=[]; let queue=st.items.map((_,i)=>i), k=0, round=0;
-  const logHtml=reveal=>entries.map(({i,ok})=>{
-    const it=st.items[i];
-    return ok||reveal
-      ? `<li><span class="r ${ok?"ok":"no"}">${ok?"✔ Right":"✘ Not quite"} · it's ${it.a?"true":"false"}</span>${esc(fmt(it.s))} ${esc(it.fb)}</li>`
-      : `<li><span class="r no">✘ Not quite</span>${esc(fmt(it.s))}</li>`;
-  }).join("");
-  const end=()=>{
-    const ok=got.size>=2;
-    if(!ok && !S.tries){
-      el.innerHTML=`<ul class="log">${logHtml(false)}</ul>`;
-      oneMoreTry("Some of those weren't right. Try the ones you missed again.",()=>{
-        queue=st.items.map((_,i)=>i).filter(i=>!got.has(i)); k=0; round=1;
-        entries.splice(0,entries.length,...entries.filter(e=>e.ok)); draw();
-      });
-      return;
-    }
-    el.innerHTML=`<ul class="log">${logHtml(true)}</ul>`;
-    finish(ok?"ok":"no", ok?(round?"Got there!":"Nice work!"):"Good try", ok?st.right:st.wrong);
-  };
+/* 2. group chat: tap to reveal each brain/gut message, then a multiple-choice question about it */
+function playChat(st,el){
+  let shown=0;
   const draw=()=>{
-    const i=queue[k];
-    if(i===undefined){ end(); return; }
-    el.innerHTML=(entries.length?`<ul class="log">${logHtml(round>0)}</ul>`:"")+tfItemHtml(st.items[i],round?"One more try: true or false?":"True or false?");
-    el.querySelectorAll("[data-v]").forEach(b=>b.addEventListener("click",()=>{
-      const ok=(b.dataset.v==="1")===st.items[i].a; if(ok) got.add(i);
-      beep(ok?[[784,.06]]:[[220,.08]]);
-      entries.push({i,ok}); k++; draw();
-      el.querySelector("[data-v]")?.focus();
-    }));
+    const done=shown===st.chat.length;
+    el.innerHTML=`<div class="chat px" role="log" aria-label="${esc(fmt("Group chat between {name}'s brain and gut"))}">
+        <div class="chat-top"><span class="chat-av brain" aria-hidden="true"></span><span class="chat-av gut" aria-hidden="true"></span><b>Brain and Gut</b><small>2 members</small></div>
+        ${st.chat.map((m,i)=>i<shown
+          ? `<div class="msg ${m.from}"><b>${m.from.toUpperCase()}</b><p>${esc(fmt(m.text))}</p></div>`
+          : i===shown ? `<button type="button" class="msg ${m.from} sealed" id="nextMsg"><b>${m.from.toUpperCase()}</b><span class="typing" aria-hidden="true"><i></i><i></i><i></i></span><span class="sr">New message from the ${m.from}. </span><small>Tap to read</small></button>` : "").join("")}
+      </div>
+      ${done?`<p class="moment">Quick question</p><p class="q">${esc(fmt(st.q2))}</p><div id="chatQ"></div>`:""}`;
+    if(done){ playMcq(st,$("#chatQ")); $("#chatQ").scrollIntoView({behavior:reduce?"auto":"smooth",block:"nearest"}); return; }
+    $("#nextMsg").addEventListener("click",()=>{
+      if(S.answered) return;
+      shown++; beep(st.chat[shown-1].from==="brain"?[[660,.05],[880,.06]]:[[440,.05],[587,.06]]);
+      draw(); $("#nextMsg")?.focus();
+    });
   };
   draw();
 }
