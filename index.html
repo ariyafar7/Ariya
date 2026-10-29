@@ -1405,17 +1405,33 @@ function ell(c,cx,cy,rx,ry,fill,out){
   }
 }
 const shadeOf=col=>(dx,dy)=>dy<0&&dx<0?col.l:(dy>0?col.d:col.b);
+/* The poo, drawn like a pixel 💩 emoji: a curled tip, three glossy tiers, big eyes and a wide smile.
+   22 x 19 pixels; (x, y) is where the old 17 x 16 poo sat, so its bottom edge is at y+15. */
+const POO_SPR=[
+  "..........kk..........",
+  ".........khlk.........",
+  "........kkbbdk........",
+  "........khlbbdk.......",
+  ".......khbbbbbdk......",
+  ".....kkkddddddddkk....",
+  "....khhlbbbbbbbbbdk...",
+  "...khwwwwwbbbwwwwwdk..",
+  "...kwwwwwwbbbwwwwwwk..",
+  "...kwwwkkwbbbwkkwwwk..",
+  "..kkwwwkkwbbbwkkwwwkk.",
+  ".khlbwwwwbbbbbwwwwbbdk",
+  "khlbbbbbbbbbbbbbbbbbdk",
+  "khbbbkkkkkkkkkkkkbbbdk",
+  "khbbbbkkkkkkkkkkbbbbdk",
+  "kbbbbbbkkrrrrkkbbbbbdk",
+  ".kdbbbbbbkkkkbbbbbbddk",
+  "..kdddddddddddddddddk.",
+  "...kkkkkkkkkkkkkkkkk.."
+];
+const POO_PAL={k:"#2a1608",d:"#6b3e1a",b:"#8a5a2b",l:"#b8834c",h:"#deac70",w:"#ffffff",r:"#ff6b6b"};
 function drawPoo(c,x,y,t){
-  x=Math.round(x); y=Math.round(y)+(reduce?0:-Math.round(Math.abs(Math.sin(t*3))));
-  const cx=x+8, sh=shadeOf(POO_COL);
-  px(c,cx+1,y+1,K); px(c,cx+1,y+2,POO_COL.l);
-  ell(c,cx,y+4,3.4,1.9,sh,K);          // top swirl
-  ell(c,cx,y+7.5,5.5,2.4,sh,K);        // middle
-  ell(c,cx,y+12,7.5,3,sh,K);           // bottom (front), holds the face
-  [[-3,11],[-2,11],[-3,12],[2,11],[3,11],[2,12]].forEach(([i,j])=>px(c,cx+i,y+j,"#ffffff"));
-  px(c,cx-2,y+12,K); px(c,cx+3,y+12,K);
-  [[-2,13],[2,13],[-1,14],[0,14],[1,14]].forEach(([i,j])=>px(c,cx+i,y+j,K));
-  px(c,cx-5,y+13,"#ff8fa3"); px(c,cx+5,y+13,"#ff8fa3");
+  y=Math.round(y)+(reduce?0:-Math.round(Math.abs(Math.sin(t*3))));
+  spr(c,POO_SPR,Math.round(x)-2,y-3,POO_PAL);
 }
 function drawBristol(cv,type){
   cv.width=22; cv.height=12;
@@ -2366,12 +2382,12 @@ function dissolveMichael(x,y,mood,t,k){
 }
 
 /* The poo drawn at any size (for the swirl down the toilet). */
-const PT=document.createElement("canvas"); PT.width=20; PT.height=22;
+const PT=document.createElement("canvas"); PT.width=24; PT.height=24;
 const ptc=PT.getContext("2d");
 function drawPooAt(c,cx,bottom,t,scale){
-  ptc.clearRect(0,0,20,22); drawPoo(ptc,2,5,t);
-  const s=Math.max(.15,scale), W=Math.round(20*s), H=Math.round(22*s);
-  c.drawImage(PT,0,0,20,22,Math.round(cx-W/2),Math.round(bottom-H*(20/22)),W,H);
+  ptc.clearRect(0,0,24,24); drawPoo(ptc,3,5,t);          // the poo spans x 1-22, its bottom row is y 20
+  const s=Math.max(.15,scale), W=Math.round(24*s), H=Math.round(24*s);
+  c.drawImage(PT,0,0,24,24,Math.round(cx-W/2),Math.round(bottom-H*(20/24)),W,H);
 }
 
 /* The finale bathroom: tiled wall, checked floor and a pixel toilet.
@@ -2675,7 +2691,7 @@ function drawMap(t){
     if(S.phase==="zoom"){ const [x,y]=routePoint(0); lens(x,y,t); }
     return;
   }
-  if(S.scene==="toilet"){ drawPoo(mapCtx,52,100,t); return; }
+  if(S.scene==="toilet"){ drawPoo(mapCtx,49,100,t); return; }
   const [x,y]=routePoint(pos);
   lens(x,y,t);
 }
