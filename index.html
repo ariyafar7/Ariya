@@ -653,6 +653,15 @@ details.more summary{font-size:10px}
 /* "Try this instead" reads as advice, so it uses the same yellow as the Try this labels */
 .gpnote.wrongpick .gp-why b,.gpnote.skipped .gp-why b{color:var(--acid)}
 
+/* End-page toolkit: tip, where to start, why it works; pledge ideas tagged */
+.tk-group li{padding-bottom:10px;border-bottom:2px dashed rgba(255,244,232,.12)}
+.tk-group li:last-child{border-bottom:0;padding-bottom:0}
+.tk-group li p.tk-t{margin:0 0 6px;font-weight:700}
+.tk-sub{margin:0 0 4px!important;font-family:var(--f-pixel);font-size:8.5px;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-faint)}
+.tk-why{margin:8px 0 0!important;font-size:14.5px;color:var(--ink-soft)}
+.tk-tag{display:inline-block;margin-bottom:5px;padding:3px 7px;background:var(--acid);color:var(--k);font-family:var(--f-pixel);font-size:8px;letter-spacing:.05em;text-transform:uppercase}
+.tk-group.urgent .tk-why{color:#ffd6dc}
+
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
 .btn:disabled{opacity:.45;cursor:default}
@@ -1122,46 +1131,106 @@ const SORT_CARDS = [
 /* Pledge bubbles: the four "Helps" cards above, plus one more so there are five to pick from */
 const PLEDGE_EXTRA=["Keep regular sleep times"];
 
-/* End page: the gut toolkit. Practical fixes, each with trusted places to start (Australian services).
-   Every item has at least one web link, so it all works online; phone numbers are extra tap-to-call links. */
+/* End page: the gut toolkit. Each tip has trusted places to start (mostly Australian) and a line on
+   why it works; pledge:true marks a small, specific thing to try this week. Phone numbers are tap-to-call. */
 const TOOLKIT = [
   {h:"Calm the stress response", items:[
-    {t:"Do a few minutes of slow breathing or a guided meditation most days.",
-     links:[["Smiling Mind (free app)","https://www.smilingmind.com.au/smiling-mind-app"]]},
-    {t:"Learn stress skills with a free online CBT course.",
-     links:[["THIS WAY UP: Coping with Stress","https://thiswayup.org.au/courses/coping-with-stress-course"],["MindSpot","https://www.mindspot.org.au/"]]},
+    {t:"Do a few minutes of slow breathing or a guided meditation most days",
+     links:[["Smiling Mind","https://www.smilingmind.com.au/"],["Breathwork trials","https://pmc.ncbi.nlm.nih.gov/articles/PMC9828383/"]],
+     why:"Breathwork trials show reduced stress. Smiling Mind (Australian app) reports less stress and burnout in some studies."},
+    {pledge:true, t:"Do 3 minutes of slow breathing after class",
+     links:[["Smiling Mind","https://www.smilingmind.com.au/"],["Mindfulness review","https://iaap-journals.onlinelibrary.wiley.com/doi/10.1111/aphw.12328"]],
+     why:"Mindfulness reduces stress. Sessions under 5 minutes were less consistently effective."},
+    {pledge:true, t:"Try one Smiling Mind session",
+     links:[["Smiling Mind","https://www.smilingmind.com.au/"]],
+     why:"Matches Smiling Mind's own evidence statement."},
+    {t:"Learn stress skills with a free online CBT course",
+     links:[["THIS WAY UP: stress","https://thiswayup.org.au/what-we-treat/stress"]],
+     why:"Australian CBT program based on clinical guidelines and tested in trials."},
     {t:"Talk it through. If you're 12 to 25, headspace is free and needs no referral.",
-     links:[["headspace","https://headspace.org.au/"],["eheadspace webchat","https://headspace.org.au/online-and-phone-support/connect-with-us/"],["Call eheadspace 1800 650 890","tel:1800650890"]]}
+     links:[["headspace","https://headspace.org.au/"],["eheadspace","https://eheadspace.org.au/"],["Call eheadspace 1800 650 890","tel:1800650890"]],
+     why:"Study of 58,233 young people: less distress, better functioning and quality of life."},
+    {pledge:true, t:"Message someone about what's stressing me",
+     links:[["headspace","https://headspace.org.au/"],["eheadspace","https://eheadspace.org.au/"],["Call eheadspace 1800 650 890","tel:1800650890"]],
+     why:"Fits CBT and support-service models. Same headspace outcomes as above."}
   ]},
-  {h:"Retrain the gut–brain connection", items:[
-    {t:"CBT and gut-directed hypnotherapy have the strongest evidence of any mind-based treatment for IBS.",
-     links:[["Mind over Gut: free IBS program","https://ibs.mindovergut.com/"]]},
-    {t:"Try gut-directed hypnotherapy at home with an app developed at Monash University (paid, with a free trial).",
-     links:[["About the Nerva app","https://www.monash.edu/medicine/news/latest/2024-articles/hypnotherapy-reduces-irritable-bowel-syndrome-symptoms-and-now-theres-an-app-for-that"]]}
+  {h:"Mind-gut treatments", items:[
+    {t:"CBT and gut-directed hypnotherapy are among the best-supported mind-based treatments for IBS",
+     links:[["Mind over Gut: IBS program","https://www.mindovergut.com/ibs-program-2/"],["2025 meta-analysis","https://onlinelibrary.wiley.com/doi/10.1111/nmo.70037"]],
+     why:"2025 meta-analysis (12 studies, 1,158 patients): hypnotherapy improved overall symptoms and pain. CBT also helps, partly by reducing anxiety."},
+    {t:"Try gut-directed hypnotherapy at home with an app developed at Monash University",
+     links:[["Nerva","https://www.nervahealth.com/au/"],["Nerva research","https://www.nervahealth.com/au/research"]],
+     why:"RCT of 244 adults: Nerva beat an active digital control for gut symptoms and quality of life."},
+    {pledge:true, t:"Start one session of Mind over Gut",
+     links:[["Mind over Gut","https://www.mindovergut.com/"],["IBS program","https://www.mindovergut.com/ibs-program-2/"]],
+     why:"Gut-directed therapy evidence above."},
+    {pledge:true, t:"Start a Nerva trial",
+     links:[["Nerva","https://www.nervahealth.com/au/"],["Nerva research","https://www.nervahealth.com/au/research"]],
+     why:"Nerva RCT above."}
   ]},
-  {h:"Feed your gut and its microbes", items:[
-    {t:"Eat regular meals. Add soluble fibre like oats or psyllium slowly.",
-     links:[["High-fibre foods","https://www.healthdirect.gov.au/high-fibre-foods-and-diet"],["Gut health","https://www.healthdirect.gov.au/gut-health"]]},
-    {t:"Thinking about a low FODMAP diet? It's short-term, and best done with a dietitian.",
-     links:[["Monash FODMAP","https://www.monashfodmap.com/about-fodmap-and-ibs/"],["Find a dietitian","https://dietitiansaustralia.org.au/find-dietitian"]]},
-    {t:"Probiotics are optional. If you try one, give it up to 12 weeks and stop if it doesn't help.",
-     links:[["About probiotics","https://www.healthdirect.gov.au/probiotics"]]}
+  {h:"Food and gut", items:[
+    {t:"Eat regular meals. Add soluble fibre like oats or psyllium",
+     links:[["healthdirect: high-fibre foods","https://www.healthdirect.gov.au/healthy-living/food-and-nutrition/high-fibre-foods-and-diet"],["healthdirect: gut health","https://www.healthdirect.gov.au/gut-health"]],
+     why:"Soluble fibre (oats, barley, legumes) keeps bowels regular. Monash: fibre increased stool bulk."},
+    {pledge:true, t:"Add one fibre food slowly this week",
+     links:[["healthdirect: high-fibre foods","https://www.healthdirect.gov.au/healthy-living/food-and-nutrition/high-fibre-foods-and-diet"],["healthdirect: gut health","https://www.healthdirect.gov.au/gut-health"]],
+     why:"Healthdirect advises adding fibre gradually; Monash fibre research."},
+    {t:"Thinking about a low-FODMAP diet? It's short-term, and best done with a dietitian.",
+     links:[["Monash FODMAP","https://www.monashfodmap.com/"],["Find a dietitian","https://www.monashfodmap.com/online-training/fodmap-dietitians-directory/"]],
+     why:"Monash RCT: fewer symptoms than a typical Australian diet. Meta-analysis of 13 RCTs ranked it first for symptoms, pain and bloating."},
+    {t:"Probiotics are optional. If you try one, give it up to 12 weeks and stop if it doesn't help",
+     links:[["healthdirect: probiotics","https://www.healthdirect.gov.au/healthy-living/food-and-nutrition/probiotics"]],
+     why:"2026 review of 27 reviews: modest benefit, low-certainty. No universal strain or dose."},
+    {pledge:true, t:"Try a probiotic for 12 weeks",
+     links:[["healthdirect: probiotics","https://www.healthdirect.gov.au/healthy-living/food-and-nutrition/probiotics"],["Probiotics meta-analysis","https://www.sciencedirect.com/science/article/pii/S0016508523048382"]],
+     why:"Reasonable, but low certainty and varies by product and person."},
+    {pledge:true, t:"Book a GP or dietitian appointment",
+     links:[["Find a dietitian","https://www.monashfodmap.com/online-training/fodmap-dietitians-directory/"],["Find a health service","https://www.healthdirect.gov.au/australian-health-services"]],
+     why:"Guidance advises assessment to exclude other bowel conditions and dietitian-led diet management. Around 3 in 4 see symptom relief within days to weeks of low-FODMAP."}
   ]},
-  {h:"Move and sleep", items:[
-    {t:"Get moving for 30 minutes or more on most days, and break up long stretches of sitting.",
-     links:[["Australia's movement guidelines","https://www.health.gov.au/topics/physical-activity/24-hour-movement-guidelines-for-all-australians"]]},
-    {t:"Keep regular sleep times and switch screens off before bed.",
-     links:[["Good sleep habits","https://www.sleephealthfoundation.org.au/sleep-topics/sleep-hygiene-good-sleep-habits"]]}
+  {h:"Movement and sleep", items:[
+    {t:"Get moving for 30 minutes or more on most days, and break up long stretches of sitting",
+     links:[["Australia's movement guidelines","https://www.health.gov.au/topics/physical-activity/24-hour-movement-guidelines-for-all-australians?language=en"]],
+     why:"Cochrane: activity over 6–24 weeks may improve IBS (low certainty). A review of 14 RCTs (683 people) agrees."},
+    {pledge:true, t:"Walk for 20 minutes three times",
+     links:[["Australia's movement guidelines","https://www.health.gov.au/topics/physical-activity/24-hour-movement-guidelines-for-all-australians?language=en"]],
+     why:"Achievable activity, but this exact dose isn't proven for IBS."},
+    {pledge:true, t:"Move for 10 minutes after lunch",
+     links:[["Australia's movement guidelines","https://www.health.gov.au/topics/physical-activity/24-hour-movement-guidelines-for-all-australians?language=en"]],
+     why:"Breaks up sitting; not tested as an IBS treatment."},
+    {t:"Keep regular sleep times and switch screens off before bed",
+     links:[["Good sleep habits","https://www.healthdirect.gov.au/healthy-living/physical-wellbeing/sleep"],["Sleep and IBS review","https://pubmed.ncbi.nlm.nih.gov/27683238/"]],
+     why:"Poor sleep is linked with IBS symptoms. This doesn't prove better sleep treats IBS."},
+    {pledge:true, t:"Put my phone away 30 minutes before bed",
+     links:[["Good sleep habits","https://www.healthdirect.gov.au/healthy-living/physical-wellbeing/sleep"]],
+     why:"Standard sleep-hygiene advice; not tested for IBS."}
   ]},
-  {h:"Get checked and learn more", items:[
-    {t:"Note your symptoms and poo type for two weeks, then take it to a GP.",
-     links:[["Bristol poo chart","https://theromefoundation.org/wp-content/uploads/Bristol-Stool-Form-Scale-Card-2021.pdf"],["Find a GP","https://www.healthdirect.gov.au/australian-health-services/guided-search/general-practice"]]},
-    {t:"Read up on IBS from trusted sources, or check your symptoms online. For 24-hour health advice, talk to a nurse.",
-     links:[["IBS on healthdirect","https://www.healthdirect.gov.au/irritable-bowel-syndrome-ibs"],["Symptom Checker","https://www.healthdirect.gov.au/symptom-checker"],["The IBS Network","https://www.theibsnetwork.org/"],["Call healthdirect 1800 022 222","tel:1800022222"]]}
+  {h:"Track, check and get help", items:[
+    {pledge:true, t:"Track symptoms and stress for seven days",
+     links:[["Bristol stool chart","https://www.bladderandbowel.org/bowel/bowel-resources/bristol-stool-form-scale/"],["healthdirect: IBS","https://www.healthdirect.gov.au/irritable-bowel-syndrome-ibs"]],
+     why:"Helps spot patterns and prepare for a GP visit; not a treatment. Guidelines favour the Bristol scale and 2-week diaries."},
+    {t:"Note your symptoms and poo type for two weeks, then take it to a GP",
+     links:[["Bristol stool chart","https://www.bladderandbowel.org/bowel/bowel-resources/bristol-stool-form-scale/"],["Find a health service","https://www.healthdirect.gov.au/australian-health-services"]],
+     why:"Bristol scale links stool form to gut transit time."},
+    {t:"Read up on IBS from trusted sources, or check your symptoms online",
+     links:[["healthdirect: IBS","https://www.healthdirect.gov.au/irritable-bowel-syndrome-ibs"],["Symptom checker","https://www.healthdirect.gov.au/symptom-checker"]],
+     why:"Australian consumer information. The checker guides care-seeking; it doesn't replace a professional."},
+    {t:"For 24-hour health advice, talk to a nurse",
+     links:[["Call healthdirect 1800 022 222","tel:1800022222"],["Find a health service","https://www.healthdirect.gov.au/australian-health-services"]],
+     why:"Free government-funded advice and help finding services."},
+    {t:"See a doctor if you notice blood in your poo, unexplained weight loss, symptoms that wake you at night, fever, or a family history of bowel cancer, coeliac disease or IBD",
+     links:[["healthdirect: IBS","https://www.healthdirect.gov.au/irritable-bowel-syndrome-ibs"],["Find a health service","https://www.healthdirect.gov.au/australian-health-services"]],
+     why:"These are listed as alarm features needing assessment in Australian prescriber and GP guidance."}
   ]},
   {h:"Need to talk to someone now?", urgent:true, items:[
-    {t:"Free, confidential support, 24 hours a day. In an emergency, call 000.",
-     links:[["Lifeline chat and text","https://www.lifeline.org.au/131114"],["Call Lifeline 13 11 14","tel:131114"],["Beyond Blue webchat","https://www.beyondblue.org.au/get-support/talk-to-a-counsellor/chat"],["Call Beyond Blue 1300 22 4636","tel:1300224636"]]}
+    {t:"Free, confidential support, 24 hours a day",
+     links:[["Lifeline chat","https://www.lifeline.org.au/crisis-chat"],["Lifeline text","https://www.lifeline.org.au/text"],["Call Lifeline 13 11 14","tel:131114"]],
+     why:"Crisis support by phone, text and chat. For emotional support, not IBS treatment."},
+    {t:"Support for anxiety, depression and stress",
+     links:[["Beyond Blue chat","https://www.beyondblue.org.au/get-support/talk-to-a-counsellor/chat"],["Call Beyond Blue 1300 22 4636","tel:1300224636"]],
+     why:"Free 24/7 brief counselling. A support service, not a trial-tested treatment."},
+    {t:"In an emergency, call 000",
+     links:[["Call 000","tel:000"]]}
   ]}
 ];
 
@@ -2209,8 +2278,10 @@ function toolkitHtml(){
   return `<section class="toolkit" aria-labelledby="tkTitle">
     <h3 id="tkTitle">Your gut toolkit</h3>
     <p class="tk-lead">Practical things that help with stress, the gut and IBS, and trusted places to start. Tap an area to open it.</p>
-    ${TOOLKIT.map(g=>`<details class="tk-group px${g.urgent?" urgent":""}"${g.urgent?" open":""}><summary><span class="tk-h">${esc(g.h)}</span><span class="tk-n">${g.items.length} ${g.items.length>1?"tips":"tip"}</span></summary><ul>${g.items.map(it=>`<li><p>${esc(it.t)}</p>
-      <span class="tk-links">${it.links.map(([l,u])=>`<a class="tk-link px" href="${esc(u)}"${u.startsWith("tel:")?"":' target="_blank" rel="noopener"'}>${esc(l)}${u.startsWith("tel:")?"":' <span aria-hidden="true">&#8599;</span>'}</a>`).join("")}</span></li>`).join("")}</ul></details>`).join("")}
+    ${TOOLKIT.map(g=>`<details class="tk-group px${g.urgent?" urgent":""}"${g.urgent?" open":""}><summary><span class="tk-h">${esc(g.h)}</span><span class="tk-n">${g.items.length} ${g.items.length>1?"tips":"tip"}</span></summary><ul>${g.items.map(it=>`<li${it.pledge?' class="tk-pledge"':""}>${it.pledge?'<span class="tk-tag">Pledge idea</span>':""}<p class="tk-t">${esc(it.t)}</p>
+      <p class="tk-sub">Where to start</p>
+      <span class="tk-links">${it.links.map(([l,u])=>`<a class="tk-link px" href="${esc(u)}"${u.startsWith("tel:")?"":' target="_blank" rel="noopener"'}>${esc(l)}${u.startsWith("tel:")?"":' <span aria-hidden="true">&#8599;</span>'}</a>`).join("")}</span>
+      ${it.why?`<p class="tk-why"><b class="lbl">Why it works:</b> ${esc(it.why)}</p>`:""}</li>`).join("")}</ul></details>`).join("")}
   </section>`;
 }
 function renderEnd(){
