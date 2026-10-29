@@ -81,7 +81,7 @@ The tunnel is kept calm so players can focus on the question.
 - **Rectum:** pouched walls
 - **Exit:** ringed walls (the sphincter muscles) and a pixel-art poo drawn like the 💩 emoji (curled tip, three glossy tiers, big eyes, wide smile), which stays for the gut kit and pledge screens
 - **Finale:** Michael slides into the poo and breaks up in an 8-bit dither while sparkles circle it. With a sparkle burst, the poo does two happy hops. The scene fades to a tiled pixel bathroom: the poo falls into the toilet and lands floating in the water (face still showing) with a splash. The handle dips, the water turns into a whirlpool, and the poo spins round, shrinks and is flushed away. "THE END" drops in above the toilet, and a little sparkle twinkles over the clean bowl.
-- **Opening:** a plain dark backdrop (no twinkling lights) with a person's silhouette, a faint pink outline of the GI tract inside them, and Michael at double size beside them. Sam holds a book; Alex holds a briefcase. The dive starts with a smooth zoom: the mouth opens, Michael glides in and shrinks, and the open mouth crossfades into the teeth tunnel.
+- **Opening:** a plain dark backdrop (no twinkling lights) with a person's silhouette, a faint pink outline of the GI tract inside them, and Michael at double size beside them. Sam holds a stack of three pixel textbooks (red, green and purple); Alex holds a large brown briefcase with a handle and two gold clasps. The dive starts with a smooth zoom: the mouth opens, Michael glides in and shrinks, and the open mouth crossfades into the teeth tunnel.
 - **Mini-games:** pixel stress bubbles float over the scene; Bifi, Michael's purple twin, swims beside him during the chat
 
 ## 4. Design decisions (for the reflective report)

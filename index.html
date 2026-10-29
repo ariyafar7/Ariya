@@ -2569,18 +2569,29 @@ function drawPerson(c,G,t){
   }
   c.globalAlpha=1;
 
-  // a prop once a person is chosen
+  // a prop once a person is chosen: a stack of textbooks for Sam, a briefcase for Alex
   if(S.char==="sam"){
-    const bx=tl+G.torsoW+1, by=G.torsoTop+G.armH-2;
-    c.fillStyle=K; c.fillRect(bx-1,by-1,8,7);
-    c.fillStyle="#3f8fc4"; c.fillRect(bx,by,6,5);
-    c.fillStyle="#f4f0e6"; c.fillRect(bx+1,by+1,4,1); c.fillRect(bx+1,by+3,4,1);
+    const hx=tl+G.torsoW+1+Math.floor(G.armW/2), ox=hx-5, oy=G.torsoTop+G.armH-4;
+    const book=(x,y,wd,col,dark)=>{
+      c.fillStyle=K; c.fillRect(x-1,y-1,wd+2,5);
+      c.fillStyle=col; c.fillRect(x,y,wd,3);
+      c.fillStyle=dark; c.fillRect(x,y+2,wd,1);                       // shadow along the bottom edge
+      c.fillStyle="#f4f0e6"; c.fillRect(x+wd-2,y,2,2);                  // page edges
+      c.fillStyle="#d8cfb8"; c.fillRect(x+wd-2,y+1,2,1);
+      c.fillStyle="#f2d14a"; c.fillRect(x+2,y+1,2,1);                   // title band on the spine
+    };
+    book(ox,oy+8,11,"#d0473f","#8f2a25");
+    book(ox+1,oy+4,9,"#3f9a5a","#246238");
+    book(ox,oy,10,"#7a5bc4","#4f3a8a");
   } else if(S.char==="alex"){
-    const bx=tl-G.armW-5, by=G.torsoTop+G.armH;
-    c.fillStyle=K; c.fillRect(bx-1,by-1,10,8);
-    c.fillStyle="#8a5a2b"; c.fillRect(bx,by,8,6);
-    c.fillStyle="#5a3a1b"; c.fillRect(bx+2,by-2,4,1); c.fillRect(bx+2,by-2,1,2); c.fillRect(bx+5,by-2,1,2);
-    c.fillStyle="#f2c94c"; c.fillRect(bx+3,by+2,2,1);
+    const hx=tl-G.armW-1+Math.floor(G.armW/2), bw=13, bh=9, bx=hx-6, by=G.torsoTop+G.armH+1;
+    c.fillStyle=K; c.fillRect(bx-1,by-1,bw+2,bh+2);
+    c.fillStyle="#8a5a2b"; c.fillRect(bx,by,bw,bh);
+    c.fillStyle="#a8743c"; c.fillRect(bx,by,bw,1);                      // light top edge
+    c.fillStyle="#6b4420"; c.fillRect(bx,by+3,bw,1); c.fillRect(bx,by+bh-1,bw,1);   // lid seam and base
+    c.fillStyle=K; c.fillRect(bx+3,by-4,7,1); c.fillRect(bx+3,by-4,1,3); c.fillRect(bx+9,by-4,1,3);   // handle
+    c.fillStyle="#5a3a1b"; c.fillRect(bx+4,by-3,5,1);
+    c.fillStyle="#f2c94c"; c.fillRect(bx+2,by+3,2,2); c.fillRect(bx+bw-4,by+3,2,2);   // clasps
   }
 }
 
