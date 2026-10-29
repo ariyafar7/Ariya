@@ -826,7 +826,6 @@ const IBS_CHECK = {
   answer:0,
   right:"That's right! IBS stands for irritable bowel syndrome. It causes recurring tummy pain, bloating, constipation or diarrhoea. Stress may contribute to symptoms by changing how the brain and gut communicate.",
   wrong:"No worries! IBS stands for irritable bowel syndrome. Stress can affect gut movement and sensitivity, potentially triggering or worsening tummy pain, bloating, constipation or diarrhoea.",
-  dyk:"Stress doesn't cause IBS in everyone, but it can contribute to symptoms by changing gut movement, sensitivity and signals between the brain and gut.",
   then:"So, how can stress affect your tummy? Your brain and gut constantly communicate, and stress can change how your gut works. Let's follow these signals to see how they might trigger IBS symptoms!"
 };
 
@@ -1513,8 +1512,7 @@ function renderIbsCheck(){
     opts.forEach(x=>{ const j=+x.dataset.i; x.disabled=true; x.classList.add(j===c.answer?"right":j===i?"wrongpick":"dim"); });
     setMood(ok?"wow":"happy",1500); beep(ok?SFX.right:[[392,.08]]);
     $("#ibsFb").innerHTML=`
-      <div class="fb ${ok?"ok":"mid"} px"><span class="v">${ok?"Correct!":"Not quite"}</span><p>${esc(ok?c.right:c.wrong)}</p>
-        <p class="dyk"><b class="lbl">Did you know?</b> ${esc(c.dyk)}</p></div>
+      <div class="fb ${ok?"ok":"mid"} px"><span class="v">${ok?"Correct!":"Not quite"}</span><p>${esc(ok?c.right:c.wrong)}</p></div>
       ${sayBox(c.then)}
       <button type="button" class="say-btn" id="diveBtn">&#9660; Click here to dive in</button>`;
     const box=$("#ibsFb .say"); portrait(box.querySelector("canvas"),"happy");
