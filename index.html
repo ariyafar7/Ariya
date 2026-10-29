@@ -624,6 +624,12 @@ details.more summary{font-size:10px}
 @keyframes organIn{from{opacity:0}to{opacity:1}}
 @media (prefers-reduced-motion: reduce){ .organ-tag span{animation:none} .organ-tag span.out{display:none} }
 
+/* Accessibility: header buttons big enough to tap (at least 32px) */
+.hbtn{min-height:32px;min-width:32px}
+@media (max-width: 480px){ .hbtn{font-size:7px;padding:7px 6px} }
+/* Accessibility: answer and sort buttons at least 44px tall, the recommended touch size */
+.btn{min-height:44px}
+
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
 .btn:disabled{opacity:.45;cursor:default}
@@ -635,6 +641,7 @@ details.more summary{font-size:10px}
 </header>
 
 <main class="home" id="home">
+  <h1 class="sr">elgoog concept Doodle for World IBS Day: Michael the Microbe</h1>
   <section class="hero" id="hero">
     <button type="button" class="eg-doodle" id="doodle" aria-label="elgoog Doodle for World IBS Day. Play Michael the Microbe, a game about stress and the gut.">
       <span class="eg-day" aria-hidden="true">
@@ -831,12 +838,14 @@ const P = {
   bsg:{t:"British Society of Gastroenterology IBS guideline 2021",u:"https://pubmed.ncbi.nlm.nih.gov/33903147/"},
   fibre:{t:"La Torre, Verbeke & Dalile 2021 · fibre and the gut–brain axis",u:"https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11406392/"},
   marx:{t:"Marx et al. 2017 · nutritional psychiatry",u:"https://doi.org/10.1017/S0029665117002026"},
+  drossman:{t:"Drossman 2016 · Rome IV criteria for disorders of gut–brain interaction",u:"https://doi.org/10.1053/j.gastro.2016.02.032"},
   barbara:{t:"Barbara et al. 2004 · alarm cells next to gut nerves",u:"https://doi.org/10.1053/j.gastro.2003.11.055"},
   dickhaus:{t:"Dickhaus et al. 2003 · stress and gut sensitivity in IBS",u:"https://doi.org/10.1111/j.1572-0241.2003.07156.x"},
   black:{t:"Black et al. 2020 · talking therapies for IBS, Gut",u:"https://doi.org/10.1136/gutjnl-2020-321191"},
   johann:{t:"Johannesson et al. 2011 · exercise trial in IBS",u:"https://doi.org/10.1038/ajg.2010.480"},
   smith:{t:"Smith et al. 2019 · sleep and gut bacteria",u:"https://doi.org/10.1371/journal.pone.0222394"},
   bristol:{t:"Lewis & Heaton 1997 · the Bristol Stool Form Scale",u:"https://doi.org/10.3109/00365529709011203"},
+  racgp:{t:"RACGP 2018 · irritable bowel syndrome",u:"https://www.racgp.org.au/getattachment/c7b01052-d17c-4425-89cd-58985e790ad5/IBS.aspx"},
   romecard:{t:"Rome Foundation · Bristol Stool Form Scale card",u:"https://theromefoundation.org/wp-content/uploads/Bristol-Stool-Form-Scale-Card-2021.pdf"}
 };
 
@@ -947,48 +956,46 @@ const STOPS = [
 },
 {
   zone:"Colon", depth:7.2, type:"mcq", kind:"Myth-buster",
-  scene:{sam:"Sam's flatmate says, \"It's just stress. Take some probiotics or something.\"",
+  scene:{sam:"Sam's flatmate says, \"It's probably just stress. Why not try some probiotics?\"",
          alex:"A coworker tells Alex, \"Just take a probiotic. I heard it's good for stress.\""},
-  q:"What does the research actually say?",
-  options:["Probiotics reliably improve stress and anxiety, especially when taken regularly over several weeks","Probiotics may slightly ease perceived stress, but evidence for reducing anxiety remains unclear","Probiotics only help when stress has already disrupted gut bacteria, rather than before symptoms develop","Probiotics cannot affect stress because gut microbes mainly help digest food rather than influence the brain"],
+  q:"What does the evidence suggest?",
+  options:["Probiotics reliably ease stress and anxiety when taken regularly over several weeks","Probiotics may slightly ease perceived stress, but benefits for anxiety are unclear","Probiotics only help with stress if it has already changed the gut microbiome","Probiotics cannot affect stress because gut microbes mainly help break down food"],
   answer:1,
-  right:"Exactly! Across seven trials, probiotics slightly reduced perceived stress in healthy adults but didn't significantly change cortisol levels. Studies in young people found no overall benefit for anxiety.",
-  wrong:"Not quite! Probiotics may slightly reduce perceived stress, but studies haven't found a clear overall benefit for anxiety in young people.",
-  dyk:"Probiotics' effects depend on the strain and outcome measured. They're not a guaranteed fix for stress or anxiety.",
-  tip:"Feed your gut community with regular meals and fibre you tolerate. Treat probiotics as an optional extra, not a cure.",
-  more:{text:"Zhang et al. (2020) analysed seven randomised controlled trials involving 1,146 healthy adults and found a small reduction in perceived stress, but no significant effect on cortisol. Cohen Kadosh et al. (2021) found no overall effect of psychobiotic interventions on anxiety in people aged 10–24. Although people with IBS may have different gut microbial communities, researchers haven't established that these differences cause symptoms.",
-    papers:[P.zhang,P.kadosh,P.pitta,P.exam]}
+  right:"Exactly! Some studies suggest probiotics may slightly reduce how stressed people feel, but research hasn't found a clear overall benefit for anxiety in young people.",
+  wrong:"Not quite! Probiotics may have some benefits, but the evidence is mixed. They aren't a guaranteed fix for stress or anxiety.",
+  dyk:"Not all probiotics are the same. Their effects can vary depending on the strain and the outcome being measured.",
+  tip:"Give your gut microbes a helping hand with regular meals and fibre-rich foods you tolerate. Probiotics are an optional extra, not a guaranteed solution.",
+  more:{text:"Zhang et al. (2020) reviewed seven randomised controlled trials involving 1,146 healthy adults. Probiotics had a small effect on perceived stress but no significant effect on cortisol levels. Cohen Kadosh et al. (2021) found no overall benefit for anxiety in people aged 10–24. These findings suggest probiotics are not a reliable fix for stress or anxiety, although effects may vary between probiotic strains and outcomes.",
+    papers:[P.zhang,P.kadosh]}
 },
 {
-  zone:"Sigmoid colon", depth:8.4, type:"gp", kind:"Tell the GP",
+  zone:"Sigmoid colon", depth:8.4, type:"gp", kind:"GP check-in",
   scene:{sam:"Sam's tummy pain keeps coming back, even after exams finish.",
          alex:"Alex's tummy pain keeps coming back, even on weekends."},
-  q:"{name} has a GP appointment. Tap everything worth telling the doctor.",
+  q:"{name} has a GP appointment. Tap everything that could help the GP understand what's going on.",
   // what {name} could say to the GP: good = worth saying; why shows after checking
   notes:[
-    {t:"It hurts a few days a week, and it's been going on for about 4 months",good:true,
-     why:"IBS is diagnosed from a pattern: tummy pain at least once a week for 3 months or more."},
+    {t:"It hurts a few days a week, and it's been going on for a few months",good:true,
+     why:"How often the pain happens and how long it lasts help the GP assess it."},
     {t:"It's probably nothing. Sorry for wasting your time",good:false,
-     why:"Playing it down can mean the GP misses what's going on. Your symptoms are worth their time."},
-    {t:"The pain eases after I've been to the toilet",good:true,
-     why:"Pain linked to going to the toilet is one of the main signs doctors look for in IBS."},
-    {t:"It's all in my head. I'm just stressed",good:false,
-     why:"Stress changes real things in the gut. Mention the stress, but describe the symptoms too."},
-    {t:"My poo keeps switching between hard lumps and mushy",good:true,
-     why:"Changes in poo type or how often you go are part of the IBS checklist."},
-    {t:{sam:"It gets worse in exam weeks",alex:"It gets worse in deadline weeks"},good:true,
-     why:"Spotting triggers like stress helps you and the GP plan what to try."},
-    {t:"I read online that it's definitely a food allergy",good:false,
-     why:"Self-diagnosing can send you the wrong way. Describe what happens and let the GP decide on tests."},
-    {t:"There's no blood in my poo, no weight loss, and it doesn't wake me at night",good:true,
-     why:"Saying which warning signs you don't have helps the GP rule other conditions out."}
+     why:"Try saying what you're experiencing instead. Recurring pain is worth discussing, even if you're unsure what's causing it."},
+    {t:"The pain often eases after I've been to the toilet",good:true,
+     why:"The link between pain and going to the toilet can help identify IBS."},
+    {t:{sam:"I've been stressed lately, and the pain seems worse during exam weeks",alex:"I've been stressed lately, and the pain seems worse during deadline weeks"},good:true,
+     why:"Stress can worsen gut symptoms, so it helps to mention when they flare up."},
+    {t:"My poo keeps switching between hard lumps and mushy poo",good:true,
+     why:"Changes in poo consistency and frequency help the GP assess your symptoms."},
+    {t:"I'm worried it might be a food allergy because certain foods seem to make it worse",good:true,
+     why:"Describe the foods and symptoms rather than assuming it's an allergy."},
+    {t:"I haven't noticed blood in my poo, unexplained weight loss or pain that wakes me at night",good:true,
+     why:"If you notice blood in your poo, unexplained weight loss or pain that wakes you at night, tell your GP promptly. Heavy bleeding or severe, sudden abdominal pain needs urgent medical attention."}
   ],
   right:"Great notes. How often it hurts, its link to the toilet, poo changes, triggers and the missing warning signs are what a GP uses to diagnose IBS.",
   wrong:"A GP needs the pattern: how often it hurts, its link to the toilet, poo changes and triggers. Saying there are no warning signs helps too. Never play it down.",
-  dyk:"In IBS, the gut's alarm cells sit close to nerves, which can make normal gas feel painful. The pain is real.",
-  tip:"Before a GP visit, jot down how often it hurts, your poo changes and what makes it worse. Blood, weight loss or night symptoms need checking soon.",
-  more:{text:"In people with IBS, active alarm cells (mast cells) sit closer to gut nerves than usual, and this is linked to how much pain they report. Under stress, people with IBS also feel gut stretching more strongly. In rats, gut oversensitivity lasted up to 30 days after the stress ended. GPs diagnose IBS from the pattern of symptoms, with a few simple tests (like blood tests and a poo test) to rule out other conditions.",
-    papers:[P.barbara,P.dickhaus,P.vicario,P.bsg]}
+  dyk:"IBS symptoms can come and go, and stress may make them worse. Tracking your pain, poo changes and possible triggers can help your GP spot patterns and work out what to investigate.",
+  tip:"Before your appointment, note your pain, poo changes, possible triggers and how symptoms affect daily life. Tell your GP about warning signs, such as blood in your poo or unexplained weight loss.",
+  more:{text:"IBS is diagnosed from a pattern of symptoms while considering other possible causes. Under Rome IV, abdominal pain occurs at least one day a week over the previous three months, alongside at least two features: a link to going to the toilet, a change in poo frequency or a change in poo consistency. Symptoms must have started at least six months before diagnosis. A GP may arrange blood and poo tests to check for other conditions. {name} can seek help now without waiting six months.",
+    papers:[P.barbara,P.drossman]}
 },
 {
   zone:"Rectum", depth:8.75, type:"path", kind:"Choose {name}'s path",
@@ -1057,7 +1064,7 @@ const POO_TYPES = [
 /* Mini-game 2 (after stop 6): meet Bifi, Michael's purple twin (a fibre-loving Bifidobacterium) */
 const MEET = {
   open:[
-    ["bifi","Oh! Hi, Michael! It seems you brought a friend! I'm Bifi, short for Bifidobacterium, a kind of bacterium. Sorry, I'm a bit frazzled. Ever since {stressor} started, our neighbourhood has changed."],
+    ["bifi","Oh! Hi, Michael! You've brought a friend. I'm Bifi, short for Bifidobacterium. I'm one of the friendly bacteria living in the gut. Sorry if I seem a little stressed. Ever since {stressor} began, things around here haven't been quite the same :("],
     ["michael","Oh no, Bifi! What's going on down here?"]
   ],
   questions:[
@@ -1074,8 +1081,8 @@ const MEET = {
     ["michael","Thanks, Bifi. Want to come along for the rest of the dive?"],
     ["bifi","Count me in!"]
   ],
-  more:{text:"Stress can change how fast the gut moves and the mix of microbes living there. Fibre that bacteria can ferment helps them make substances that support the gut lining. For IBS, guidelines suggest soluble fibre (like oats or psyllium), added gradually. Wheat bran can make IBS worse.",
-    papers:[P.tache,P.cryan,P.fibre,P.bsg]}
+  more:{text:"Stress can change gut movement and may alter the mix of microbes living in the gut. When gut bacteria ferment certain types of fibre, they produce substances that help support the gut lining. For people with IBS, soluble fibre, such as oats or psyllium, may help ease symptoms when introduced gradually. Wheat bran may make symptoms worse.",
+    papers:[P.cryan,P.racgp]}
 };
 
 const SORT_CARDS = [
@@ -1156,6 +1163,7 @@ const S = {
   scene:"tunnel", morph:0, hop:0, drop:0, splash:0, flush:0
 };
 const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+document.documentElement.lang="en-AU";   // the published wrapper has no lang, so screen readers would guess the language
 const $ = s => document.querySelector(s);
 const sheet = $("#sheet");
 /* ---------------------------------------------------------------
@@ -1491,6 +1499,7 @@ function renderChoose(){
     </div>`;
   sheet.scrollTop=0;
   mountSay(line);
+  sheet.querySelector(".charcard").focus({preventScroll:true});   // keyboard users land on the first choice
   sheet.querySelectorAll(".charcard").forEach(b=>b.addEventListener("click",()=>{
     S.char=b.dataset.c; setMood("wow",1500); beep([[659,.06],[880,.1]]);
     renderIbsCheck();
@@ -1585,7 +1594,7 @@ function reward(ok){
 function nextLabel(){
   if(S.idx===STOPS.length-1) return fmt("Build {name}'s gut kit &#9654;");
   if(S.idx===2) return "Mini-game: stress bubbles &#9660;";
-  if(S.idx===5) return "Mini-game: meet a microbe &#9660;";
+  if(S.idx===5) return "Mini-game: Meet a microbe &#9660;";
   return "Keep diving &#9660;";
 }
 /* First wrong answer: a nudge and one more try. The answer is only revealed after the second go. */
@@ -2025,7 +2034,7 @@ function playMeet(){
     } else {
       S.guest=false; addFriend("bifi"); setMood("wow",1800); beep(SFX.right);
       ch.innerHTML=`<div class="fb ok px"><span class="v">Bifi joined the journey!</span>
-          <p>${esc(fmt("Stress changes the gut microbiome, and the microbes talk back to the brain. Eat right to treat {name} right!"))}</p>
+          <p>${esc(fmt("Stress can shake things up in the gut, changing how it moves and the microbes living there. And those microbes can send signals back to the brain! Want to help {name}'s gut community? Let's talk food!"))}</p>
           ${moreHtml(MEET.more)}
         </div>
         <button type="button" class="btn big px" id="nextBtn">Keep diving &#9660;</button>`;
@@ -2150,7 +2159,7 @@ function toolkitHtml(){
 function renderEnd(){
   S.phase="end"; S.outside=false; S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M;
   S.scene="toilet"; S.morph=1; S.hop=1; S.drop=1; S.splash=1; S.flush=1; S.fade=0; showTheEnd(true); updateHud();
-  const allPapers=[P.oka,P.koloski,P.tache,P.vanuytsel,P.barbara,P.pitta,P.cryan,P.zhang,P.kadosh,P.fibre,P.black,P.johann,P.bsg,P.bristol,P.romecard];
+  const allPapers=[P.oka,P.koloski,P.tache,P.vanuytsel,P.barbara,P.qin,P.cryan,P.zhang,P.kadosh,P.racgp,P.black,P.johann,P.bsg,P.bristol,P.romecard];
   sheet.innerHTML=`
     <h2>Thanks for diving with Michael!</h2>
     <button type="button" class="btn big px" id="againBtn">&#9654; Dive again</button>
@@ -2307,6 +2316,15 @@ function makeFriend(n){
   return {type:FRIEND_TYPES[n%FRIEND_TYPES.length],col:COLS[FRIEND_COLS[n%FRIEND_COLS.length]],x:null,y:null,ph:n*1.7};
 }
 
+/* Characters that turn up mid-dive (Bifi, the poo) fade in over 0.6 s rather than popping into view. */
+const FADE_MS=600, shownSince={};
+function fadeIn(key,visible){
+  if(!visible){ shownSince[key]=null; return 0; }
+  if(reduce) return 1;
+  const now=performance.now(); shownSince[key]??=now;
+  return Math.min(1,(now-shownSince[key])/FADE_MS);
+}
+
 const ACID_TOP=2*SP-26, ACID_BOT=2*SP+58;
 
 function frame(now){
@@ -2401,10 +2419,16 @@ function frame(now){
       const a=t*5+s2*.785, d=(1-mo)*12+5;
       px(ctx,Math.round(pooX+8+Math.cos(a)*d),Math.round(by+8+Math.sin(a)*d*.7),s2%2?"#f2d14a":"#b9f27c");
     }
-    if(S.guest) drawBifi(ctx,bx+18,by+2+(reduce?0:Math.round(Math.sin(t*2+1))),t);
-    if(S.idx===STOPS.length-1 && Math.abs(S.pos-S.idx)<.01 && ["question","sort","pledge","end","finale"].includes(S.phase)){
+    if(S.guest){
+      ctx.globalAlpha=fadeIn("bifi",true);
+      drawBifi(ctx,bx+18,by+2+(reduce?0:Math.round(Math.sin(t*2+1))),t);
+      ctx.globalAlpha=1;
+    } else fadeIn("bifi",false);
+    const pooHere=S.idx===STOPS.length-1 && Math.abs(S.pos-S.idx)<.01 && ["question","sort","pledge","end","finale"].includes(S.phase);
+    const pooA=fadeIn("poo",pooHere);
+    if(pooHere){
       const hop=S.hop||0, hy=Math.round(Math.abs(Math.sin(hop*Math.PI*2))*7);   // two happy hops
-      drawPoo(ctx,pooX,by-hy,t);
+      ctx.globalAlpha=pooA; drawPoo(ctx,pooX,by-hy,t); ctx.globalAlpha=1;
       // a burst of sparkles as the change finishes
       if(mo>.9 && hop<.6){ const r=4+((mo-.9)*10+hop)*14;
         for(let s2=0;s2<10;s2++){ const a=s2*.628; px(ctx,Math.round(pooX+8+Math.cos(a)*r),Math.round(by+7-hy+Math.sin(a)*r*.8),s2%2?"#ffffff":"#f2d14a"); } }
