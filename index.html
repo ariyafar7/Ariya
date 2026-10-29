@@ -2693,14 +2693,16 @@ const MOUTH_STEPS=[null,
   [[4,7,"k"],[5,7,"k"],[6,7,"k"],[7,7,"k"],[4,8,"k"],[5,8,"r"],[6,8,"r"],[7,8,"k"],[5,9,"k"],[6,9,"k"]],
   [[3,7,"k"],[4,7,"k"],[5,7,"k"],[6,7,"k"],[7,7,"k"],[8,7,"k"],[3,8,"k"],[4,8,"k"],[5,8,"k"],[6,8,"k"],[7,8,"k"],[8,8,"k"],
    [3,9,"k"],[4,9,"k"],[5,9,"r"],[6,9,"r"],[7,9,"k"],[8,9,"k"],[4,10,"k"],[5,10,"k"],[6,10,"k"],[7,10,"k"]]];
-function drawMouth(c,x,y,step){
-  for(let j=7;j<=10;j++) for(let i=3;i<=8;i++) px(c,x+i,y+j,MICHAEL_PAL.g);   // wipe the smile
+function drawMouth(c,x,y,step,pal=MICHAEL_PAL){
+  for(let j=7;j<=10;j++) for(let i=3;i<=8;i++) px(c,x+i,y+j,pal.g);   // wipe the smile
   for(const [i,j,k] of MOUTH_STEPS[step]) px(c,x+i,y+j,k==="r"?"#ff6b6b":K);
 }
 
 // E red, l green, g blue, (Michael, Bifi), g blue
 const LETTERS=[{ch:"E",col:"#ea4335"},{ch:"l",col:"#34a853"},{ch:"g",col:"#4285f4"},{ch:"M"},{ch:"B"},{ch:"g",col:"#4285f4"}];
 let D_SLOTS=[];
+// on the logo the two microbes take the o colours: yellow (Michael) then red (Bifi); in the game they stay green and purple
+const LOGO_PAL={M:{k:K,l:"#ffe38f",g:"#fbbc05",d:"#c58f00",c:"#ff8fa3"},B:{k:K,l:"#f8a39b",g:"#ea4335",d:"#a8261b",c:"#ffc9c4"}};
 const MOUTH={u:0,v:0,h:2*SPR};   // middle of Michael's wide-open mouth, in canvas pixels; h = height of its dark part
 
 function buildDoodle(){
@@ -2728,8 +2730,8 @@ function drawDoodle(t){
     if(s.ch!=="M" && s.ch!=="B") continue;
     const isM=s.ch==="M", ph=isM?0:1.6;
     dsc.clearRect(0,0,15,24);
-    drawMichael(dsc,1,7,(dHover||dMouth)&&!(isM&&dMouth)?"wow":"happy",t+ph,true,isM?MICHAEL_PAL:BIFI_PAL);
-    if(isM && dMouth) drawMouth(dsc,1,7,dMouth);
+    drawMichael(dsc,1,7,(dHover||dMouth)&&!(isM&&dMouth)?"wow":"happy",t+ph,true,LOGO_PAL[s.ch]);
+    if(isM && dMouth) drawMouth(dsc,1,7,dMouth,LOGO_PAL.M);
     const bob=(reduce||dMouth)?0:Math.round(Math.sin(t*(dHover?6:2.2)+ph)*(dHover?2:1));
     mic.drawImage(DSPR,s.x+15-SPR,BASE_Y-23*SPR+bob*SPR,15*SPR,24*SPR);
   }
