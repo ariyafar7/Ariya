@@ -697,9 +697,6 @@ details.more summary{font-size:10px}
 .duo .btn{font-size:9px}
 </style>
 
-<header class="eg-top">
-  <button type="button" class="eg-notes" id="notesBtn">Prototype notes</button>
-</header>
 
 <main class="home" id="home">
   <h1 class="sr">elgoog concept Doodle for World IBS Day: Michael the Microbe</h1>
@@ -769,85 +766,6 @@ details.more summary{font-size:10px}
 
 </main>
 
-<div class="notes" id="notes" hidden>
-  <div class="notes-inner" role="dialog" aria-labelledby="notesTitle">
-    <div class="notes-top">
-      <h2 id="notesTitle">Run-through notes</h2>
-      <button type="button" id="notesClose">Close</button>
-    </div>
-
-    <section>
-      <h3>How people find it</h3>
-      <p>This is a <b>concept</b> Doodle on a parody homepage spelled "elgoog" (Google backwards), so no real logo is used. On World IBS Day (19 April) the logo spells "Elgoog" in the familiar four colours, reversed, with Michael and Bifi as the two o's and a "World IBS Day" label with an awareness ribbon above it. Clicking the Doodle zooms into Michael's open mouth until the screen goes dark, then the game fills the screen, with the gut map alongside. "I'm Feeling Gutsy" opens it too. The game's × button (or Esc) zooms back out of Michael's mouth to the Doodle, and progress is kept. There are no scores or counters on screen, so the focus stays on the story.</p>
-    </section>
-
-    <section>
-      <h3>Story</h3>
-      <p>The game opens outside the body. Michael stands beside a person's silhouette, with a faint outline of their gut showing. Michael introduces himself, and the player chooses who to follow:</p>
-      <ul>
-        <li><b>Sam</b>: a first-year uni student juggling assignments, exams, deadlines and a social life.</li>
-        <li><b>Alex</b>: a new graduate starting a first full-time job, with new responsibilities, expectations and deadlines.</li>
-      </ul>
-      <p>The scene then zooms into the person's mouth, and the dive begins. Every scenario, the three decisions at the end and the stress bubbles change to match the chosen person.</p>
-    </section>
-
-    <section>
-      <h3>Flow (tap Jump to preview any screen)</h3>
-      <ol class="flow" id="flowList"></ol>
-    </section>
-
-    <section>
-      <h3>Interaction types</h3>
-      <ul>
-        <li><b>Scenario multiple choice</b>: mouth, small intestine, ileum, colon</li>
-        <li><b>Group chat</b>: oesophagus. Tap to reveal a brain–gut group chat, then answer what it shows.</li>
-        <li><b>Put in order</b>: the stress chain in the stomach</li>
-        <li><b>Tell the GP</b> (sigmoid colon): tap everything worth telling the doctor at a GP appointment, then check the notes. Red alarm cells pulse by a nerve in the scene.</li>
-        <li><b>Choose the path</b> (rectum): 3 decisions that move a stress meter and a gut meter</li>
-        <li><b>Poo chart</b> (exit): tap the 7 poo types of the Bristol Stool Form Scale, then a question on how IBS types show up in poo. A cute pixel poo waves goodbye.</li>
-        <li><b>Swipe to sort</b>: build the gut kit, then pick one thing to try this week</li>
-      </ul>
-      <p><b>Mini-games every three questions:</b></p>
-      <ul>
-        <li><b>After stop 3, pop the stress bubbles:</b> bubbles labelled with the person's stressors float down. Each pop reveals one step of the stress chain, from the brain to the gut bacteria. A breathing break follows.</li>
-        <li><b>After stop 6, meet another microbe:</b> Michael meets Bifi, his purple twin, a fibre-loving gut bacterium (<i>Bifidobacterium</i>). The player picks questions, and Bifi explains how stress changes the microbes' world, what she needs to thrive, and how microbes talk back to the brain. Bifi then joins the colony.</li>
-      </ul>
-      <p>Everything works by tapping, so there's no typing on a phone. Swiping also works with the buttons or the arrow keys.</p>
-    </section>
-
-    <section>
-      <h3>Design decisions</h3>
-      <ul>
-        <li><b>Practical first.</b> Each stop starts with something the player recognises and ends with one tip. Scientific terms are kept for "Digest the evidence".</li>
-        <li><b>Digest the evidence, not ratings.</b> Each stop has an optional "Digest the evidence" section: a short plain-language summary plus the papers behind it as further reading. It stays closed unless the player opens it.</li>
-        <li><b>Story first.</b> The mini-games and Bifi's conversation carry the science through characters instead of extra quiz questions.</li>
-        <li><b>IBS-specific advice.</b> Diet tips follow the IBS guideline (soluble fibre added slowly, a dietitian before strict diets), not general "gut health" advice.</li>
-        <li><b>No timer, and never punishing.</b> Wrong answers still move Michael down, and every answer explains itself.</li>
-        <li><b>A breathing break</b> halfway models a stress-calming tool instead of only describing it.</li>
-        <li><b>Sound is off by default</b> because it's on a search page.</li>
-      </ul>
-    </section>
-
-    <section>
-      <h3>Fact-check before final (see EVIDENCE.md)</h3>
-      <ul>
-        <li class="flag">Serotonin "about 9 in 10 made in the gut": confirm Gershon &amp; Tack 2007 and add its link.</li>
-        <li class="flag">Stress and dry mouth: add a source.</li>
-        <li class="flag">"Regular meals" as first-line advice, and the "see a doctor" list: confirm against BSG 2021 or a local guideline.</li>
-        <li class="flag">Check every quoted number against the full paper.</li>
-      </ul>
-    </section>
-
-    <section>
-      <h3>Core readings</h3>
-      <ul>
-        <li>Qin H-Y, et al. Impact of psychological stress on irritable bowel syndrome. <em>World J Gastroenterol</em> 2014;20(39):14126–31.</li>
-        <li>Vicario M, et al. Chronic psychosocial stress … in the rat intestine and IBS-like gut dysfunction. <em>Psychoneuroendocrinology</em> 2012;37:65–77.</li>
-      </ul>
-      <p>Newer sources are linked inside each stop's "Digest the evidence" section and listed in EVIDENCE.md.</p>
-    </section>
-  </div>
-</div>
 
 <script>
 (() => {
@@ -3123,36 +3041,13 @@ const egMsg=()=>{ $("#doodleCap").textContent="This is a mock search bar. Tap on
 $("#egSearch").addEventListener("submit",e=>{ e.preventDefault(); egMsg(); });
 $("#egSearchBtn").addEventListener("click",egMsg);
 
-const notes=$("#notes");
-$("#notesBtn").addEventListener("click",()=>{ notes.hidden=false; $("#notesClose").focus(); });
-$("#notesClose").addEventListener("click",()=>{ notes.hidden=true; });
-notes.addEventListener("click",e=>{ if(e.target===notes) notes.hidden=true; });
 document.addEventListener("keydown",e=>{
   if(e.key!=="Escape") return;
-  if(!notes.hidden) notes.hidden=true;
-  else if(!skipMenu.hidden){ closeSkip(); $("#skipBtn").focus(); }
+  if(!skipMenu.hidden){ closeSkip(); $("#skipBtn").focus(); }
   else closeGame();
 });
 
 const atEnd=()=>{ stopAll(); if(!S.char) S.char="sam"; S.outside=false; S.idx=STOPS.length-1; S.pos=S.idx; S.depth=TOTAL_M; };
-const flowItems=[
-  {n:"Start",d:"Title: Michael beside the silhouette",s:"Michael says hi, then Click here to play",go:()=>restart()},
-  {n:"Pick",d:"Play as Sam or Alex, then zoom in",s:"Uni student or new graduate at work",go:()=>{ stopAll(); S.outside=true; S.char=null; renderChoose(); }},
-  ...STOPS.map((st,i)=>({n:`${st.depth.toFixed(2)} m`,d:`${i+1}. ${st.zone}: ${st.kind.toLowerCase()}`,s:st.scene,go:()=>jumpTo(i)})),
-  {n:"Bonus",d:"Swipe to sort: build the gut kit",s:"8 cards, helps or doesn't help",go:()=>{ atEnd(); renderSort(); }},
-  {n:"Pledge",d:"Pick one thing to try this week",s:"Chosen from the gut kit",go:()=>{ atEnd(); S.kit=pledgeChoices(); renderPledge(); }},
-  {n:"Finale",d:"Michael turns into the poo and is flushed",s:"Toilet scene, then THE END",go:()=>{ atEnd(); startFinale(); }},
-  {n:"End",d:"THE END: Dive again, pledge, see a doctor",s:"Pledge, share message, Digest the evidence",go:()=>{ atEnd(); renderEnd(); }}
-];
-flowItems.splice(5,0,{n:"Mini 1",d:"Pop the stress bubbles, then breathe",s:"After stop 3",go:()=>{ stopAll(); if(!S.char) S.char="sam"; S.outside=false; S.idx=2; S.pos=2.5; S.depth=0.6; playBubbles(); }});
-flowItems.splice(9,0,{n:"Mini 2",d:"Meet Bifi, Michael's purple twin",s:"After stop 6",go:()=>{ stopAll(); if(!S.char) S.char="sam"; S.outside=false; S.idx=5; S.pos=5.5; S.depth=7.8; playMeet(); }});
-const fl=$("#flowList");
-flowItems.forEach((it,k)=>{
-  const li=document.createElement("li");
-  li.innerHTML=`<span class="n">${esc(it.n)}</span><span class="d">${esc(it.d)}<small>${esc(it.s)}</small></span><button type="button" id="jump${k}">Jump</button>`;
-  li.querySelector("button").addEventListener("click",()=>{ notes.hidden=true; openGame(false); it.go(); });
-  fl.appendChild(li);
-});
 
 /* Skip menu (bottom right): zoom straight to any section of the dive. */
 const SECTIONS=[
