@@ -998,40 +998,40 @@ const STOPS = [
     papers:[P.barbara,P.drossman]}
 },
 {
-  zone:"Rectum", depth:8.75, type:"path", kind:"Choose {name}'s path",
-  scene:{sam:"The last exam is coming up. Every choice moves Sam's stress meter and gut meter.",
-         alex:"A big work deadline is coming up. Every choice moves Alex's stress meter and gut meter."},
+  zone:"Rectum", depth:8.75, type:"path", kind:"Finding balance",
+  scene:{sam:"The last exam is coming up! Every choice moves Sam's stress and gut meters.",
+         alex:"A big work deadline is coming up! Every choice moves Alex's stress and gut meters."},
   q:"What should {name} do?",
   decisions:{
     sam:[
       {moment:"Night before the last exam",
-       good:{t:"Revise until a set time, then sleep at the usual hour",why:"Sleep helps reset your stress system. A small study also linked quality sleep with a more diverse and healthy gut community."},
-       bad:{t:"Pull an all-nighter with energy drinks",why:"Sacrificing sleep keeps your internal stress alarm active, which means you head into the exam completely exhausted."}},
+       good:{t:"Revise until a set time, then sleep at the usual hour",why:"Getting enough sleep helps Sam manage stress."},
+       bad:{t:"Pull an all-nighter with energy drinks",why:"Skipping sleep can leave Sam stressed and exhausted."}},
       {moment:"Exam-day lunch",
-       good:{t:"Have something small and plain",why:"Regular meals are standard first-line advice for managing IBS symptoms. Skipping food altogether just adds more stress to your body."},
-       bad:{t:"Skip lunch, there's no time for it",why:"Going without food increases your physical stress load, whereas eating regularly helps keep your digestive system stable."}},
+       good:{t:"Have something small and plain",why:"Regular meals may help manage IBS symptoms."},
+       bad:{t:"Skip lunch, there's no time for it",why:"Skipping meals can disrupt Sam's routine and worsen symptoms."}},
       {moment:"The week after exams",
-       good:{t:"Go for a brisk 20–30 minute walk with a friend",why:"A clinical trial showed that people with IBS who exercised 3 to 5 times a week experienced fewer symptoms. Catching up with friends also lowers stress."},
-       bad:{t:"Stay in and doom scroll",why:"Moving your body and socialising are two of the most effective and proven ways to interrupt a negative stress and gut loop."}}
+       good:{t:"Go for a brisk 20–30 minute walk with a friend",why:"Exercise and catching up with friends can help Sam unwind."},
+       bad:{t:"Stay in and doom scroll",why:"Staying inactive and isolated means missing chances to ease stress."}}
     ],
     alex:[
       {moment:"Night before the deadline",
-       good:{t:"Stop working at a set time and go to sleep at the usual hour",why:"Sleep gives your stress response a chance to reset. Good sleep patterns are also linked to a healthier, more varied gut environment."},
-       bad:{t:"Keep working well past midnight with energy drinks",why:"Running on empty keeps your body in a constant state of alert, leaving you drained before the big day even starts."}},
+       good:{t:"Stop working at a set time and go to sleep at the usual hour",why:"Getting enough sleep helps Alex manage stress."},
+       bad:{t:"Keep working well past midnight with energy drinks",why:"Skipping sleep can leave Alex stressed and exhausted."}},
       {moment:"Lunch on a packed workday",
-       good:{t:"Step away from your desk for a small, plain meal",why:"Eating regular meals is standard advice for managing IBS, and taking a short break from the screen helps lower your tension."},
-       bad:{t:"Skip lunch entirely to keep answering urgent emails",why:"Missing meals adds unnecessary stress to your system. Routine eating patterns are essential for keeping your gut steady."}},
+       good:{t:"Step away from your desk for a small, plain meal",why:"Regular meals may help manage IBS symptoms."},
+       bad:{t:"Skip lunch entirely to keep answering urgent emails",why:"Skipping meals can disrupt Alex's routine and worsen symptoms."}},
       {moment:"The weekend after the deadline",
-       good:{t:"Go for a brisk 20–30 minute walk with a friend",why:"Regular exercise has been shown to clearly reduce IBS symptoms. Getting fresh air with friends provides excellent psychological relief."},
-       bad:{t:"Stay indoors and keep checking your work emails",why:"Taking a break from work, moving your body and spending time with people all work together to calm the communication loop between your brain and gut."}}
+       good:{t:"Go for a brisk 20–30 minute walk with a friend",why:"Exercise and catching up with friends can help Alex unwind."},
+       bad:{t:"Stay indoors and keep checking your work emails",why:"Staying glued to work emails means missing chances to switch off and ease stress."}}
     ]
   },
   right:"{name}'s calmer, and their gut community is happier.",
   wrong:"Small choices add up. Sleep, regular meals, moving and seeing people all help calm the loop.",
-  dyk:"Small habits add up quickly. Prioritising sleep, eating regular meals, staying active and staying connected are all vital to keeping your system balanced.",
-  tip:"If you want to make a change, pick just one small habit to focus on first.",
-  more:{text:"Data from 41 clinical trials shows that talking therapies like cognitive behavioural therapy (CBT), including online programs, and gut-directed hypnotherapy significantly reduce IBS symptoms. Research also indicates that exercising for 20 to 30 minutes, three to five times a week, leads to a noticeable improvement in digestive comfort within three months. Because of this, official UK medical guidelines explicitly recommend regular exercise for anyone managing IBS.",
-    papers:[P.black,P.johann,P.bsg,P.smith]}
+  dyk:"Small habits add up. Sleep well, eat regularly, stay active and keep connected.",
+  tip:"Pick one small habit to work on first.",
+  more:{text:"CBT and gut-directed hypnotherapy can reduce IBS symptoms. Regular exercise may also help. Sleep and gut microbes are linked, but more research is needed.",
+    papers:[P.black,P.johann,P.smith]}
 },
 {
   zone:"Exit", depth:8.9, type:"poo", kind:"Poo chart",

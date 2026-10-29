@@ -34,7 +34,7 @@ The page is a clean parody homepage spelled **"elgoog"** (Google backwards), so 
 | 6 | Colon | 7.20 m | Myth-buster: "just take a probiotic" | Probiotics are an optional extra, not a fix |
 | 🎮 | **Mini-game 2: meet another microbe** | 7.80 m | Michael meets Bifi, his purple twin, a fibre-loving bacterium (*Bifidobacterium*). The player picks at least 2 of 4 questions, then Bifi joins the colony. | Stress changes the microbes' world; fibre feeds them; microbes talk back to the brain |
 | 7 | Sigmoid colon | 8.40 m | GP check-in: tap everything that could help the GP understand what's going on (7 notes, 6 helpful, 1 unhelpful), then check the notes, each with a why | The pain is real, and a GP diagnoses IBS from the symptom pattern, so describe it clearly and never play it down |
-| 8 | Rectum | 8.75 m | Choose the person's path: 3 decisions moving a stress meter and gut meter (different decisions for Sam and Alex) | Sleep, regular meals and a walk with a friend help |
+| 8 | Rectum | 8.75 m | Finding balance: 3 decisions moving a stress meter and gut meter (different decisions for Sam and Alex) | Sleep, regular meals and a walk with a friend help |
 | 9 | Exit | 8.90 m | Poo chart: tap at least 3 of the 7 Bristol poo types, then a question on which IBS type a pattern of mushy or watery poo points to. A cute pixel poo appears beside Michael. | Poo type can show how IBS is affecting the gut: hard lumps lean IBS-C, mushy or watery lean IBS-D, both is IBS-M |
 | ★ | Gut kit | 8.90 m | Swipe to sort 8 cards (buttons and arrow keys work too) | What actually helps IBS |
 | ★ | Pick one | 8.90 m | Choose one thing to try this week | Small changes stick |
