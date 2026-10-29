@@ -676,6 +676,20 @@ details.more summary{font-size:10px}
 .tk-area.tk-group .tk-h{flex:1}
 .tk-group.urgent .tk-row{box-shadow:none}
 
+/* Pledge bubbles: a more solid fill so the words read clearly over the gut scene */
+.pbubble{background:rgba(92,24,52,.9);box-shadow:inset 0 0 0 3px #ff9db0,inset 9px 9px 0 rgba(255,255,255,.12);font-weight:700;line-height:1.15;padding:12px}
+.pbubble:hover,.pbubble:focus-visible{background:rgba(120,92,20,.92)}
+/* Toolkit: bigger link buttons and column labels */
+.tk-col{font-size:10px}
+.tk-link{font-size:16.5px;padding:9px 12px}
+@media (min-width: 901px){ .tk-link{font-size:17px} .tk-col{font-size:10.5px} }
+
+/* A tip's pledges sit inside its card, marked with a yellow edge */
+.tk-pledge{display:flex;flex-direction:column;gap:5px;margin-top:2px;padding:10px 12px;background:rgba(242,209,74,.08);box-shadow:inset 4px 0 0 var(--acid)}
+.tk-pledge .tk-col{color:var(--acid)}
+.tk-pledge .tk-t{font-size:15.5px}
+@container (min-width: 620px){ .tk-pledge{grid-column:1 / -1} }
+
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
 .btn:disabled{opacity:.45;cursor:default}
@@ -1146,86 +1160,85 @@ const SORT_CARDS = [
 const PLEDGE_EXTRA=["Keep regular sleep times"];
 
 /* End page: the gut toolkit. Each tip has trusted places to start (mostly Australian) and a line on
-   why it works; pledge:true marks a small, specific thing to try this week. Phone numbers are tap-to-call. */
+   why it works; pledges are small, specific things to try this week that go with that tip.
+   Phone numbers are tap-to-call. */
 const TOOLKIT = [
   {h:"Calm the stress response", items:[
     {t:"Do a few minutes of slow breathing or a guided meditation most days",
      links:[["Smiling Mind","https://www.smilingmind.com.au/"],["Breathwork trials","https://pmc.ncbi.nlm.nih.gov/articles/PMC9828383/"]],
-     why:"Breathwork trials show reduced stress. Smiling Mind (Australian app) reports less stress and burnout in some studies."},
-    {pledge:true, t:"Do 3 minutes of slow breathing after class",
-     links:[["Smiling Mind","https://www.smilingmind.com.au/"],["Mindfulness review","https://iaap-journals.onlinelibrary.wiley.com/doi/10.1111/aphw.12328"]],
-     why:"Mindfulness reduces stress. Sessions under 5 minutes were less consistently effective."},
-    {pledge:true, t:"Try one Smiling Mind session",
-     links:[["Smiling Mind","https://www.smilingmind.com.au/"]],
-     why:"Matches Smiling Mind's own evidence statement."},
+     why:"Breathwork trials show reduced stress. Smiling Mind (Australian app) reports less stress and burnout in some studies.",
+     pledges:[
+       {t:"Do 3 minutes of slow breathing after class", links:[["Smiling Mind","https://www.smilingmind.com.au/"],["Mindfulness review","https://iaap-journals.onlinelibrary.wiley.com/doi/10.1111/aphw.12328"]],
+        why:"Mindfulness reduces stress. Sessions under 5 minutes were less consistently effective."},
+       {t:"Try one Smiling Mind session", links:[["Smiling Mind","https://www.smilingmind.com.au/"]],
+        why:"Matches Smiling Mind's own evidence statement."}]},
     {t:"Learn stress skills with a free online CBT course",
      links:[["THIS WAY UP: stress","https://thiswayup.org.au/what-we-treat/stress"]],
      why:"Australian CBT program based on clinical guidelines and tested in trials."},
     {t:"Talk it through. If you're 12 to 25, headspace is free and needs no referral.",
      links:[["headspace","https://headspace.org.au/"],["eheadspace","https://eheadspace.org.au/"],["Call eheadspace 1800 650 890","tel:1800650890"]],
-     why:"Study of 58,233 young people: less distress, better functioning and quality of life."},
-    {pledge:true, t:"Message someone about what's stressing me",
-     links:[["headspace","https://headspace.org.au/"],["eheadspace","https://eheadspace.org.au/"],["Call eheadspace 1800 650 890","tel:1800650890"]],
-     why:"Fits CBT and support-service models. Same headspace outcomes as above."}
+     why:"Study of 58,233 young people: less distress, better functioning and quality of life.",
+     pledges:[
+       {t:"Message someone about what's stressing me", links:[["headspace","https://headspace.org.au/"],["eheadspace","https://eheadspace.org.au/"],["Call eheadspace 1800 650 890","tel:1800650890"]],
+        why:"Fits CBT and support-service models. Same headspace outcomes as above."}]}
   ]},
   {h:"Mind-gut treatments", items:[
     {t:"CBT and gut-directed hypnotherapy are among the best-supported mind-based treatments for IBS",
      links:[["Mind over Gut: IBS program","https://www.mindovergut.com/ibs-program-2/"],["2025 meta-analysis","https://onlinelibrary.wiley.com/doi/10.1111/nmo.70037"]],
-     why:"2025 meta-analysis (12 studies, 1,158 patients): hypnotherapy improved overall symptoms and pain. CBT also helps, partly by reducing anxiety."},
+     why:"2025 meta-analysis (12 studies, 1,158 patients): hypnotherapy improved overall symptoms and pain. CBT also helps, partly by reducing anxiety.",
+     pledges:[
+       {t:"Start one session of Mind over Gut", links:[["Mind over Gut","https://www.mindovergut.com/"],["IBS program","https://www.mindovergut.com/ibs-program-2/"]],
+        why:"Gut-directed therapy evidence above."}]},
     {t:"Try gut-directed hypnotherapy at home with an app developed at Monash University",
      links:[["Nerva","https://www.nervahealth.com/au/"],["Nerva research","https://www.nervahealth.com/au/research"]],
-     why:"RCT of 244 adults: Nerva beat an active digital control for gut symptoms and quality of life."},
-    {pledge:true, t:"Start one session of Mind over Gut",
-     links:[["Mind over Gut","https://www.mindovergut.com/"],["IBS program","https://www.mindovergut.com/ibs-program-2/"]],
-     why:"Gut-directed therapy evidence above."},
-    {pledge:true, t:"Start a Nerva trial",
-     links:[["Nerva","https://www.nervahealth.com/au/"],["Nerva research","https://www.nervahealth.com/au/research"]],
-     why:"Nerva RCT above."}
+     why:"RCT of 244 adults: Nerva beat an active digital control for gut symptoms and quality of life.",
+     pledges:[
+       {t:"Start a Nerva trial", links:[["Nerva","https://www.nervahealth.com/au/"],["Nerva research","https://www.nervahealth.com/au/research"]],
+        why:"Nerva RCT above."}]}
   ]},
   {h:"Food and gut", items:[
     {t:"Eat regular meals. Add soluble fibre like oats or psyllium",
      links:[["healthdirect: high-fibre foods","https://www.healthdirect.gov.au/healthy-living/food-and-nutrition/high-fibre-foods-and-diet"],["healthdirect: gut health","https://www.healthdirect.gov.au/gut-health"]],
-     why:"Soluble fibre (oats, barley, legumes) keeps bowels regular. Monash: fibre increased stool bulk."},
-    {pledge:true, t:"Add one fibre food slowly this week",
-     links:[["healthdirect: high-fibre foods","https://www.healthdirect.gov.au/healthy-living/food-and-nutrition/high-fibre-foods-and-diet"],["healthdirect: gut health","https://www.healthdirect.gov.au/gut-health"]],
-     why:"Healthdirect advises adding fibre gradually; Monash fibre research."},
+     why:"Soluble fibre (oats, barley, legumes) keeps bowels regular. Monash: fibre increased stool bulk.",
+     pledges:[
+       {t:"Add one fibre food slowly this week", links:[["healthdirect: high-fibre foods","https://www.healthdirect.gov.au/healthy-living/food-and-nutrition/high-fibre-foods-and-diet"],["healthdirect: gut health","https://www.healthdirect.gov.au/gut-health"]],
+        why:"Healthdirect advises adding fibre gradually; Monash fibre research."}]},
     {t:"Thinking about a low-FODMAP diet? It's short-term, and best done with a dietitian.",
      links:[["Monash FODMAP","https://www.monashfodmap.com/"],["Find a dietitian","https://www.monashfodmap.com/online-training/fodmap-dietitians-directory/"]],
-     why:"Monash RCT: fewer symptoms than a typical Australian diet. Meta-analysis of 13 RCTs ranked it first for symptoms, pain and bloating."},
+     why:"Monash RCT: fewer symptoms than a typical Australian diet. Meta-analysis of 13 RCTs ranked it first for symptoms, pain and bloating.",
+     pledges:[
+       {t:"Book a GP or dietitian appointment", links:[["Find a dietitian","https://www.monashfodmap.com/online-training/fodmap-dietitians-directory/"],["Find a health service","https://www.healthdirect.gov.au/australian-health-services"]],
+        why:"Guidance advises assessment to exclude other bowel conditions and dietitian-led diet management. Around 3 in 4 see symptom relief within days to weeks of low-FODMAP."}]},
     {t:"Probiotics are optional. If you try one, give it up to 12 weeks and stop if it doesn't help",
      links:[["healthdirect: probiotics","https://www.healthdirect.gov.au/healthy-living/food-and-nutrition/probiotics"]],
-     why:"2026 review of 27 reviews: modest benefit, low-certainty. No universal strain or dose."},
-    {pledge:true, t:"Try a probiotic for 12 weeks",
-     links:[["healthdirect: probiotics","https://www.healthdirect.gov.au/healthy-living/food-and-nutrition/probiotics"],["Probiotics meta-analysis","https://www.sciencedirect.com/science/article/pii/S0016508523048382"]],
-     why:"Reasonable, but low certainty and varies by product and person."},
-    {pledge:true, t:"Book a GP or dietitian appointment",
-     links:[["Find a dietitian","https://www.monashfodmap.com/online-training/fodmap-dietitians-directory/"],["Find a health service","https://www.healthdirect.gov.au/australian-health-services"]],
-     why:"Guidance advises assessment to exclude other bowel conditions and dietitian-led diet management. Around 3 in 4 see symptom relief within days to weeks of low-FODMAP."}
+     why:"2026 review of 27 reviews: modest benefit, low-certainty. No universal strain or dose.",
+     pledges:[
+       {t:"Try a probiotic for 12 weeks", links:[["healthdirect: probiotics","https://www.healthdirect.gov.au/healthy-living/food-and-nutrition/probiotics"],["Probiotics meta-analysis","https://www.sciencedirect.com/science/article/pii/S0016508523048382"]],
+        why:"Reasonable, but low certainty and varies by product and person."}]}
   ]},
   {h:"Movement and sleep", items:[
     {t:"Get moving for 30 minutes or more on most days, and break up long stretches of sitting",
      links:[["Australia's movement guidelines","https://www.health.gov.au/topics/physical-activity/24-hour-movement-guidelines-for-all-australians?language=en"]],
-     why:"Cochrane: activity over 6–24 weeks may improve IBS (low certainty). A review of 14 RCTs (683 people) agrees."},
-    {pledge:true, t:"Walk for 20 minutes three times",
-     links:[["Australia's movement guidelines","https://www.health.gov.au/topics/physical-activity/24-hour-movement-guidelines-for-all-australians?language=en"]],
-     why:"Achievable activity, but this exact dose isn't proven for IBS."},
-    {pledge:true, t:"Move for 10 minutes after lunch",
-     links:[["Australia's movement guidelines","https://www.health.gov.au/topics/physical-activity/24-hour-movement-guidelines-for-all-australians?language=en"]],
-     why:"Breaks up sitting; not tested as an IBS treatment."},
+     why:"Cochrane: activity over 6–24 weeks may improve IBS (low certainty). A review of 14 RCTs (683 people) agrees.",
+     pledges:[
+       {t:"Walk for 20 minutes three times", links:[["Australia's movement guidelines","https://www.health.gov.au/topics/physical-activity/24-hour-movement-guidelines-for-all-australians?language=en"]],
+        why:"Achievable activity, but this exact dose isn't proven for IBS."},
+       {t:"Move for 10 minutes after lunch", links:[["Australia's movement guidelines","https://www.health.gov.au/topics/physical-activity/24-hour-movement-guidelines-for-all-australians?language=en"]],
+        why:"Breaks up sitting; not tested as an IBS treatment."}]},
     {t:"Keep regular sleep times and switch screens off before bed",
      links:[["Good sleep habits","https://www.healthdirect.gov.au/healthy-living/physical-wellbeing/sleep"],["Sleep and IBS review","https://pubmed.ncbi.nlm.nih.gov/27683238/"]],
-     why:"Poor sleep is linked with IBS symptoms. This doesn't prove better sleep treats IBS."},
-    {pledge:true, t:"Put my phone away 30 minutes before bed",
-     links:[["Good sleep habits","https://www.healthdirect.gov.au/healthy-living/physical-wellbeing/sleep"]],
-     why:"Standard sleep-hygiene advice; not tested for IBS."}
+     why:"Poor sleep is linked with IBS symptoms. This doesn't prove better sleep treats IBS.",
+     pledges:[
+       {t:"Put my phone away 30 minutes before bed", links:[["Good sleep habits","https://www.healthdirect.gov.au/healthy-living/physical-wellbeing/sleep"]],
+        why:"Standard sleep-hygiene advice; not tested for IBS."}]}
   ]},
   {h:"Track, check and get help", items:[
-    {pledge:true, t:"Track symptoms and stress for seven days",
-     links:[["Bristol stool chart","https://www.bladderandbowel.org/bowel/bowel-resources/bristol-stool-form-scale/"],["healthdirect: IBS","https://www.healthdirect.gov.au/irritable-bowel-syndrome-ibs"]],
-     why:"Helps spot patterns and prepare for a GP visit; not a treatment. Guidelines favour the Bristol scale and 2-week diaries."},
     {t:"Note your symptoms and poo type for two weeks, then take it to a GP",
      links:[["Bristol stool chart","https://www.bladderandbowel.org/bowel/bowel-resources/bristol-stool-form-scale/"],["Find a health service","https://www.healthdirect.gov.au/australian-health-services"]],
-     why:"Bristol scale links stool form to gut transit time."},
+     why:"Bristol scale links stool form to gut transit time.",
+     pledges:[
+       {t:"Track symptoms and stress for seven days", links:[["Bristol stool chart","https://www.bladderandbowel.org/bowel/bowel-resources/bristol-stool-form-scale/"],["healthdirect: IBS","https://www.healthdirect.gov.au/irritable-bowel-syndrome-ibs"]],
+        why:"Helps spot patterns and prepare for a GP visit; not a treatment. Guidelines favour the Bristol scale and 2-week diaries."}]},
     {t:"Read up on IBS from trusted sources, or check your symptoms online",
      links:[["healthdirect: IBS","https://www.healthdirect.gov.au/irritable-bowel-syndrome-ibs"],["Symptom checker","https://www.healthdirect.gov.au/symptom-checker"]],
      why:"Australian consumer information. The checker guides care-seeking; it doesn't replace a professional."},
@@ -2215,12 +2228,12 @@ function renderPledge(){
   const place=()=>{
     const zr=zone.getBoundingClientRect(), tag=$("#organTag").getBoundingClientRect();
     const floor=tag.height?tag.top-zr.top:zr.height;
-    const size=Math.round(Math.max(70,Math.min(112,Math.min(zr.width,floor)/3.4)));
+    const size=Math.round(Math.max(84,Math.min(146,Math.min(zr.width,floor)/2.9)));
     const cx=(S.mx+6.5)*PX, cy=clamp((S.my+8.5)*PX,size/2+6,floor-size/2-6);
     const rx=Math.min(zr.width/2-size/2-8,size*1.45), ry=Math.min(floor/2-size/2-6,size*1.25);   // an oval, so short screens still fit
     zone.querySelectorAll(".pbubble").forEach((b,i)=>{
       const a=-Math.PI/2+i*2*Math.PI/S.kit.length;
-      b.style.width=b.style.height=size+"px";
+      b.style.width=b.style.height=size+"px"; b.style.fontSize=Math.max(12,Math.round(size/7.6))+"px";
       b.style.left=Math.round(clamp(cx+Math.cos(a)*rx,size/2+6,zr.width-size/2-6))+"px";
       b.style.top=Math.round(clamp(cy+Math.sin(a)*ry,size/2+6,floor-size/2-6))+"px";
     });
@@ -2288,10 +2301,13 @@ function toolkitHtml(){
   return `<section class="toolkit" aria-label="Your gut toolkit">
     ${TOOLKIT.map(g=>`<details class="tk-group tk-area px${g.urgent?" urgent":""}"${g.urgent?" open":""}>
       <summary><span class="tk-h">${esc(g.h)}</span><span class="tk-n">${g.items.length} ${g.items.length>1?"tips":"tip"}</span></summary>
-      <div class="tk-rows">${g.items.map(it=>`<div class="tk-row px${it.pledge?" pledge":""}">
-        <div class="tk-cell"><span class="tk-col">${it.pledge?"Pledge":"Tip"}</span><p class="tk-t">${esc(it.t)}</p></div>
+      <div class="tk-rows">${g.items.map(it=>`<div class="tk-row px">
+        <div class="tk-cell"><span class="tk-col">Tip</span><p class="tk-t">${esc(it.t)}</p></div>
         <div class="tk-cell"><span class="tk-col">Where to start</span><span class="tk-links">${it.links.map(link).join("")}</span></div>
         ${it.why?`<div class="tk-cell"><span class="tk-col">Why it works</span><p class="tk-why">${esc(it.why)}</p></div>`:""}
+        ${(it.pledges||[]).map(p=>`<div class="tk-pledge"><span class="tk-col">Pledge</span><p class="tk-t">${esc(p.t)}</p>
+          <span class="tk-links">${p.links.map(link).join("")}</span>
+          <p class="tk-why"><b class="lbl">Why:</b> ${esc(p.why)}</p></div>`).join("")}
       </div>`).join("")}</div>
     </details>`).join("")}
   </section>`;
