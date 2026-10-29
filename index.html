@@ -2770,7 +2770,9 @@ function updateMapLabel(){
     const p=clamp(S.pos||0,0,STOPS.length-1), zi=Math.floor(p+1e-6);
     zone=STOPS[zi].zone; sub="";
   }
-  setOrganTag(S.scene==="toilet"||S.outside?"":zone);
+  // the scene's organ name switches to the next organ as soon as Michael sets off towards it
+  const next=STOPS[Math.min(STOPS.length-1,Math.ceil(clamp(S.pos||0,0,STOPS.length-1)-.01))].zone;
+  setOrganTag(S.scene==="toilet"||S.outside?"":next);
   const txt=zone+"|"+sub;
   if(txt===mapText) return; mapText=txt;
   $("#mapZone").textContent=zone; $("#mapSub").textContent=sub;
