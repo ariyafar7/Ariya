@@ -606,7 +606,7 @@ details.more summary{font-size:10px}
 #doodlecv{width:100%;height:auto;aspect-ratio:1120/340;image-rendering:auto}
 .eg-day{display:inline-flex;align-items:center;gap:8px;font-family:Poppins,"Trebuchet MS",sans-serif;font-weight:500;font-size:20px;color:#5f6368}
 .eg-day svg{flex:0 0 auto}
-@media (max-width: 480px){ .eg-day{font-size:16px} .eg-day svg{width:28px;height:28px} }
+@media (max-width: 480px){ .eg-day{font-size:16px} .eg-day svg{width:28px;height:35px} }
 
 .btn.alt{background:var(--orange);box-shadow:inset -4px -4px 0 #c4622a,inset 4px 4px 0 #ffd2a8}
 .btn.alt:hover{background:#ffab72}
@@ -622,14 +622,15 @@ details.more summary{font-size:10px}
   <section class="hero" id="hero">
     <button type="button" class="eg-doodle" id="doodle" aria-label="elgoog Doodle for World IBS Day. Play Michael the Microbe, a game about stress and the gut.">
       <span class="eg-day" aria-hidden="true">
-        <svg viewBox="0 0 64 64" width="36" height="36">
+        <svg viewBox="0 0 100 126" width="34" height="43" aria-hidden="true">
           <defs>
-            <linearGradient id="rbFront" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#e3ebf5"/><stop offset="1" stop-color="#a9b7c8"/></linearGradient>
-            <linearGradient id="rbBack" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#b9c5d3"/><stop offset="1" stop-color="#7b8899"/></linearGradient>
+            <linearGradient id="rbLoop" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8e9bad"/><stop offset=".55" stop-color="#c3cfdd"/><stop offset="1" stop-color="#97a4b6"/></linearGradient>
+            <linearGradient id="rbBack" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#9eabbd"/><stop offset="1" stop-color="#727f91"/></linearGradient>
+            <linearGradient id="rbFront" x1="1" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8eff8"/><stop offset=".55" stop-color="#cdd9e7"/><stop offset="1" stop-color="#aebdcf"/></linearGradient>
           </defs>
-          <path d="M26 22 L48 61" stroke="url(#rbBack)" stroke-width="10" fill="none"/>
-          <path d="M22.5 24 C14 11 21 3 32 3 C43 3 50 11 41.5 24" stroke="url(#rbBack)" stroke-width="9" fill="none"/>
-          <path d="M38 22 L16 61" stroke="url(#rbFront)" stroke-width="10" fill="none"/>
+          <path d="M77 121 L40 52 C27 27 35 6 50 6 C65 6 73 27 60 52 L23 121" fill="none" stroke="url(#rbLoop)" stroke-width="16" stroke-linejoin="round"/>
+          <path d="M40 52 L77 121" fill="none" stroke="url(#rbBack)" stroke-width="16"/>
+          <path d="M50 6 C65 6 73 27 60 52 L23 121" fill="none" stroke="url(#rbFront)" stroke-width="16"/>
         </svg>
         <span>World IBS Day</span>
       </span>
@@ -2680,6 +2681,9 @@ const LOGO_FONT='500 300px Poppins, "Trebuchet MS", sans-serif';
 const dcv=$("#doodlecv"), dctx=dcv.getContext("2d");
 dcv.width=DW; dcv.height=DH;
 const D_BASE=document.createElement("canvas"); D_BASE.width=DW; D_BASE.height=DH;
+const D_MIC=document.createElement("canvas"); D_MIC.width=DW; D_MIC.height=DH;   // the two microbes on their own, for the zoom
+const mic=D_MIC.getContext("2d");
+let dZooming=false;   // while the zoom runs, the microbes are drawn by the zoom layer instead of the logo
 const DSPR=document.createElement("canvas"); DSPR.width=15; DSPR.height=24;
 const dsc=DSPR.getContext("2d");
 let dHover=false, dMouth=0;   // dMouth: how wide Michael's mouth is open on the Doodle (0 = smiling, 3 = wide "ahh")
@@ -2718,8 +2722,8 @@ function drawDoodle(t){
   const c=dctx;
   c.clearRect(0,0,DW,DH);
   c.drawImage(D_BASE,0,0);
-  c.imageSmoothingEnabled=false;
   // Michael and Bifi as the two o's, sitting on the baseline (they get excited on hover)
+  mic.clearRect(0,0,DW,DH); mic.imageSmoothingEnabled=false;
   for(const s of D_SLOTS){
     if(s.ch!=="M" && s.ch!=="B") continue;
     const isM=s.ch==="M", ph=isM?0:1.6;
@@ -2727,8 +2731,9 @@ function drawDoodle(t){
     drawMichael(dsc,1,7,(dHover||dMouth)&&!(isM&&dMouth)?"wow":"happy",t+ph,true,isM?MICHAEL_PAL:BIFI_PAL);
     if(isM && dMouth) drawMouth(dsc,1,7,dMouth);
     const bob=(reduce||dMouth)?0:Math.round(Math.sin(t*(dHover?6:2.2)+ph)*(dHover?2:1));
-    c.drawImage(DSPR,s.x+15-SPR,BASE_Y-23*SPR+bob*SPR,15*SPR,24*SPR);
+    mic.drawImage(DSPR,s.x+15-SPR,BASE_Y-23*SPR+bob*SPR,15*SPR,24*SPR);
   }
+  if(!dZooming) c.drawImage(D_MIC,0,0);
 }
 
 const dBtn=$("#doodle");
@@ -2747,6 +2752,7 @@ let portalBusy=false;
 function portalZoom(inward,dur,done){
   const W=innerWidth, H=innerHeight; portal.width=W; portal.height=H; portal.hidden=false; portal.style.opacity=1;
   const r=dcv.getBoundingClientRect(), s0=r.width/DW;
+  dZooming=true;   // only the microbes zoom; the Elgoog letters stay on the page
   const mx0=r.left+MOUTH.u*s0, my0=r.top+MOUTH.v*s0;
   const Zmax=Math.max(W,H)*1.4/(MOUTH.h*s0);    // the dark part of the mouth ends up bigger than the screen
   const t0=performance.now();
@@ -2757,11 +2763,11 @@ function portalZoom(inward,dur,done){
     pctx.clearRect(0,0,W,H); pctx.imageSmoothingEnabled=s<2;   // smooth while the logo is near its own size, hard pixels as it zooms in
     const u0=Math.max(0,Math.floor(-x0/s)), v0=Math.max(0,Math.floor(-y0/s));
     const u1=Math.min(DW,Math.ceil((W-x0)/s)), v1=Math.min(DH,Math.ceil((H-y0)/s));
-    if(u1>u0 && v1>v0) pctx.drawImage(dcv,u0,v0,u1-u0,v1-v0,x0+u0*s,y0+v0*s,(u1-u0)*s,(v1-v0)*s);
+    if(u1>u0 && v1>v0) pctx.drawImage(D_MIC,u0,v0,u1-u0,v1-v0,x0+u0*s,y0+v0*s,(u1-u0)*s,(v1-v0)*s);
     const k=clamp((ez-.7)/.3,0,1);              // the inside of the mouth closes in
     if(k>0){ pctx.fillStyle=`rgba(13,7,16,${k})`; pctx.fillRect(0,0,W,H); }
     if(p<1){ requestAnimationFrame(step); return; }
-    done();
+    dZooming=false; done();
   };
   requestAnimationFrame(step);
 }
