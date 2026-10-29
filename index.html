@@ -2683,9 +2683,9 @@ const LOGO_FONT='500 300px Poppins, "Trebuchet MS", sans-serif';
 const dcv=$("#doodlecv"), dctx=dcv.getContext("2d");
 dcv.width=DW; dcv.height=DH;
 const D_BASE=document.createElement("canvas"); D_BASE.width=DW; D_BASE.height=DH;
-const D_MIC=document.createElement("canvas"); D_MIC.width=DW; D_MIC.height=DH;   // the two microbes on their own, for the zoom
+const D_MIC=document.createElement("canvas"); D_MIC.width=DW; D_MIC.height=DH;   // the left microbe (Michael) on his own, for the zoom
 const mic=D_MIC.getContext("2d");
-let dZooming=false;   // while the zoom runs, the microbes are drawn by the zoom layer instead of the logo
+let dZooming=false;   // while the zoom runs, Michael is drawn by the zoom layer instead of the logo
 const DSPR=document.createElement("canvas"); DSPR.width=15; DSPR.height=24;
 const dsc=DSPR.getContext("2d");
 let dHover=false, dMouth=0;   // dMouth: how wide Michael's mouth is open on the Doodle (0 = smiling, 3 = wide "ahh")
@@ -2735,7 +2735,8 @@ function drawDoodle(t){
     drawMichael(dsc,1,7,(dHover||dMouth)&&!(isM&&dMouth)?"wow":"happy",t+ph,true,LOGO_PAL[s.ch]);
     if(isM && dMouth) drawMouth(dsc,1,7,dMouth,LOGO_PAL.M);
     const bob=(reduce||dMouth)?0:Math.round(Math.sin(t*(dHover?6:2.2)+ph)*(dHover?2:1));
-    mic.drawImage(DSPR,s.x+15-SPR,BASE_Y-23*SPR+bob*SPR,15*SPR,24*SPR);
+    (isM?mic:c).imageSmoothingEnabled=false;
+    (isM?mic:c).drawImage(DSPR,s.x+15-SPR,BASE_Y-23*SPR+bob*SPR,15*SPR,24*SPR);   // Bifi stays in the logo; only Michael zooms
   }
   if(!dZooming) c.drawImage(D_MIC,0,0);
 }
@@ -2756,7 +2757,7 @@ let portalBusy=false;
 function portalZoom(inward,dur,done){
   const W=innerWidth, H=innerHeight; portal.width=W; portal.height=H; portal.hidden=false; portal.style.opacity=1;
   const r=dcv.getBoundingClientRect(), s0=r.width/DW;
-  dZooming=true;   // only the microbes zoom; the Elgoog letters stay on the page
+  dZooming=true;   // only Michael (the left microbe) zooms; Bifi and the Elgoog letters stay on the page
   const mx0=r.left+MOUTH.u*s0, my0=r.top+MOUTH.v*s0;
   const Zmax=Math.max(W,H)*1.4/(MOUTH.h*s0);    // the dark part of the mouth ends up bigger than the screen
   const t0=performance.now();
